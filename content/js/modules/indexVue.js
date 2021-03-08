@@ -1,5 +1,3 @@
-console.log('entryVue.js runnning')
-
 const makeLoginVue = function() {
     const loginVue = new Vue({
         el: "#login",
@@ -27,13 +25,12 @@ const makeRegisterVue = function() {
         },
         methods: {
             register: function () {
-                // todo login via API
                 this.message = ""
                 this.message += (this.password !== this.passwordConfirm) ? "Passwords don't match." : " ";
                 this.message += (this.message !== "") ? " ": ""
                 this.message += (this.password.length < 4) ? "Password must be at least 4 characters long." : " ";
                 if (this.message === "") {
-                    // todo validate username
+                    // todo register via API
                     console.log(`Sending data to API: ${this.username}, ${this.password}, ${this.passwordConfirm}`)
                 }
             }
@@ -46,7 +43,7 @@ const makeGuestVue = function() {
         el: "#guest",
         methods: {
             playAsGuest: function () {
-                // todo login via API
+                // todo reroute to lobby
                 console.log(`Sending data to API: Guest`)
             }
         }

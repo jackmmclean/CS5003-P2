@@ -1,4 +1,4 @@
-import {makeEntry} from "./modules/entryVue.js";
+import {makeEntry} from "./modules/indexVue.js";
 
 const setup = function() {
     makeEntry();

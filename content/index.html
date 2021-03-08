@@ -4,43 +4,17 @@
     <meta charset="UTF-8">
     <!-- todo Use production version of Vue-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="js/client.js" type="module"></script>
+    <script src="js/index.js" type="module"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <title>Gin Rummy</title>
+    <title>Gin Rummy|Login</title>
 </head>
 <body>
     <nav id="sidebar">
         <div class="title" id="brand">
-            <h1>
-                Gin Rummy
-            </h1>
+            <h1>Gin Rummy</h1>
+            <p class="subtitle">Login</p>
         </div>
-
-        <div class="card">
-            <div class="card-content">
-                <div class="content">
-                    Navbar Card 1
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <div class="content">
-                    Navbar Card 2
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <div class="content">
-                    Navbar Card 3
-                </div>
-            </div>
-        </div>
-
     </nav>
 
     <section id="main">
@@ -69,8 +43,6 @@
                         <input type="password" v-model="passwordConfirm" placeholder="Confirm Password">
                         <button v-on:click="register">Register</button>
                         <br>
-<!--                        {{ lengthError }}-->
-<!--                        {{ matchError }}-->
                         {{ message }}
                     </div>
                 </div>
