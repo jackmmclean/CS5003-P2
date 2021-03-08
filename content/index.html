@@ -4,14 +4,93 @@
     <meta charset="UTF-8">
     <!-- todo Use production version of Vue-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="js/vue.js" type="text/javascript"></script>
+    <script src="js/client.js" type="module"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Gin Rummy</title>
 </head>
 <body>
-<h1>Gin Rummy</h1>
-<div id="gameboard">
-    {{ message }}
-</div>
+    <nav id="sidebar">
+        <div class="title" id="brand">
+            <h1>
+                Gin Rummy
+            </h1>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="content">
+                    Navbar Card 1
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="content">
+                    Navbar Card 2
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="content">
+                    Navbar Card 3
+                </div>
+            </div>
+        </div>
+
+    </nav>
+
+    <section id="main">
+        <div class="container" id="display">
+            <div class="card" id="login">
+                <header class="card-header">
+                    <p class="card-header-title">Login with your credentials.</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <input type="text" v-model="username" placeholder="Username">
+                        <input type="password" v-model="password" placeholder="Password">
+                        <button v-on:click="login">Login</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="register">
+                <header class="card-header">
+                    <p class="card-header-title">Register a new user.</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <input type="text" v-model="username" placeholder="Username">
+                        <input type="password" v-model="password" placeholder="Password">
+                        <input type="password" v-model="passwordConfirm" placeholder="Confirm Password">
+                        <button v-on:click="register">Register</button>
+                        <br>
+<!--                        {{ lengthError }}-->
+<!--                        {{ matchError }}-->
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="guest">
+                <header class="card-header">
+                    <p class="card-header-title">Play as guest without registration.</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <div class="content">
+                            <button v-on:click="playAsGuest">Play!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 </body>
 </html>

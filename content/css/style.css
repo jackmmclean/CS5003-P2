@@ -1,0 +1,38 @@
+/* General layout */
+body, html {
+    background: #477148;
+    height: 100%;
+    color: white;
+}
+
+.title {
+    color: white;
+    text-shadow: 2px 2px black;
+}
+
+.card {
+    margin-bottom: 0.5rem;
+}
+
+#sidebar {
+    position: sticky;
+    padding: 30px;
+    width: 350px;
+    float: left;
+}
+
+/*#toolbar {*/
+/*    position: sticky;*/
+/*    top: 30px;*/
+/*    padding-left: 350px;*/
+/*    z-index: 1;*/
+/*    padding-right: 30px;*/
+/*}*/
+
+#main {
+    /*margin-top: 60px;*/
+    padding-top: 30px;
+    padding-left: 350px;
+    padding-right: 30px;
+    overflow-scrolling: auto;
+}
