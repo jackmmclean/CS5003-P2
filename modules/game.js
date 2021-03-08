@@ -1,4 +1,4 @@
-// import {shuffle} from "./utils.js"
+const {shuffle} = require("./utils");
 
 //define function (use of closure) that will create the distribution of cards
 function makeCards(players) {
@@ -62,5 +62,4 @@ function makeCards(players) {
 	}
 
 	return cards
-
 }

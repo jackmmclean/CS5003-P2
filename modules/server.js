@@ -1,5 +1,3 @@
-// import {createGame, getGames, joinGame, startGame} from "./api.js";
-
 const express = require("express");
 const bodyParser = require("body-parser")
 const getGames = require("./api");
