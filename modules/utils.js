@@ -1,5 +1,5 @@
 // define function to shuffle cards
-function shuffle(array) {
+export function shuffle(array) {
 
     var currentIndex = array.length,
         temporaryValue, randomIndex;

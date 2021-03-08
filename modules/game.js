@@ -1,3 +1,4 @@
+// import {shuffle} from "./utils.js"
 
 //define function (use of closure) that will create the distribution of cards
 function makeCards(numOfPlayers) {
