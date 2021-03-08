@@ -1,0 +1,7 @@
+Game logic:
+- how do you determine a winner when you have more than two players?
+- player Id renewed each game (distinct only for current games)
+
+User logic:
+- Single player can only play one game at a time
+- User gets a player ID once they enter a game (new every time)
