@@ -37,8 +37,12 @@
 
 <section id="main">
     <div class="container board" id="display">
-        <div class="board-element hand" id="player-hand">{{ msg }}</div>
+        <div class="board-element hand" id="player-hand">
+            <div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"></div>
+        </div>
+
         <div class="board-element deck" id="closed-deck">{{ msg }}</div>
+
         <div class="board-element deck" id="open-deck">{{ msg }}</div>
     </div>
 </section>

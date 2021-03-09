@@ -42,7 +42,7 @@ body, html {
 }
 
 .board-element {
-    background: #858585;
+    background: white;
     margin-bottom: 0.5rem;
     justify-items: center;
     align-items: center;
@@ -51,6 +51,8 @@ body, html {
 
 #player-hand {
     grid-area: a;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
 }
 
 #closed-deck {
@@ -63,3 +65,16 @@ body, html {
     margin-left: 0.25rem;
 }
 
+/* playing card */
+.playing-card {
+    display: inline-block;
+    font-size: 800%;
+    cursor: grab;
+    padding: 0;
+    margin: 0;
+}
+
+.playing-card:hover {
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 15px rgb(128, 203, 115);
+}
