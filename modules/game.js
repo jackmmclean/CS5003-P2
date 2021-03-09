@@ -95,10 +95,10 @@ function makeCards(players, game) {
 	//storing locations of cards at every point in game
 	function cardsInstance() {
 		this.time = new Date;
-		this.openDeck = cards.openDeck;
-		this.deck = cards.deck;
+		this.openDeck = Object.assign({}, cards.openDeck);
+		this.deck = Object.assign({}, cards.deck);
 		for (let player of players) {
-			this[player.id] = cards[player.id];
+			this[player.id] = Object.assign({}, cards[player.id]);
 		}
 	}
 
@@ -122,7 +122,7 @@ function makeCards(players, game) {
 		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
 	}
 
-	//allow these functions to be accessed from the player objects 
+	//allow these functions to be accessed from the player objects
 	for (let player of players) {
 		player.hand = () => {
 			return cards[player.id];
@@ -144,8 +144,6 @@ function makeCards(players, game) {
 players = makePlayers(3);
 game = makeGame(players);
 cards = makeCards(players, game);
-
-//having a scoping (maybe) problem with updating history, will resolve later
 
 players[0].depositCard(0)
 
