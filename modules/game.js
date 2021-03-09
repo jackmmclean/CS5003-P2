@@ -28,10 +28,10 @@ function makeGame(players) {
 		this.gameOver = false;
 		this.round = 1;
 		this.players = players;
+		this.cardHistory = [];
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
-			this.cardHistory = cards.cardHistory;
 		};
 	}
 	return new Game(players)
@@ -81,37 +81,34 @@ function makeCards(players, game) {
 		cards[player.id] = cards.deck.splice(0, cardsPerPlayer);
 	}
 
-	//initialise a variable to store history of all cards
-	cards.cardHistory = [];
-
-	function updateHistory() {
-		let instance = {};
-		instance.time = new Date;
-		instance.openDeck = cards.openDeck;
-		instance.deck = cards.deck;
+	//constructor function for instances of cards, used for
+	//storing locations of cards at every point in game
+	function cardsInstance() {
+		this.time = new Date;
+		this.openDeck = cards.openDeck;
+		this.deck = cards.deck;
 		for (let player of players) {
-			instance[player.id] = cards[player.id];
+			this[player.id] = cards[player.id];
 		}
-		cards.cardHistory.push(instance);
 	}
 
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
-		updateHistory();
+		game.cardHistory.push(new cardsInstance());
 		cards[player.id].push(cards.deck.splice(0, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
-		updateHistory();
+		game.cardHistory.push(new cardsInstance());
 		cards[player.id].push(cards.openDeck.splice(0, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, cardNo) {
-		updateHistory();
+		game.cardHistory.push(new cardsInstance());
 		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
 	}
 
@@ -138,21 +135,14 @@ players = makePlayers(3);
 game = makeGame(players);
 cards = makeCards(players, game);
 
-//having a scoping problem with updatehistory, will resolve later
+//having a scoping (maybe) problem with updating history, will resolve later
 
 players[0].depositCard(0)
-for (let instance of cards.cardHistory) {
-	console.log(instance[players[0].id])
-}
-console.log('second run')
-players[0].depositCard(0)
-for (let instance of cards.cardHistory) {
-	console.log(instance[players[0].id])
-}
-console.log('third run')
-players[0].depositCard(0)
-for (let instance of cards.cardHistory) {
-	console.log(instance[players[0].id])
-}
 
-game.endGame()
+players[0].depositCard(0)
+
+players[0].depositCard(0)
+
+for (let instance of game.cardHistory) {
+	console.log(instance[players[0].id])
+}
