@@ -2,6 +2,12 @@ const {
 	shuffle
 } = require("./utils");
 const {
+	isRun
+} = require("./utils");
+const {
+	isSet
+} = require("./utils");
+const {
 	v4: uuidv4
 } = require('uuid');
 
@@ -14,6 +20,7 @@ function makePlayers(playerCount) {
 	function Player() {
 		this.username = 'get a username';
 		this.id = uuidv4();
+		this.melds = null;
 	}
 	for (let i = 0; i < playerCount; i++) {
 		players.push(new Player());
@@ -29,6 +36,7 @@ function makeGame(players) {
 		this.round = 1;
 		this.players = players;
 		this.cardHistory = [];
+		this.highOrLowAces = false;
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
@@ -43,6 +51,8 @@ function makeCards(players, game) {
 	//initialise variables
 	var deck = [];
 	const ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
+	//value of ace is 1 by default but we change this when checking (if high or low aces is toggled)
+
 	const suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
 	//define invalid cards, for example the 'knights' cards
 	const invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
@@ -145,4 +155,16 @@ players[0].depositCard(0)
 
 for (let instance of game.cardHistory) {
 	console.log(instance[players[0].id])
+}
+
+function processGinDeclared(player) {
+	melds = player.melds;
+	//assuming that player.melds is an array that contains arrays - eg
+	// player.melds = [[card, card, card], [card,card,card]...]
+
+	for (let meld of melds) {
+		if (!(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
+	}
+
+	return true;
 }
