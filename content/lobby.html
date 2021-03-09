@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <!-- todo Use production version of Vue-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="js/index.js" type="module"></script>
+    <script src="js/lobby.js" type="module"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
     <link rel="stylesheet" href="css/style.css">
     <title>Gin Rummy|Lobby</title>
 </head>
@@ -16,26 +17,29 @@
         <p class="subtitle">Lobby</p>
     </div>
 
-    <div class="card">
+    <div class="card" id="join-game-by-id">
+        <header class="card-header">
+            <p class="card-header-title">Join game by Game ID.</p>
+        </header>
         <div class="card-content">
             <div class="content">
-                Navbar Card 1
+                <input type="text" v-model="gameId" placeholder="Game ID">
+                <button v-on:click="join">Join</button>
+                <br>
+                {{ message }}
             </div>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="new-game">
+        <header class="card-header">
+            <p class="card-header-title">Create new game.</p>
+        </header>
         <div class="card-content">
             <div class="content">
-                Navbar Card 2
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-content">
-            <div class="content">
-                Navbar Card 3
+                <button v-on:click="createNewGame">Create!</button>
+                <br>
+                {{ message }}
             </div>
         </div>
     </div>
@@ -44,13 +48,23 @@
 
 <section id="main">
     <div class="container" id="display">
-        <div class="card" id="login">
+        <div class="card" id="open-games">
             <header class="card-header">
-                <p class="card-header-title">Lorem ipsum</p>
+                <p class="card-header-title">Open games.</p>
+                <button v-on:click="getGames" class="button is-white">
+                    <span class="icon">
+                      <i class="fas fa-sync"></i>
+                    </span>
+                </button>
             </header>
             <div class="card-content">
                 <div class="content">
-                    Some text without meaning.
+                    <table>
+                        <tr v-for="(gameId) in openGames">
+                            <td>{{ gameId }}</td>
+                            <td><button v-on:click="join(gameId)">Join!</button></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
