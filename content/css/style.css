@@ -58,11 +58,13 @@ body, html {
 #closed-deck {
     grid-area: b;
     margin-right: 0.25rem;
+    text-align: center;
 }
 
 #open-deck {
     grid-area: c;
     margin-left: 0.25rem;
+    text-align: center;
 }
 
 /* playing card */

@@ -41,7 +41,9 @@
             <div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"></div>
         </div>
 
-        <div class="board-element deck" id="closed-deck">{{ msg }}</div>
+        <div class="board-element deck" id="closed-deck">
+            <div class="playing-card" v-html="backOfCard.card" v-bind:style="{color: backOfCard.color}"></div>
+        </div>
 
         <div class="board-element deck" id="open-deck">{{ msg }}</div>
     </div>

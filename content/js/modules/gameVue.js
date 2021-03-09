@@ -20,8 +20,7 @@ const makePlayerHandVue = function() {
     const playerHandVue = new Vue({
         el: "#player-hand",
         data: {
-            msg: 'msg from playerHandVue',
-            hand: []
+            hand: [],
         },
         methods: {
             getHand: function() {
@@ -45,7 +44,9 @@ const makePlayerHandVue = function() {
 const makeClosedDeckVue = function() {
     const closedDeckVue = new Vue({
         el: "#closed-deck",
-        data: {msg: 'msg from closedDeckVue'},
+        data: {
+            backOfCard: {card: "&#127136", color: "royalblue"}
+        },
         methods: {}
     })
 }
