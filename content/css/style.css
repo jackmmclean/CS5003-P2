@@ -32,3 +32,34 @@ body, html {
     padding-right: 30px;
     overflow-scrolling: auto;
 }
+
+/* Game board */
+.board {
+    display: grid;
+    grid-template-areas:
+            "a a"
+            "b c";
+}
+
+.board-element {
+    background: #858585;
+    margin-bottom: 0.5rem;
+    justify-items: center;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+#player-hand {
+    grid-area: a;
+}
+
+#closed-deck {
+    grid-area: b;
+    margin-right: 0.25rem;
+}
+
+#open-deck {
+    grid-area: c;
+    margin-left: 0.25rem;
+}
+
