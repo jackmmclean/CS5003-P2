@@ -1,7 +1,44 @@
-const {shuffle} = require("./utils");
+const {
+	shuffle
+} = require("./utils");
+const {
+	v4: uuidv4
+} = require('uuid');
+
+
+//define a players object
+function makePlayers(playerCount) {
+	var players = [];
+	//player object constructor. We will add access to the card methods in the
+	//makeCards function
+	function Player() {
+		this.username = 'get a username';
+		this.id = uuidv4();
+	}
+	for (let i = 0; i < playerCount; i++) {
+		players.push(new Player());
+	}
+	return players
+}
+
+function makeGame(players) {
+	function Game(players) {
+		this.timeStarted = new Date;
+		this.timeFinished = null;
+		this.gameOver = false;
+		this.round = 1;
+		this.players = players;
+		this.endGame = () => {
+			this.gameOver = true;
+			this.timeFinished = new Date;
+			this.cardHistory = cards.cardHistory;
+		};
+	}
+	return new Game(players)
+}
 
 //define function (use of closure) that will create the distribution of cards
-function makeCards(players) {
+function makeCards(players, game) {
 
 	//initialise variables
 	var deck = [];
@@ -40,26 +77,82 @@ function makeCards(players) {
 	}
 
 	//assign object attributes that hold each players cards
-	for (let i = 0; i < numOfPlayers; i++) {
-		cards[players[i]] = cards.deck.splice(0, cardsPerPlayer);
+	for (let player of players) {
+		cards[player.id] = cards.deck.splice(0, cardsPerPlayer);
+	}
+
+	//initialise a variable to store history of all cards
+	cards.cardHistory = [];
+
+	function updateHistory() {
+		let instance = {};
+		instance.time = new Date;
+		instance.openDeck = cards.openDeck;
+		instance.deck = cards.deck;
+		for (let player of players) {
+			instance[player.id] = cards[player.id];
+		}
+		cards.cardHistory.push(instance);
 	}
 
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
-		cards[player].push(cards.deck.splice(0, 1));
-		return cards[player][cards[player].length - 1];
+		updateHistory();
+		cards[player.id].push(cards.deck.splice(0, 1)[0]);
+		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
-		cards[player].push(cards.openDeck.splice(0, 1));
-		return cards[player][cards[player].length - 1];
+		updateHistory();
+		cards[player.id].push(cards.openDeck.splice(0, 1)[0]);
+		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, cardNo) {
-		cards['openDeck'].push(cards[player].splice(cardNo, cardNo + 1)[0]);
+		updateHistory();
+		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
+	}
+
+	//allow these functions to be accessed from the player objects 
+	for (let player of players) {
+		player.hand = () => {
+			return cards[player.id];
+		}
+		player.openDraw = () => {
+			cards.openDraw(player)
+		};
+		player.closedDraw = () => {
+			cards.closedDraw(player)
+		};
+		player.depositCard = (cardNo) => {
+			cards.depositCard(player, cardNo)
+		};
 	}
 
 	return cards
 }
+
+players = makePlayers(3);
+game = makeGame(players);
+cards = makeCards(players, game);
+
+//having a scoping problem with updatehistory, will resolve later
+
+players[0].depositCard(0)
+for (let instance of cards.cardHistory) {
+	console.log(instance[players[0].id])
+}
+console.log('second run')
+players[0].depositCard(0)
+for (let instance of cards.cardHistory) {
+	console.log(instance[players[0].id])
+}
+console.log('third run')
+players[0].depositCard(0)
+for (let instance of cards.cardHistory) {
+	console.log(instance[players[0].id])
+}
+
+game.endGame()
