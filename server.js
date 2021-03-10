@@ -10,20 +10,17 @@ app.use(bodyParser.json());
 app.use(express.static("content"))
 
 // HTML routes
-// todo for this to work, need to move the content folder into the same directory as server.js
-// 	I commented this out to avoid braking the server. Uncomment once the directory structure is fixed.
-//
-// app.get('/', (req, res) => {
-// 	res.sendFile(__dirname + '/content/index.html')
-// })
-//
-// app.get('/lobby', (req, res) => {
-// 	res.sendFile(__dirname + '/content/lobby.html')
-// })
-//
-// app.get('/game', (req, res) => {
-// 	res.sendFile(__dirname + '/content/game.html')
-// })
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/content/index.html')
+})
+
+app.get('/lobby', (req, res) => {
+	res.sendFile(__dirname + '/content/lobby.html')
+})
+
+app.get('/game', (req, res) => {
+	res.sendFile(__dirname + '/content/game.html')
+})
 
 
 // API routes
