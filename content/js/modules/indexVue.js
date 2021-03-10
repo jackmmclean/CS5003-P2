@@ -4,11 +4,19 @@ const makeLoginVue = function() {
         data: {
             username: "",
             password: "",
+            message: ""
         },
         methods: {
             login: function () {
+                this.message = "";
                 // todo login via API
                 console.log(`Sending data to API: ${this.username}, ${this.password}`)
+                // todo if login successful, redirect to lobby, else show error message
+                if (true) {
+                    location.href='lobby.html'
+                } else {
+                    this.message = "Wrong password or username.";
+                }
             }
         }
     })
@@ -26,12 +34,16 @@ const makeRegisterVue = function() {
         methods: {
             register: function () {
                 this.message = ""
-                this.message += (this.password !== this.passwordConfirm) ? "Passwords don't match." : " ";
+                this.message += (this.password !== this.passwordConfirm) ? "Passwords don't match." : "";
                 this.message += (this.message !== "") ? " ": ""
-                this.message += (this.password.length < 4) ? "Password must be at least 4 characters long." : " ";
+                this.message += (this.password.length < 4) ? "Password must be at least 4 characters long." : "";
                 if (this.message === "") {
                     // todo register via API
                     console.log(`Sending data to API: ${this.username}, ${this.password}, ${this.passwordConfirm}`)
+                    // redirect to lobby
+                    location.href='lobby.html'
+                } else {
+                    console.log(`Registration failed. ${this.message}`)
                 }
             }
         }
@@ -43,8 +55,9 @@ const makeGuestVue = function() {
         el: "#guest",
         methods: {
             playAsGuest: function () {
-                // todo reroute to lobby
-                console.log(`Sending data to API: Guest`)
+                // this happens before rerouting to lobby
+                // todo send guest login to server
+                console.log(`Sending data to API: Play as guest`)
             }
         }
     })
