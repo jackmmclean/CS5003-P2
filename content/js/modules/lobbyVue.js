@@ -7,11 +7,16 @@ const makeJoinGameByIdVue = function() {
         },
         methods: {
             join: function () {
-                // todo check if game is available
-                //  if yes, enter lobby and display gameId and players
+                // todo check if game is available -> try - catch
+                //  if yes, enter and display gameId and players
                 //  else, display msg
-                console.log(`Sending data to API: ${this.gameId}`)
-                this.message = "Sent to API.";
+                if (true) {
+                    console.log(`Sending data to API: ${this.gameId}`);
+                    location.href = "game.html";
+                } else {
+                    // show a message to the user why they could not join the game
+                    this.message = "Could not join game.";
+                }
             }
         }
     })
@@ -25,11 +30,16 @@ const makeNewGameVue = function() {
         },
         methods: {
             createNewGame: function () {
-                // todo create a new game
-                //  if successful, enter lobby for this game and display gameID
+                // todo create a new game -> try - catch
+                //  if successful, enter this game and display gameID
                 //  else, display msg
-                console.log(`Sending data to API: Create game.`)
-                this.message = "Sent to API."
+                if (true) {
+                    console.log(`Sending data to API: Create game.`);
+                    location.href = "game.html";
+                } else {
+                    // Show a message to the user why they couldn't create a game
+                    this.message = "Couldn't create game."
+                }
             }
         }
     })
@@ -48,8 +58,16 @@ const makeOpenGamesVue = function() {
                 this.openGames = ['uuid1', 'uuid2', 'uuid3', 'uuid4']
             },
             join: function (gameId) {
-                // todo reroute to lobby
-                console.log(`Sending data to API: Join game ${gameId}`)
+                // todo create a new game -> try - catch
+                //  if successful, enter this game
+                //  else, display msg
+                if (true) {
+                    console.log(`Sending data to API: ${this.gameId}`);
+                    location.href = "game.html";
+                } else {
+                    // show a message to the user why they could not join the game
+                    this.message = "Could not join game.";
+                }
             },
         },
         created: function() {

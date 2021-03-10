@@ -23,9 +23,12 @@
         </header>
         <div class="card-content">
             <div class="content">
-                <input type="text" v-model="gameId" placeholder="Game ID">
-                <button v-on:click="join">Join</button>
-                <br>
+                <form name="join-form" v-on:submit.prevent="join(gameId)">
+                    <label>
+                        <input type="text" class="input is-small" v-model="gameId" placeholder="Game ID">
+                    </label>
+                    <input type="submit" class="button is-small" value="Join">
+                </form>
                 {{ message }}
             </div>
         </div>
@@ -37,7 +40,7 @@
         </header>
         <div class="card-content">
             <div class="content">
-                <button v-on:click="createNewGame">Create!</button>
+                <button class="button is-small" v-on:click="createNewGame">Create!</button>
                 <br>
                 {{ message }}
             </div>
@@ -62,7 +65,7 @@
                     <table>
                         <tr v-for="(gameId) in openGames">
                             <td>{{ gameId }}</td>
-                            <td><button v-on:click="join(gameId)">Join!</button></td>
+                            <td><button class="button is-small" v-on:click="join(gameId)">Join!</button></td>
                         </tr>
                     </table>
                 </div>
