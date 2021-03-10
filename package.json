@@ -2,10 +2,10 @@
   "name": "cs5003p2",
   "version": "1.0.0",
   "description": "A custom Gin Rummy game",
-  "main": "modules/server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node modules/server.js"
+    "start": "node server.js"
   },
   "author": " <authour names go here>",
   "license": "ISC",
