@@ -2,16 +2,27 @@ const makeGameInfoVue = function() {
     const gameInfoVue = new Vue({
         el: "#game-info",
         data: {
-            generalInfo: [
-                {key: "Time", value: "some time"},
-                {key: "Players", value: "a number"}
-            ]
+            generalInfo: {
+                Username: "",
+                Turn: "who's turn",
+                Action: "possible action",
+                Time: "some time",
+                Players: "a number"
+            }
         },
         methods: {
             login: function () {
                 // todo login via API
                 console.log(`Sending data to API: ${this.username}, ${this.password}`)
+            },
+            getUserData: function() {
+                // todo get userName from API
+                //  Question: how do we make sure to get the right user? or game for that matter?
+                this.generalInfo.Username = "some name"
             }
+        },
+        created: function() {
+            this.getUserData();
         }
     })
 }
@@ -74,6 +85,22 @@ const makeOpenDeckVue = function() {
     })
 }
 
+const makeUserActionsVue = function() {
+    const userActionsVue = new Vue({
+        el: "#user-actions",
+        data: {},
+        methods: {
+            declareGin: function() {
+                // todo send declare gin to API and process response
+                console.log('Declare gin');
+            },
+            knock: function() {
+                // todo send knock to API and process response
+                console.log('Knock');
+            }
+        }
+    })
+}
 const transformCards = function(numericCards) {
     let cards = []
     for (let c of numericCards) {
@@ -87,4 +114,5 @@ export const makeGame = function() {
     makePlayerHandVue();
     makeClosedDeckVue();
     makeOpenDeckVue();
+    makeUserActionsVue();
 }

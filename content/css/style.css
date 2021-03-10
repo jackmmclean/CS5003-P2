@@ -72,10 +72,10 @@ body, html {
 /* playing cards */
 .playing-card {
     display: inline-block;
-    font-size: 800%;
+    font-size: 1000%;
     cursor: grab;
     padding: 0;
-    margin-left: -1.5rem;
+    margin-left: -2.5rem;
     background-color: white;
 }
 
@@ -84,7 +84,7 @@ body, html {
 }
 
 #closed-deck > .playing-card {
-    margin-left: -5rem;
+    margin-left: -6.25rem;
 }
 
 #closed-deck > .playing-card:first-child {
@@ -97,7 +97,7 @@ body, html {
 }
 
 #open-deck > .playing-card {
-    margin-left: -5rem;
+    margin-left: -6.25rem;
 }
 
 #open-deck > .playing-card:first-child {
