@@ -27,9 +27,16 @@
 				</header>
 				<div class="card-content">
 					<div class="content">
-						<input type="text" v-model="username" placeholder="Username">
-						<input type="password" v-model="password" placeholder="Password">
-						<button v-on:click="login">Login</button>
+						<form name="login-form" v-on:submit.prevent="login">
+							<label>
+								<input class="input is-small" type="text" v-model="username" placeholder="Username">
+							</label>
+							<label>
+								<input class="input is-small" type="password" v-model="password" placeholder="Password" autocomplete="on">
+							</label>
+							<input class="button is-small" type="submit" value="Login">
+						</form>
+						{{ message }}
 					</div>
 				</div>
 			</div>
@@ -40,11 +47,18 @@
 				</header>
 				<div class="card-content">
 					<div class="content">
-						<input type="text" v-model="username" placeholder="Username">
-						<input type="password" v-model="password" placeholder="Password">
-						<input type="password" v-model="passwordConfirm" placeholder="Confirm Password">
-						<button v-on:click="register">Register</button>
-						<br>
+						<form name="registration-form" v-on:submit.prevent="register">
+							<label>
+								<input class="input is-small" type="text" v-model="username" placeholder="Username">
+							</label>
+							<label>
+								<input class="input is-small" type="password" v-model="password" placeholder="Password" autocomplete="on">
+							</label>
+							<label>
+								<input class="input is-small" type="password" v-model="passwordConfirm" placeholder="Confirm Password" autocomplete="on">
+							</label>
+							<input type="submit" class="button is-small" value="Register">
+						</form>
 						{{ message }}
 					</div>
 				</div>
@@ -57,7 +71,7 @@
 				<div class="card-content">
 					<div class="content">
 						<div class="content">
-							<button v-on:click="playAsGuest">Play!</button>
+							<a class="button is-small" v-on:click="playAsGuest" href="lobby.html">Play!</a>
 						</div>
 					</div>
 				</div>
