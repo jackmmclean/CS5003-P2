@@ -90,3 +90,21 @@ exports.isRun = function (cardArray, highOrLowAces) {
 
 	return true;
 }
+
+exports.cardScore = function (card) {
+	if (!isNaN(card.rank)) {
+		return card.rank;
+	} else if (card.rank === 'A') {
+		return 1;
+	} else return 10;
+}
+
+exports.unmatchedCards = function (meldsArray) {
+	var unmatchedCards = [];
+	for (let entry of meldsArray) {
+		if (!Array.isArray(entry)) {
+			unmatchedCards.push(entry)
+		}
+	}
+	return unmatchedCards;
+}

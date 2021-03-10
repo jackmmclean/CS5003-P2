@@ -1,3 +1,4 @@
+// is there a syntax for this like 'shuffle, isRun, ...' ???
 const {
 	shuffle
 } = require("./utils");
@@ -6,6 +7,12 @@ const {
 } = require("./utils");
 const {
 	isSet
+} = require("./utils");
+const {
+	cardScore
+} = require("./utils");
+const {
+	unmatchedCards
 } = require("./utils");
 const {
 	v4: uuidv4
@@ -21,6 +28,7 @@ function makePlayers(playerCount) {
 		this.username = 'get a username';
 		this.id = uuidv4();
 		this.melds = null;
+		this.score = 0;
 	}
 	for (let i = 0; i < playerCount; i++) {
 		players.push(new Player());
@@ -141,20 +149,7 @@ function makeCards(players, game) {
 	return cards
 }
 
-players = makePlayers(3);
-game = makeGame(players);
-cards = makeCards(players, game);
-
-players[0].depositCard(0)
-
-players[0].depositCard(0)
-
-players[0].depositCard(0)
-
-for (let instance of game.cardHistory) {
-	console.log(instance[players[0].id])
-}
-
+//
 function processGinDeclared(player) {
 	melds = player.melds;
 	//assuming that player.melds is an array that contains arrays - eg
@@ -165,4 +160,34 @@ function processGinDeclared(player) {
 	}
 
 	return true;
+}
+
+//function to process knock after all players have placed their cards on knocked players matched melds
+function getRoundKnockScores(players, declaringPlayer) {
+	//assuming that player.melds is an array as above but that all unmatched
+	//cards are loose in the array eg for cards 7-9 unmatched
+	//  player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
+
+	//add up the score of all players and store in opponentScores
+	let opponentScores;
+	for (let player of players) {
+		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+	}
+
+	//declaring player's round score is value of all opponents cards minus their own - therefore opponentScores minus
+	//double their own scores
+	declaringPlayer.score += (opponentScores - 2 * unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0))
+
+}
+
+//player argument is player who declared gin
+function getRoundGinScores(players, declaringPlayer) {
+	//add up the score of all players and store in opponentScores
+	let opponentScores;
+	for (let player of players) {
+		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+	}
+
+	//the players score is the value of opponents cards plus 20 points
+	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }
