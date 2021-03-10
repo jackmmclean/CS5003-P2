@@ -1,3 +1,5 @@
+const {users} = require('./users')
+
 exports.createGame = function (names, knockingAllowed, lowHighAceAllowed, numPlayers) {
 	return {};
 }
@@ -45,7 +47,14 @@ exports.gameStats = function (gameId) {
 }
 
 exports.registerUser = function (username, password) {
-	return {};
+	// make sure the user doesn't exist yet
+	if (users.hasOwnProperty(username)) {
+		// return 409
+		return {status: 409, text: 'Username is already taken.'};
+	} else {
+		users[username] = {password: password, score: 0};
+		return {status: 200, text: 'Registration successful.'}
+	}
 }
 
 exports.login = function (username, password) {

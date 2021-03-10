@@ -10,13 +10,25 @@ const makeLoginVue = function() {
             login: function () {
                 this.message = "";
                 // todo login via API
-                console.log(`Sending data to API: ${this.username}, ${this.password}`)
-                // todo if login successful, redirect to lobby, else show error message
-                if (true) {
-                    location.href='lobby'
-                } else {
-                    this.message = "Wrong password or username.";
-                }
+                let user_key = btoa(this.username + ':' + this.password)
+
+                // todo fix this -> location.href = 'lobby' doesn't work
+                //  as the auth header is not propagated from the first call to the lobby redirect
+                // fetch('/api/authenticate-user', {
+                //     method: "GET",
+                //     headers: {"Authorization": "Basic " + user_key}
+                // }).then((res) => {
+                //     if (!res.ok) {
+                //         throw new Error('Authentication failed')
+                //     }
+                // }).then((res) => {
+                //     console.log('Authentication successful')
+                //     location.href='lobby'
+                // })
+                // .catch((err) => {
+                //     console.log(err)
+                //     this.message = "Wrong password or username.";
+                // })
             }
         }
     })
@@ -40,8 +52,21 @@ const makeRegisterVue = function() {
                 if (this.message === "") {
                     // todo register via API
                     console.log(`Sending data to API: ${this.username}, ${this.password}, ${this.passwordConfirm}`)
-                    // redirect to lobby
-                    location.href='lobby'
+                    fetch('/api/users/register-user', {
+                        method: 'POST',
+                        headers: {
+                            username: this.username,
+                            password: this.password
+                        }
+                    }).then((res) => {
+                        if (!res.ok) {
+                            throw new Error(`Got response ${res.status}`);
+                        }
+                    }).then(() => {
+                        this.message = 'Successfully registered. You can now login.'
+                    }).catch((err) => {
+                        this.message = 'No success.'
+                    })
                 } else {
                     console.log(`Registration failed. ${this.message}`)
                 }

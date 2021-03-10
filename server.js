@@ -6,19 +6,35 @@ const {
 } = require("./api");
 
 const app = express();
+const {users} = require('./users')
+const basicAuth = require('basic-auth');
+
 app.use(bodyParser.json());
 app.use(express.static("content"))
+
+// Basic authentication
+let authenticate = function(req, res, next) {
+	let user = basicAuth(req);
+	console.log(user)
+	if (!user || !users.hasOwnProperty(user.name) || users[user.name].password !== user.pass) {
+		//make the browser ask for credentials if none/wrong are provided
+		res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+		return res.sendStatus(401);
+	}
+	req.username = user.name;
+	next();
+};
 
 // HTML routes
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/content/index.html')
 })
 
-app.get('/lobby', (req, res) => {
+app.get('/lobby', authenticate, (req, res) => {
 	res.sendFile(__dirname + '/content/lobby.html')
 })
 
-app.get('/game', (req, res) => {
+app.get('/game', authenticate, (req, res) => {
 	res.sendFile(__dirname + '/content/game.html')
 })
 
@@ -76,18 +92,21 @@ app.get('/api/game/game-stats/:gameId', (req, res) => {
 	res.json(gameStats);
 })
 
-app.post('/api/users/registerUser', (req, res) => {
-	let username = req.body.username;
-	let password = req.body.password;
-	registerUser(username, password);
-	res.send(200);
+app.post('/api/users/register-user', (req, res) => {
+	let username = req.headers.username;
+	let password = req.headers.password;
+	console.log(users)
+	let registration = registerUser(username, password);
+	// todo send text too
+	console.log(users)
+	res.status(registration.status).send(registration.text);
 })
 
 app.post('/api/users/login', (req, res) => {
 	let username = req.body.username;
 	let password = req.body.password;
 	login(username, password);
-	res.send(200);
+	res.sendStatus(200);
 })
 
 app.get('/api/users/scores/:username', (req, res) => {
