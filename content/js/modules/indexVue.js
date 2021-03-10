@@ -13,7 +13,7 @@ const makeLoginVue = function() {
                 console.log(`Sending data to API: ${this.username}, ${this.password}`)
                 // todo if login successful, redirect to lobby, else show error message
                 if (true) {
-                    location.href='lobby.html'
+                    location.href='lobby'
                 } else {
                     this.message = "Wrong password or username.";
                 }
@@ -41,7 +41,7 @@ const makeRegisterVue = function() {
                     // todo register via API
                     console.log(`Sending data to API: ${this.username}, ${this.password}, ${this.passwordConfirm}`)
                     // redirect to lobby
-                    location.href='lobby.html'
+                    location.href='lobby'
                 } else {
                     console.log(`Registration failed. ${this.message}`)
                 }

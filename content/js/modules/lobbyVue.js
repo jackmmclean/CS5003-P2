@@ -12,7 +12,7 @@ const makeJoinGameByIdVue = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: ${this.gameId}`);
-                    location.href = "game.html";
+                    location.href = "game";
                 } else {
                     // show a message to the user why they could not join the game
                     this.message = "Could not join game.";
@@ -35,7 +35,7 @@ const makeNewGameVue = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: Create game.`);
-                    location.href = "game.html";
+                    location.href = "game";
                 } else {
                     // Show a message to the user why they couldn't create a game
                     this.message = "Couldn't create game."
@@ -63,7 +63,7 @@ const makeOpenGamesVue = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: ${this.gameId}`);
-                    location.href = "game.html";
+                    location.href = "game";
                 } else {
                     // show a message to the user why they could not join the game
                     this.message = "Could not join game.";
