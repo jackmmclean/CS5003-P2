@@ -51,32 +51,66 @@ body, html {
 
 #player-hand {
     grid-area: a;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    text-align: center;
+    display: inline-flex;
 }
 
 #closed-deck {
     grid-area: b;
     margin-right: 0.25rem;
     text-align: center;
+    display: inline-flex;
 }
 
 #open-deck {
     grid-area: c;
-    margin-left: 0.25rem;
+    margin-right: 0.25rem;
     text-align: center;
+    display: inline-flex;
 }
 
-/* playing card */
+/* playing cards */
 .playing-card {
     display: inline-block;
     font-size: 800%;
     cursor: grab;
     padding: 0;
-    margin: 0;
+    margin-left: -1.5rem;
+    background-color: white;
 }
 
-.playing-card:hover {
+.playing-card:first-child {
+    margin-left: 0.5rem;
+}
+
+#closed-deck > .playing-card {
+    margin-left: -5rem;
+}
+
+#closed-deck > .playing-card:first-child {
+    margin-left: 0.5rem;
+}
+
+#closed-deck > .playing-card:last-child:hover {
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 15px rgb(128, 203, 115);
+}
+
+#open-deck > .playing-card {
+    margin-left: -5rem;
+}
+
+#open-deck > .playing-card:first-child {
+    margin-left: 0.5rem;
+}
+
+#open-deck > .playing-card:last-child:hover {
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 15px rgb(128, 203, 115);
+}
+
+
+#player-hand > .playing-card:hover {
     color: rgba(255, 255, 255, 1);
     box-shadow: 0 5px 15px rgb(128, 203, 115);
 }
