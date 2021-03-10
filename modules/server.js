@@ -1,20 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser")
-const getGames = require("./api");
 const {
-	drawClosedCard
-} = require("./api");
-const {
-	drawOpenCard
-} = require("./api");
-const {
-	startGame
-} = require("./api");
-const {
-	createGame
-} = require("./api");
-const {
-	joinGame
+	drawClosedCard, drawOpenCard, startGame, createGame, joinGame, getScore, getGames, depositCard,
+	login, registerUser, gameStats, declareGin
 } = require("./api");
 
 const app = express();
