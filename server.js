@@ -30,11 +30,6 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/content/index.html')
 })
 
-app.get('/game', authenticate, (req, res) => {
-	res.sendFile(__dirname + '/content/game.html')
-})
-
-
 // API routes
 app.get('/api/lobby/getGames', (req, res) => {
 	let games = getGames();

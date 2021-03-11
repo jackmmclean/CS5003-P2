@@ -1,3 +1,4 @@
+import {game, setState} from "./game.js";
 const makeGameInfoVue = function() {
     const gameInfoVue = new Vue({
         el: "#game-info",
@@ -9,6 +10,11 @@ const makeGameInfoVue = function() {
                 Time: "some time",
                 Players: "a number"
             }
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             login: function () {
@@ -32,6 +38,11 @@ const makePlayerHandVue = function() {
         el: "#player-hand",
         data: {
             hand: [],
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             getHand: function() {
@@ -57,6 +68,11 @@ const makeClosedDeckVue = function() {
         data: {
             backOfCard: {card: "&#127136", color: "#0d47a1"}
         },
+        computed: {
+            state() {
+                return game.state;
+            },
+        },
         methods: {}
     })
 }
@@ -66,6 +82,11 @@ const makeOpenDeckVue = function() {
         el: "#open-deck",
         data: {
             openDeckCards: []
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             getOpenDeckCards: function() {
@@ -89,6 +110,11 @@ const makeUserActionsVue = function() {
     const userActionsVue = new Vue({
         el: "#user-actions",
         data: {},
+        computed: {
+            state() {
+                return game.state;
+            },
+        },
         methods: {
             declareGin: function() {
                 // todo send declare gin to API and process response

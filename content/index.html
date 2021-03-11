@@ -55,6 +55,33 @@
 			</div>
 		</div>
 
+		<!--	Game Page Sidebar		-->
+
+		<div class="card" id="game-info" v-show="state === 'play'">
+			<header class="card-header">
+				<p class="card-header-title">Game info</p>
+			</header>
+			<div class="card-content">
+				<div class="content">
+					<table>
+						<tr v-for="(v, k) in generalInfo">
+							<td>{{ k }}</td>
+							<td>{{ v }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="card" id="user-actions" v-show="state === 'play'">
+			<div class="card-content">
+				<div class="content">
+					<button class="button is-small" v-on:click="declareGin">Declare Gin</button>
+					<button class="button is-small" v-on:click="knock">Knock</button>
+				</div>
+			</div>
+		</div>
+
 	</nav>
 
 	<section id="main">
@@ -141,6 +168,21 @@
 				</div>
 			</div>
 
+			<!--	Game Page		-->
+
+			<div class="board">
+				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
+					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"></div>
+				</div>
+
+				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
+					<div class="playing-card" v-for="i in 8" v-html="backOfCard.card" v-bind:style="{color: backOfCard.color}"></div>
+				</div>
+
+				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
+					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card" v-bind:style="{color: card.color}"></div>
+				</div>
+			</div>
 		</div>
 	</section>
 
