@@ -19,7 +19,7 @@ export const makeLobby = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: ${this.gameId}`);
-                    location.href = "game";
+                    setState('play')
                 } else {
                     // show a message to the user why they could not join the game
                     this.message = "Could not join game.";
@@ -45,7 +45,7 @@ export const makeLobby = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: Create game.`);
-                    location.href = "game";
+                    setState('play')
                 } else {
                     // Show a message to the user why they couldn't create a game
                     this.message = "Couldn't create game."
@@ -76,7 +76,7 @@ export const makeLobby = function() {
                 //  else, display msg
                 if (true) {
                     console.log(`Sending data to API: ${this.gameId}`);
-                    location.href = "game";
+                    setState('play')
                 } else {
                     // show a message to the user why they could not join the game
                     this.message = "Could not join game.";
