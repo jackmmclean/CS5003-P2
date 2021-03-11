@@ -6,7 +6,9 @@ const {
 	unmatchedCards,
 	getAllPossibleMelds,
 	arraysDistinct,
-	getDistinctRuns
+	getDistinctRuns,
+	sortByCards,
+	overlappingCards
 } = require("./utils.js");
 
 const {
@@ -193,8 +195,86 @@ function makeMelds(cards) {
 
 	distinctRuns = getDistinctRuns(possibleRuns);
 
+	for (let suit in distinctRuns) {
+		distinctRuns[suit] = sortByCards(distinctRuns[suit]);
+	}
+
+	//we have all combinations of distinct runs and we have sets but cards may overlap
+	//therefore we need to choose whether to remove from runs or sets. Start with largest array
+
+	distRunChoice = 0;
+
+	//for every run we check it against the sets for overlapping cards
+	for (let suit in distinctRuns) {
+		for (let rank in possibleSets) {
+			console.log(distinctRuns[suit][0])
+			//if it has overlapping cards we remove them
+			let overlappingCardsArray = overlappingCards(distinctRuns[suit][distRunChoice], possibleSets[rank]);
+			if (overlappingCardsArray.length > 0) {
+				for (let overlappingCard of overlappingCardsArray) {
+					for (let run of distinctRuns[suit][distRunChoice]) {
+						if ((run.length > 3) && run.indexOf(overlappingCard != -1)) {
+							run.splice(run.indexOf(overlappingCard), 1);
+							break
+						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard != -1)) {
+							possibleSets[rank](possibleSets[rank].indexOf(overlappingCard), 1);
+						} else {
+							delete distinctRuns[suit][distRunChoice]
+						}
+					}
+				}
+			}
+		}
+	}
+	let returnArray = []
+	for (let rank in possibleSets) {
+		returnArray.push(possibleSets[rank])
+	}
+	for (let suit in distinctRuns) {
+		returnArray.push(...distinctRuns[suit][distRunChoice])
+	}
+	//put unmatched cars in, not in an array
+	for (let array of returnArray) {
+		cards = cards.filter(el => !array.includes(el))
+	}
+	returnArray.push(...cards)
+	return returnArray
 	//need to finish this - need to consider the best possible way to determine which to choose.
 	//not sure if we just want to minimise the number of unmatched cards because what if 
-	//the points could be improved by using higher value cards in melds? 
+	//the points could be improved by using higher value cards in melds? or reduced for knocking
 
 }
+
+cardTest = [{
+	rank: 2,
+	suit: 'Diamonds'
+}, {
+	rank: 3,
+	suit: 'Diamonds'
+}, {
+	rank: 4,
+	suit: 'Diamonds'
+}, {
+	rank: 6,
+	suit: 'Diamonds'
+}, {
+	rank: 7,
+	suit: 'Diamonds'
+}, {
+	rank: 8,
+	suit: 'Diamonds'
+}, {
+	rank: 9,
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Hearts'
+}, {
+	rank: 'A',
+	suit: 'Clubs'
+}]
+
+makeMelds(cardTest)

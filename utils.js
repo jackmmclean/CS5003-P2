@@ -197,9 +197,9 @@ exports.arraysDistinct, arraysDistinct = function (runA, runB) {
 
 
 exports.getDistinctRuns = function (possibleRuns) {
-	let distinctRuns = [];
+	let distinctRuns = {};
 	for (let suit in possibleRuns) {
-
+		distinctRuns[suit] = [];
 		for (let i = 0; i < possibleRuns[suit].length; i++) {
 			let thisCombo = [possibleRuns[suit][i]];
 			for (let j = i + 1; j < possibleRuns[suit].length; j++) {
@@ -207,16 +207,54 @@ exports.getDistinctRuns = function (possibleRuns) {
 					thisCombo.push(possibleRuns[suit][j]);
 					//account for possibility of third distinct run. 4 not possible since minimum length 3, max cards always < 4*3
 					for (let k = j + 1; k < possibleRuns[suit].length; k++) {
-						if (arraysDistinct(possibleRuns[suit][k], possibleRuns[suit][j]) && arraysDistinct(possibleRuns[suit][k], possibleRuns[suit][j])) {
+						if (arraysDistinct(possibleRuns[suit][k], possibleRuns[suit][j]) && arraysDistinct(possibleRuns[suit][k], possibleRuns[suit][i])) {
 							j++
 							thisCombo.push(possibleRuns[suit][k]);
+							break
 						}
 					}
-
+					break
 				}
 			}
-			distinctRuns.push(thisCombo);
+			distinctRuns[suit].push(thisCombo);
 		}
+
 	}
 	return distinctRuns
+}
+
+
+// define function to sort by number of cards in array type [[[card,card],[card,card,card.]..],[card,..]..]
+exports.sortByCards = function (cardsArrayOfArraysOfArrays) {
+
+	let cardCount = function (arrayOfArrays) {
+		let cardCounts = 0;
+		for (let array of arrayOfArrays) {
+			cardCounts += array.length;
+		}
+		return cardCounts;
+	}
+
+	function compareValue(a, b) {
+		if (cardCount(a) < cardCount(b)) {
+			return 1;
+		}
+		if (cardCount(a) > cardCount(b)) {
+			return -1;
+		}
+		return 0;
+	}
+	return [].slice.call(cardsArrayOfArraysOfArrays).sort(compareValue);
+}
+
+exports.overlappingCards = function (distinctRunsArray, setArray){
+	let overlappingCardArray = [];
+	for(let array of distinctRunsArray){
+		for(let card of array){
+			if(setArray.includes(card)){
+				overlappingCardArray.push(card);
+			}
+		}
+	}
+	return overlappingCardArray
 }
