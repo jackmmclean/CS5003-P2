@@ -1,5 +1,4 @@
-import {game, setGuestUser, setState} from "./game.js";
-import {login} from "./clientUtils.js"
+import {game, setGuestUser, setState, login} from "./clientUtils.js";
 
 export const makeEntry = function() {
     const loginVue = new Vue({

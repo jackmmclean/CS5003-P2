@@ -1,4 +1,4 @@
-import {game, setState} from "./game.js";
+import {game, setState} from "./clientUtils.js";
 const makeGameInfoVue = function() {
     const gameInfoVue = new Vue({
         el: "#game-info",

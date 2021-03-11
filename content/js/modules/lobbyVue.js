@@ -1,4 +1,4 @@
-import {game, setState} from "./game.js";
+import {game, setState} from "./clientUtils.js";
 
 export const makeLobby = function() {
     const joinGameByIdVue = new Vue({
