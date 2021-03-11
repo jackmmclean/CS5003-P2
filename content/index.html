@@ -15,13 +15,13 @@
 	<nav id="sidebar">
 		<div class="title" id="brand">
 			<h1>Gin Rummy</h1>
-			<p class="subtitle">Login</p>
+			<p class="subtitle">by Jack and Leo</p>
 		</div>
 	</nav>
 
 	<section id="main">
 		<div class="container" id="display">
-			<div class="card" id="login">
+			<div class="card" id="login" v-show="state === 'login'">
 				<header class="card-header">
 					<p class="card-header-title">Login with your credentials.</p>
 				</header>
@@ -41,7 +41,7 @@
 				</div>
 			</div>
 
-			<div class="card" id="register">
+			<div class="card" id="register" v-show="state === 'login'">
 				<header class="card-header">
 					<p class="card-header-title">Register a new user.</p>
 				</header>
@@ -64,14 +64,14 @@
 				</div>
 			</div>
 
-			<div class="card" id="guest">
+			<div class="card" id="guest" v-show="state === 'login'">
 				<header class="card-header">
 					<p class="card-header-title">Play as guest without registration.</p>
 				</header>
 				<div class="card-content">
 					<div class="content">
 						<div class="content">
-							<a class="button is-small" v-on:click="playAsGuest" href="lobby">Play!</a>
+							<button class="button is-small" v-on:click="loginAsGuest">Play!</button>
 						</div>
 					</div>
 				</div>

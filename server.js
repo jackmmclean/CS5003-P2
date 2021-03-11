@@ -18,7 +18,7 @@ let authenticate = function(req, res, next) {
 	console.log(user)
 	if (!user || !users.hasOwnProperty(user.name) || users[user.name].password !== user.pass) {
 		//make the browser ask for credentials if none/wrong are provided
-		res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+		// res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
 		return res.sendStatus(401);
 	}
 	req.username = user.name;
@@ -102,10 +102,10 @@ app.post('/api/users/register-user', (req, res) => {
 	res.status(registration.status).send(registration.text);
 })
 
-app.post('/api/users/login', (req, res) => {
-	let username = req.body.username;
-	let password = req.body.password;
-	login(username, password);
+app.post('/api/users/login', authenticate, (req, res) => {
+	// let username = req.body.username;
+	// let password = req.body.password;
+	// login(username, password);
 	res.sendStatus(200);
 })
 
