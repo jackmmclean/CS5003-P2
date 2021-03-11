@@ -190,7 +190,7 @@ exports.getAllPossibleMelds = function (cards) {
 }
 
 //for a single suit, check if two runs are distinct ie do not share cards
-exports.arraysDistinct, arraysDistinct = function (runA, runB) {
+arraysDistinct = function (runA, runB) {
 	let crossoverCards = runA.filter(el => runB.includes(el));
 	return (crossoverCards.length === 0);
 }
@@ -247,14 +247,48 @@ exports.sortByCards = function (cardsArrayOfArraysOfArrays) {
 	return [].slice.call(cardsArrayOfArraysOfArrays).sort(compareValue);
 }
 
-exports.overlappingCards = function (distinctRunsArray, setArray){
+overlappingCards = function (distinctRunsArray, setArray) {
 	let overlappingCardArray = [];
-	for(let array of distinctRunsArray){
-		for(let card of array){
-			if(setArray.includes(card)){
+	for (let array of distinctRunsArray) {
+		for (let card of array) {
+			if (setArray.includes(card)) {
 				overlappingCardArray.push(card);
 			}
 		}
 	}
 	return overlappingCardArray
+}
+
+exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
+	distRunChoice = 0;
+
+	//for every run we check it against the sets for overlapping cards
+	for (let suit in distinctRuns) {
+		for (let rank in possibleSets) {
+			//if it has overlapping cards we remove them
+			let overlappingCardsArray = overlappingCards(distinctRuns[suit][distRunChoice], possibleSets[rank]);
+			if (overlappingCardsArray.length > 0) {
+				for (let overlappingCard of overlappingCardsArray) {
+					for (let run of distinctRuns[suit][distRunChoice]) {
+						if ((run.length > 3) && run.indexOf(overlappingCard != -1)) {
+							run.splice(run.indexOf(overlappingCard), 1);
+							break
+						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard != -1)) {
+							possibleSets[rank](possibleSets[rank].indexOf(overlappingCard), 1);
+						} else {
+							delete distinctRuns[suit][distRunChoice]
+						}
+					}
+				}
+			}
+		}
+	}
+	let returnArray = []
+	for (let rank in possibleSets) {
+		returnArray.push(possibleSets[rank])
+	}
+	for (let suit in distinctRuns) {
+		returnArray.push(...distinctRuns[suit][distRunChoice])
+	}
+	return returnArray;
 }
