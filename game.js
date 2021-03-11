@@ -1,26 +1,22 @@
-// is there a syntax for this like 'shuffle, isRun, ...' ???
 const {
-	shuffle
-} = require("./utils");
-const {
-	isRun
-} = require("./utils");
-const {
-	isSet
-} = require("./utils");
-const {
-	cardScore
-} = require("./utils");
-const {
-	unmatchedCards
-} = require("./utils");
+	shuffle,
+	isRun,
+	isSet,
+	cardScore,
+	unmatchedCards,
+	getAllPossibleMelds,
+	getDistinctRuns,
+	sortByCards,
+	clearDuplicateCards
+} = require("./utils.js");
+
 const {
 	v4: uuidv4
 } = require('uuid');
 
 
 //define a players object
-function makePlayers(playerCount) {
+function makePlayers(usernameArray) {
 	var players = [];
 	//player object constructor. We will add access to the card methods in the
 	//makeCards function
@@ -30,14 +26,15 @@ function makePlayers(playerCount) {
 		this.melds = null;
 		this.score = 0;
 	}
-	for (let i = 0; i < playerCount; i++) {
-		players.push(new Player());
+	for (let username of usernameArray) {
+		players.push(new Player(username));
 	}
 	return players
 }
 
 function makeGame(players) {
 	function Game(players) {
+		this.id = uuidv4();
 		this.timeStarted = new Date;
 		this.timeFinished = null;
 		this.gameOver = false;
@@ -101,7 +98,7 @@ function makeCards(players, game) {
 
 	//constructor function for instances of cards, used for
 	//storing locations of cards at every point in game
-	function cardsInstance() {
+	function CardsInstance() {
 		this.time = new Date;
 		this.openDeck = Object.assign({}, cards.openDeck);
 		this.deck = Object.assign({}, cards.deck);
@@ -112,21 +109,21 @@ function makeCards(players, game) {
 
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
-		game.cardHistory.push(new cardsInstance());
+		game.cardHistory.push(new CardsInstance());
 		cards[player.id].push(cards.deck.splice(0, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
-		game.cardHistory.push(new cardsInstance());
+		game.cardHistory.push(new CardsInstance());
 		cards[player.id].push(cards.openDeck.splice(0, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, cardNo) {
-		game.cardHistory.push(new cardsInstance());
+		game.cardHistory.push(new CardsInstance());
 		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
 	}
 
@@ -149,7 +146,6 @@ function makeCards(players, game) {
 	return cards
 }
 
-//
 function processGinDeclared(player) {
 	melds = player.melds;
 	//assuming that player.melds is an array that contains arrays - eg
@@ -162,7 +158,7 @@ function processGinDeclared(player) {
 	return true;
 }
 
-//function to process knock after all players have placed their cards on knocked players matched melds
+//function to process knock score
 function getRoundKnockScores(players, declaringPlayer) {
 	//assuming that player.melds is an array as above but that all unmatched
 	//cards are loose in the array eg for cards 7-9 unmatched
@@ -191,3 +187,97 @@ function getRoundGinScores(players, declaringPlayer) {
 	//the players score is the value of opponents cards plus 20 points
 	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }
+
+function makeMelds(cards) {
+	let possibleMelds = getAllPossibleMelds(cards);
+	let possibleRuns = possibleMelds.runs;
+	let possibleSets = possibleMelds.sets;
+
+	distinctRuns = getDistinctRuns(possibleRuns);
+
+	for (let suit in distinctRuns) {
+		distinctRuns[suit] = sortByCards(distinctRuns[suit]);
+	}
+
+	//we have all combinations of distinct runs and we have sets but cards may overlap
+	//therefore we need to choose whether to remove from runs or sets
+	let returnArray = clearDuplicateCards(distinctRuns, possibleSets);
+
+	//put unmatched cars in, not in an array
+	for (let array of returnArray) {
+		cards = cards.filter(el => !array.includes(el))
+	}
+	returnArray.push(...cards)
+	console.log(returnArray)
+	return returnArray
+	//need to review this - need to consider the best possible way to determine which to choose.
+	//not sure if we just want to minimise the number of unmatched cards because what if 
+	//the points could be improved by using higher value cards in melds? or reduced for knocking
+
+}
+
+cardTest = [{
+	rank: 2,
+	suit: 'Diamonds'
+}, {
+	rank: 3,
+	suit: 'Diamonds'
+}, {
+	rank: 4,
+	suit: 'Diamonds'
+}, {
+	rank: 6,
+	suit: 'Diamonds'
+}, {
+	rank: 7,
+	suit: 'Diamonds'
+}, {
+	rank: 8,
+	suit: 'Diamonds'
+}, {
+	rank: 9,
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Hearts'
+}, {
+	rank: 'A',
+	suit: 'Clubs'
+}]
+
+cardTest2 = [{
+	rank: 2,
+	suit: 'Diamonds'
+}, {
+	rank: 3,
+	suit: 'Diamonds'
+}, {
+	rank: 4,
+	suit: 'Diamonds'
+}, {
+	rank: 6,
+	suit: 'Hearts'
+}, {
+	rank: 7,
+	suit: 'Hearts'
+}, {
+	rank: 8,
+	suit: 'Hearts'
+}, {
+	rank: 9,
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Diamonds'
+}, {
+	rank: 'A',
+	suit: 'Hearts'
+}, {
+	rank: 'A',
+	suit: 'Clubs'
+}]
+
+makeMelds(cardTest2)
