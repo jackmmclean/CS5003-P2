@@ -1,4 +1,4 @@
-import {gameState} from "./gameState.js";
+import {game} from "./game.js";
 
 /**
  * Authenticate a user with the server using the gameState.userKey user data.
@@ -7,6 +7,6 @@ import {gameState} from "./gameState.js";
 export const login = function() {
     return fetch("/api/users/login", {
         method: "POST",
-        headers: {"Authorization": "Basic " + gameState.userKey}
+        headers: {"Authorization": "Basic " + game.userKey}
     }).then((res) => {return res.status})
 }

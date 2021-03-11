@@ -1,4 +1,4 @@
-import {gameState, setGuestUser} from "./gameState.js";
+import {game, setGuestUser, setState} from "./game.js";
 import {login} from "./clientUtils.js"
 
 export const makeEntry = function() {
@@ -8,21 +8,25 @@ export const makeEntry = function() {
             username: "",
             password: "",
             message: "",
-            state: "login",
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             login: async function () {
                 this.message = "";
 
                 // update the userKey
-                gameState.userKey = btoa(this.username + ':' + this.password)
+                game.userKey = btoa(this.username + ':' + this.password)
 
                 // get login response and process it
                 const loginResponse = await login();
 
                 if (loginResponse === 200) {
                     console.log('Authentication successful.')
-                    updateGameState("lobby");
+                    setState("lobby");
                 } else {
                     console.log('Authentication failed.')
                     this.message = "Wrong password or username.";
@@ -38,7 +42,11 @@ export const makeEntry = function() {
             password: "",
             passwordConfirm: "",
             message: "",
-            state: "login",
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             register: function () {
@@ -71,8 +79,10 @@ export const makeEntry = function() {
 
     const guestVue = new Vue({
         el: "#guest",
-        data: {
-            state: "login",
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             loginAsGuest: async function () {
@@ -84,23 +94,11 @@ export const makeEntry = function() {
 
                 if (loginResponse === 200) {
                     console.log('Authentication successful')
-                    updateGameState("lobby");
+                    setState("lobby");
                 } else {
                     alert("Could not login as guest. Try registering a user.")
                 }
             }
         }
     })
-
-    /**
-     * Update the state on all vue components as well as gameState.state.
-     * @param state {string} The new game state
-     * */
-    const updateGameState = function(state) {
-        for (let comp of [loginVue, registerVue, guestVue]) {
-            comp.state = state;
-        }
-        gameState.state = state;
-    }
-
 }

@@ -1,9 +1,16 @@
-const makeJoinGameByIdVue = function() {
+import {game, setState} from "./game.js";
+
+export const makeLobby = function() {
     const joinGameByIdVue = new Vue({
         el: "#join-game-by-id",
         data: {
             gameId: "",
-            message : ""
+            message : "",
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             join: function () {
@@ -20,13 +27,16 @@ const makeJoinGameByIdVue = function() {
             }
         }
     })
-}
 
-const makeNewGameVue = function() {
     const newGameVue = new Vue({
         el: "#new-game",
         data: {
-            message : ""
+            message : "",
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             createNewGame: function () {
@@ -43,13 +53,16 @@ const makeNewGameVue = function() {
             }
         }
     })
-}
 
-const makeOpenGamesVue = function() {
     const openGamesVue = new Vue({
         el: "#open-games",
         data: {
-            openGames: []
+            openGames: [],
+        },
+        computed: {
+            state() {
+                return game.state;
+            },
         },
         methods: {
             getGames: function() {
@@ -74,10 +87,4 @@ const makeOpenGamesVue = function() {
             this.getGames();
         }
     })
-}
-
-export const makeLobby = function() {
-    makeJoinGameByIdVue();
-    makeNewGameVue();
-    makeOpenGamesVue();
 }

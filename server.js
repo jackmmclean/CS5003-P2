@@ -30,10 +30,6 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/content/index.html')
 })
 
-app.get('/lobby', authenticate, (req, res) => {
-	res.sendFile(__dirname + '/content/lobby.html')
-})
-
 app.get('/game', authenticate, (req, res) => {
 	res.sendFile(__dirname + '/content/game.html')
 })
