@@ -16,11 +16,6 @@ exports.users = {
 	}
 }
 
-//maybe dont even need this, just stored in game
-exports.players = {
-
-}
-
 exports.games = {
 	// 'someUUID1': {
 	// 	someGameInfo: 'interesting info1'

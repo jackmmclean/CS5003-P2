@@ -27,7 +27,7 @@ exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
 exports.joinGame = function (playerId, gameId) {
-	games[gameId].addPlayer(players[playerId]);
+	games[gameId].addPlayer(playerId);
 
 	return {
 		status: 200,
