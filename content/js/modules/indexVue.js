@@ -125,4 +125,14 @@ export const makeEntry = function() {
     makeLoginVue();
     makeRegisterVue();
     makeGuestVue();
+
+    // todo take this out: this is only for development to navigate between states
+    const navVue = new Vue({
+        el: "#nav-state",
+        methods: {
+            setLogin: () => setState("login"),
+            setLobby: () => setState("lobby"),
+            setPlay: () => setState("play"),
+        }
+    })
 }

@@ -23,6 +23,20 @@
 			<p class="subtitle">by Jack and Leo</p>
 		</div>
 
+		<!--	todo take this out: this is only for development to navigate between states	-->
+		<div class="card" id="nav-state">
+			<header class="card-header">
+				<p class="card-header-title">Navigate (dev only)</p>
+			</header>
+			<div class="card-content">
+				<div class="content">
+					<button class="button is-small" v-on:click="setLogin">Login</button>
+					<button class="button is-small" v-on:click="setLobby">Lobby</button>
+					<button class="button is-small" v-on:click="setPlay">Play</button>
+				</div>
+			</div>
+		</div>
+
 		<!--	Lobby Page Sidebar		-->
 
 		<div class="card" id="join-game-by-id" v-show="state === 'lobby'">
