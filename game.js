@@ -15,7 +15,7 @@ const {
 } = require('uuid');
 
 //define a players object
-function makePlayer(username) {
+exports.makePlayer = function (username) {
 
 	function Player(username) {
 		this.username = username;

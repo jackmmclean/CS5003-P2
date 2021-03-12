@@ -3,7 +3,7 @@ const {
 	games
 } = require('./data/data')
 const {
-	makeGame,
+	makeGame, makePlayer,
 	processGinDeclared,
 	getRoundGinScores
 } = require('./game')
@@ -114,10 +114,11 @@ exports.registerUser = function (username, password) {
 	}
 }
 
-exports.login = function (username, password) {
-	return {};
+exports.makePlayerOnLogin = function (username) {
+	const player = makePlayer(username)
+	return {playerId: player.id};
 }
 
 exports.getScore = function (username) {
-	users[username].score;
+	return users[username].score;
 }
