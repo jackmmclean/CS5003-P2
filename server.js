@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser")
 const {
 	drawClosedCard, drawOpenCard, startGame, createGame, joinGame, getScore, getGames, depositCard,
-	login, registerUser, gameStats, declareGin
+	registerUser, gameStats, declareGin, makePlayerOnLogin
 } = require("./api");
 
 const app = express();
@@ -34,19 +34,19 @@ app.get('/api/lobby/get-games', (req, res) => {
 	res.status(200).json({games: getGames()});
 })
 
-app.post('/api/lobby/join-game/:gameId', (req, res) => {
-	let gameId = req.params.gameId;
-	let game = joinGame(gameId);
+app.post('/api/lobby/join-game', authenticate, (req, res) => {
+	let playerId = req.body.playerId
+	let gameId = req.body.gameId;
+	let game = joinGame(playerId, gameId);
 	res.json(game);
 })
 
-app.post('/api/game/create/', (req, res) => {
-	let names = req.body.names;
+app.post('/api/game/create', (req, res) => {
+	let playerId = req.body.playerId;
 	let knockingAllowed = req.body.knockingAllowed;
 	let lowHighAceAllowed = req.body.lowHighAceAllowed;
-	let numPlayers = req.body.numPlayers;
 
-	let game = createGame(names, knockingAllowed, lowHighAceAllowed, numPlayers);
+	let game = createGame(playerId, knockingAllowed, lowHighAceAllowed);
 
 	res.json(game);
 })
@@ -92,10 +92,10 @@ app.post('/api/users/register-user', (req, res) => {
 })
 
 app.post('/api/users/login', authenticate, (req, res) => {
-	// let username = req.body.username;
-	// let password = req.body.password;
-	// login(username, password);
-	res.sendStatus(200);
+	// make a new player
+	const playerId = makePlayerOnLogin(req.username)
+
+	res.status(200).json(playerId);
 })
 
 app.get('/api/users/scores/:username', (req, res) => {

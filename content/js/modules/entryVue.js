@@ -21,10 +21,11 @@ const makeLoginVue = function() {
                 game.userKey = btoa(this.username + ':' + this.password)
 
                 // get login response and process it
-                const loginResponse = await login();
+                let loginResponse = await login();
 
-                if (loginResponse === 200) {
-                    console.log('Authentication successful.')
+                if (loginResponse.hasOwnProperty('playerId')) {
+                    console.log('Authentication successful')
+                    game.playerId = loginResponse.playerId
                     setState("lobby");
                     this.hideRegistrationCard();
                 } else {
@@ -104,10 +105,11 @@ const makeGuestVue = function() {
                 setGuestUser();
 
                 // get the login response and process it
-                const loginResponse = await login();
+                let loginResponse = await login();
 
-                if (loginResponse === 200) {
+                if (loginResponse.hasOwnProperty('playerId')) {
                     console.log('Authentication successful')
+                    game.playerId = loginResponse.playerId
                     setState("lobby");
                 } else {
                     alert("Could not login as guest. Try registering a user.")
@@ -133,6 +135,11 @@ export const makeEntry = function() {
             setLogin: () => setState("login"),
             setLobby: () => setState("lobby"),
             setPlay: () => setState("play"),
+            devGames: () => {
+                // fetch()
+                console.log('created some games')
+                console.log('created some games')
+            },
         }
     })
 }
