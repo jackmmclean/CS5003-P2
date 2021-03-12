@@ -1,6 +1,6 @@
 import {game, setGuestUser, setState, login} from "./clientUtils.js";
 
-export const makeEntry = function() {
+const makeLoginVue = function() {
     const loginVue = new Vue({
         el: "#login",
         data: {
@@ -33,7 +33,9 @@ export const makeEntry = function() {
             }
         }
     })
+}
 
+const makeRegisterVue = function() {
     const registerVue = new Vue({
         el: "#register",
         data: {
@@ -76,6 +78,9 @@ export const makeEntry = function() {
         }
     })
 
+}
+
+const makeGuestVue = function() {
     const guestVue = new Vue({
         el: "#guest",
         computed: {
@@ -100,4 +105,10 @@ export const makeEntry = function() {
             }
         }
     })
+}
+
+export const makeEntry = function() {
+    makeLoginVue();
+    makeRegisterVue();
+    makeGuestVue();
 }
