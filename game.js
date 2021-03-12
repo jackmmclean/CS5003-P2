@@ -14,40 +14,45 @@ const {
 	v4: uuidv4
 } = require('uuid');
 
-
 //define a players object
-function makePlayers(usernameArray) {
-	var players = [];
-	//player object constructor. We will add access to the card methods in the
-	//makeCards function
+function makePlayer(username) {
+
 	function Player() {
 		this.username = 'get a username';
 		this.id = uuidv4();
 		this.melds = null;
 		this.score = 0;
 	}
-	for (let username of usernameArray) {
-		players.push(new Player(username));
-	}
-	return players
+
+	return New Player(username)
 }
 
-function makeGame(players) {
-	function Game(players) {
+exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
+	function Game(player) {
 		this.id = uuidv4();
-		this.timeStarted = new Date;
+		this.timeStarted = null;
 		this.timeFinished = null;
 		this.gameOver = false;
 		this.round = 1;
-		this.players = players;
+		this.players = [player];
 		this.cardHistory = [];
-		this.highOrLowAces = false;
+		this.cardsPerPlayer = null;
+		this.knockingAllowed = knockingAllowed;
+		this.highOrLowAces = lowHighAceAllowed;
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
 		};
+		this.addPlayer = (player) => {
+			this.players.push(player);
+
+		};
+		this.startGame = () => {
+			this.timeStarted = new Date;
+			player.length > 2 ? this.cardsPerPlayer = 7 : 10;
+		};
 	}
-	return new Game(players)
+	return new Game(player)
 }
 
 //define function (use of closure) that will create the distribution of cards
@@ -69,7 +74,6 @@ function makeCards(players, game) {
 		this.rank = rank;
 		this.suit = suit;
 		this.char = String.fromCharCode(unicodeChar);
-		this.colour = ['Hearts', 'Diamonds'].includes(suit) ? 'red' : 'black'
 	}
 
 	for (let suit of suits) {
@@ -208,15 +212,13 @@ function makeMelds(cards) {
 		cards = cards.filter(el => !array.includes(el))
 	}
 	returnArray.push(...cards)
-	console.log(returnArray)
+
 	return returnArray
-	//need to review this - need to consider the best possible way to determine which to choose.
-	//not sure if we just want to minimise the number of unmatched cards because what if 
-	//the points could be improved by using higher value cards in melds? or reduced for knocking
+	//need to review this - unsure if we need to consider the best possible way to determine which to choose
 
 }
 
-cardTest = [{
+testCards = [{
 	rank: 2,
 	suit: 'Diamonds'
 }, {
@@ -248,7 +250,7 @@ cardTest = [{
 	suit: 'Clubs'
 }]
 
-cardTest2 = [{
+testCards2 = [{
 	rank: 2,
 	suit: 'Diamonds'
 }, {
@@ -279,5 +281,3 @@ cardTest2 = [{
 	rank: 'A',
 	suit: 'Clubs'
 }]
-
-makeMelds(cardTest2)
