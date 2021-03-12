@@ -119,5 +119,5 @@ exports.login = function (username, password) {
 }
 
 exports.getScore = function (username) {
-	users[username].score;
+	return users[username].score;
 }

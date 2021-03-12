@@ -28,13 +28,13 @@ function makePlayer(username) {
 }
 
 exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
-	function Game(player) {
+	function Game() {
 		this.id = uuidv4();
 		this.timeStarted = null;
 		this.timeFinished = null;
 		this.gameOver = false;
 		this.round = 1;
-		this.players = [player];
+		this.players = {};
 		this.cardHistory = [];
 		this.cards = null;
 		this.knockingAllowed = knockingAllowed;
@@ -44,7 +44,7 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 			this.timeFinished = new Date;
 		};
 		this.addPlayer = (player) => {
-			this.players.push(player);
+			this.players[player.id] = player;
 
 		};
 		this.startGame = () => {
@@ -67,7 +67,9 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 			}
 		};
 	}
-	return new Game(player)
+	let game = new Game();
+	game.addPlayer(player);
+	return game;
 }
 
 //define function (use of closure) that will create the distribution of cards

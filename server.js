@@ -1,19 +1,31 @@
 const express = require("express");
 const bodyParser = require("body-parser")
 const {
-	drawClosedCard, drawOpenCard, startGame, createGame, joinGame, getScore, getGames, depositCard,
-	login, registerUser, gameStats, declareGin
+	drawClosedCard,
+	drawOpenCard,
+	startGame,
+	createGame,
+	joinGame,
+	getScore,
+	getGames,
+	depositCard,
+	login,
+	registerUser,
+	gameStats,
+	declareGin
 } = require("./api");
 
 const app = express();
-const {users} = require('./data/data')
+const {
+	users
+} = require('./data/data')
 const basicAuth = require('basic-auth');
 
 app.use(bodyParser.json());
 app.use(express.static("content"))
 
 // Basic authentication
-let authenticate = function(req, res, next) {
+let authenticate = function (req, res, next) {
 	let user = basicAuth(req);
 	if (!user || !users.hasOwnProperty(user.name) || users[user.name].password !== user.pass) {
 		//make the browser ask for credentials if none/wrong are provided
@@ -31,7 +43,9 @@ app.get('/', (req, res) => {
 
 // API routes
 app.get('/api/lobby/get-games', (req, res) => {
-	res.status(200).json({games: getGames()});
+	res.status(200).json({
+		games: getGames()
+	});
 })
 
 app.post('/api/lobby/join-game/:gameId', (req, res) => {
@@ -41,12 +55,11 @@ app.post('/api/lobby/join-game/:gameId', (req, res) => {
 })
 
 app.post('/api/game/create/', (req, res) => {
-	let names = req.body.names;
+	let name = req.body.name;
 	let knockingAllowed = req.body.knockingAllowed;
 	let lowHighAceAllowed = req.body.lowHighAceAllowed;
-	let numPlayers = req.body.numPlayers;
 
-	let game = createGame(names, knockingAllowed, lowHighAceAllowed, numPlayers);
+	let game = createGame(name, knockingAllowed, lowHighAceAllowed);
 
 	res.json(game);
 })
