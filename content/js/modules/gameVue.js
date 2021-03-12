@@ -194,6 +194,7 @@ const startInterval = () => {pollInterval = setInterval(() => {
             return res.json();
         }
     }).then((json) => {
+        // todo if game has started, pull game
         console.log('Has started', json.gameHasStarted)
     }).catch(err => console.log(err))
 
