@@ -91,7 +91,6 @@ function makeCards(game) {
 	function Card(rank, suit, unicodeChar) {
 		this.rank = rank;
 		this.suit = suit;
-		// this.char = String.fromCharCode(unicodeChar);
 		this.char = unicodeChar;
 	}
 

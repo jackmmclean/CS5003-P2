@@ -199,8 +199,8 @@
 				</div>
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
-					<div class="playing-card" v-for="i in 8" v-html="backOfCard.card"
-						v-bind:style="{color: backOfCard.color}"></div>
+					<div class="playing-card" v-html="backOfCard.card" v-show="showBackOfCard"
+						 v-bind:style="{color: backOfCard.color}"></div>
 				</div>
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">

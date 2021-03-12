@@ -59,13 +59,6 @@ const makePlayerHandVue = function() {
         methods: {
             getHand: function() {
                 // get cards from api
-
-                // just as long as we don't have the real data
-                // let invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
-                // let cards = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
-
-                // todo don't slice => just for showcase
-                // this.setHand(transformCards(cards.slice(7, 17)));
             },
             setHand: function(newHand) {
                 userCards.hand = newHand;
@@ -84,6 +77,9 @@ const makeClosedDeckVue = function() {
             state() {
                 return game.state;
             },
+            showBackOfCard() {
+                return userCards.showBackOfCard;
+            }
         },
         methods: {}
     })
@@ -108,17 +104,7 @@ const makeOpenDeckVue = function() {
         methods: {
             getOpenDeck: function() {
                 // get open deck cards from cards
-
-                // just as long as we don't have the real data
-                let invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
-                let cards = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
-
-                // todo don't slice => just for showcase
-                this.setOpenDeckCards(transformCards(cards.slice(37, 41)));
             },
-            setOpenDeckCards: function(newOpenDeck) {
-                userCards.openDeckCards = newOpenDeck;
-            }
         },
     })
 }
@@ -145,8 +131,9 @@ const makeUserActionsVue = function() {
                         return res.json();
                     }
                 }).then((json) => {
-                    setHand(json.hand)
-                    userCards.openDeckCards = userCards.openDeckCards[0]
+                    setHand(json.hand);
+                    setOpenDeck(json.openDeck);
+                    showBackOfCard();
                 }).catch(err => console.log(err))
             },
             declareGin: function() {
@@ -176,11 +163,20 @@ const transformCards = function(numericCards) {
 
 const userCards = Vue.observable({
     openDeckCards: [],
-    hand: []
+    hand: [],
+    showBackOfCard: false,
 });
 
 const setHand = (newHand) => {
-    userCards.hand = transformCards(newHand.map(el => el.char))
+    userCards.hand = transformCards(newHand.map(el => el.char));
+}
+
+const setOpenDeck = (newOpenDeck) => {
+    userCards.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
+}
+
+const showBackOfCard = () => {
+    userCards.showBackOfCard = true;
 }
 
 export const makeGame = function() {

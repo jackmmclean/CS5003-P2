@@ -42,10 +42,12 @@ exports.startGame = function (playerId) {
 	let game = getGameByPlayerId(playerId)
 	game.startGame();
 	let hand = game.players[playerId].hand();
+	let openDeck = game.cards.openDeck;
 
 	return {
 		gameId: game.id,
 		hand: hand,
+		openDeck: openDeck,
 		text: `Game with id ${game.id} successfully started.`
 	}
 
