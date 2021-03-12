@@ -6,7 +6,7 @@ const {
 } = require("./api");
 
 const app = express();
-const {users} = require('./users')
+const {users} = require('./data/data')
 const basicAuth = require('basic-auth');
 
 app.use(bodyParser.json());

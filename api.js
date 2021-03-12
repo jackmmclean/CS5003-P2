@@ -1,4 +1,4 @@
-const {users} = require('./users')
+const {users} = require('./data/data')
 
 exports.createGame = function (names, knockingAllowed, lowHighAceAllowed, numPlayers) {
 	return {};
