@@ -50,7 +50,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 			this.timeStarted = new Date;
 			this.cards = makeCards(this);
 			//allow these functions to be accessed from the player objects
-			for (let player of this.players) {
+			for (let [k, player] of Object.entries(this.players)) {
 				player.hand = () => {
 					return this.cards[player.id];
 				}
@@ -91,12 +91,15 @@ function makeCards(game) {
 	function Card(rank, suit, unicodeChar) {
 		this.rank = rank;
 		this.suit = suit;
-		this.char = String.fromCharCode(unicodeChar);
+		// this.char = String.fromCharCode(unicodeChar);
+		this.char = unicodeChar;
 	}
 
 	for (let suit of suits) {
-		charCode = charCodes[suits.indexOf(suit)];
 		for (let rank of ranks) {
+			// get the correct unicode character
+			let charCode = charCodes[suits.indexOf(suit) * 13 + ranks.indexOf(rank)];
+			// instantiate a new cards
 			let card = new Card(rank, suit, charCode);
 			deck.push(card);
 		}
@@ -114,8 +117,8 @@ function makeCards(game) {
 	}
 
 	//assign object attributes that hold each players cards
-	for (let player of players) {
-		cards[player.id] = cards.deck.splice(0, cardsPerPlayer);
+	for (let [k, v] of Object.entries(players)) {
+		cards[k] = cards.deck.splice(0, cardsPerPlayer);
 	}
 
 	//constructor function for instances of cards, used for

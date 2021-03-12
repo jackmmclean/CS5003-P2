@@ -21,18 +21,10 @@ const makeGameInfoVue = function() {
             },
         },
         methods: {
-            login: function () {
-                // todo login via API
-                console.log(`Sending data to API: ${this.username}, ${this.password}`)
-            },
-            getUserData: function() {
-                // todo get userName from API
-                this.generalInfo.Username = "some name"
-            },
             getGameStats: function () {
                 fetch(`/api/game/game-stats/${game.playerId}`, {
                     method: "GET",
-                    headers: {"Authorization": "Basic " + game.userKey}
+                    headers: {"Authorization": "Basic " + game.userKey},
                 }).then((res) => {
                     if (!res.ok) {
                         throw new Error(`HTTP Error ${res.status}`)
@@ -45,38 +37,40 @@ const makeGameInfoVue = function() {
                 }).catch(err => console.log('Could not get stats.', err))
             }
         },
-        created: function() {
-            this.getUserData();
-        }
     })
 }
 
 const makePlayerHandVue = function() {
     const playerHandVue = new Vue({
         el: "#player-hand",
-        data: {
-            hand: [],
-        },
+        data: {},
         computed: {
             state() {
+                if (game.state === 'play') {
+                    // get the game stats if we're playing
+                    this.getHand();
+                }
                 return game.state;
             },
+            hand() {
+                return userCards.hand;
+            }
         },
         methods: {
             getHand: function() {
                 // get cards from api
 
                 // just as long as we don't have the real data
-                let invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
-                let cards = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
+                // let invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
+                // let cards = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
 
                 // todo don't slice => just for showcase
-                this.hand = transformCards(cards.slice(7, 17));
-            }
+                // this.setHand(transformCards(cards.slice(7, 17)));
+            },
+            setHand: function(newHand) {
+                userCards.hand = newHand;
+            },
         },
-        created: function() {
-            this.getHand();
-        }
     })
 }
 
@@ -98,16 +92,21 @@ const makeClosedDeckVue = function() {
 const makeOpenDeckVue = function() {
     const openDeckVue = new Vue({
         el: "#open-deck",
-        data: {
-            openDeckCards: []
-        },
+        data: {},
         computed: {
             state() {
+                if (game.state === 'play') {
+                    // get the game stats if we're playing
+                    this.getOpenDeck();
+                }
                 return game.state;
             },
+            openDeckCards() {
+                return userCards.openDeckCards;
+            }
         },
         methods: {
-            getOpenDeckCards: function() {
+            getOpenDeck: function() {
                 // get open deck cards from cards
 
                 // just as long as we don't have the real data
@@ -115,12 +114,12 @@ const makeOpenDeckVue = function() {
                 let cards = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
 
                 // todo don't slice => just for showcase
-                this.openDeckCards = transformCards(cards.slice(37, 41));
+                this.setOpenDeckCards(transformCards(cards.slice(37, 41)));
+            },
+            setOpenDeckCards: function(newOpenDeck) {
+                userCards.openDeckCards = newOpenDeck;
             }
         },
-        created: function() {
-            this.getOpenDeckCards();
-        }
     })
 }
 
@@ -134,6 +133,22 @@ const makeUserActionsVue = function() {
             },
         },
         methods: {
+            startGame: function() {
+                // start the game for all players
+                fetch(`/api/game/start/${game.playerId}`, {
+                    method: "GET",
+                    headers: {"Authorization": "Basic " + game.userKey}
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`)
+                    } else {
+                        return res.json();
+                    }
+                }).then((json) => {
+                    setHand(json.hand)
+                    userCards.openDeckCards = userCards.openDeckCards[0]
+                }).catch(err => console.log(err))
+            },
             declareGin: function() {
                 // todo send declare gin to API and process response
                 console.log('Declare gin');
@@ -141,6 +156,12 @@ const makeUserActionsVue = function() {
             knock: function() {
                 // todo send knock to API and process response
                 console.log('Knock');
+            },
+            setHand: function(newHand) {
+                userCards.hand = newHand;
+            },
+            setOpenDeck: function(newOpenDeck) {
+                userCards.openDeckCards = newOpenDeck;
             }
         }
     })
@@ -151,6 +172,15 @@ const transformCards = function(numericCards) {
         cards.push({card: '&#'+c+';', color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred"})
     }
     return cards;
+}
+
+const userCards = Vue.observable({
+    openDeckCards: [],
+    hand: []
+});
+
+const setHand = (newHand) => {
+    userCards.hand = transformCards(newHand.map(el => el.char))
 }
 
 export const makeGame = function() {

@@ -38,12 +38,14 @@ exports.joinGame = function (username, gameId) {
 	}
 }
 
-exports.startGame = function (gameId) {
-	games[gameId].startGame();
+exports.startGame = function (playerId) {
+	let game = getGameByPlayerId(playerId)
+	game.startGame();
+	let hand = game.players[playerId].hand();
 
 	return {
-		status: 200,
 		gameId: game.id,
+		hand: hand,
 		text: `Game with id ${game.id} successfully started.`
 	}
 

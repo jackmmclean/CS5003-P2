@@ -62,9 +62,9 @@ app.post('/api/game/create/', authenticate, (req, res) => {
 	res.status(200).json(game);
 })
 
-app.get('/api/game/start/:playerId', (req, res) => {
+app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 	let game = startGame(req.params.playerId);
-	res.json(game)
+	res.status(200).json(game)
 })
 
 app.get('/api/game/draw-open-card/:playerId', (req, res) => {
