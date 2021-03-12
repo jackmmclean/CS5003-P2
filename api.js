@@ -5,6 +5,9 @@ const {
 const {
 	makeGame
 } = require('./game')
+const {
+	getGameByPlayerId
+} = require('./utils')
 
 exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
 	let game = makeGame(players[playerId], knockingAllowed, lowHighAceAllowed);
@@ -29,21 +32,23 @@ exports.getGames = function () {
 }
 
 exports.drawOpenCard = function (playerId) {
-	return {
-		// card: cards.openDraw(playerId)
-	};
+	let game = getGameByPlayerId(playerId);
+	let player = game.players[playerId];
+	let card = player.openDraw();
+	return card;
 }
 
 exports.drawClosedCard = function (playerId) {
-	return {
-		// card: cards.openDraw(playerId)
-	};
+	let game = getGameByPlayerId(playerId);
+	let player = game.players[playerId];
+	let card = player.closedDraw();
+	return card;
 }
 
 exports.depositCard = function (playerId, cardNo) {
-
-	// card: cards.openDraw(playerId, cardNo)
-
+	let game = getGameByPlayerId(playerId);
+	let player = game.players[playerId];
+	player.depositCard(cardNo);
 }
 
 exports.declareGin = function (playerId) {

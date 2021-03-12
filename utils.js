@@ -292,3 +292,11 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 	}
 	return returnArray;
 }
+
+exports.getGameByPlayerId = function (searchedPlayerID) {
+	for (let gameId in games) {
+		if (games[gameId].players.some(player => player.id === searchedPlayerID)) {
+			return games[gameId];
+		}
+	}
+}

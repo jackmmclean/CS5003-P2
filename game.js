@@ -50,6 +50,21 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 		this.startGame = () => {
 			this.timeStarted = new Date;
 			this.cards = makeCards(this);
+			//allow these functions to be accessed from the player objects
+			for (let player of this.players) {
+				player.hand = () => {
+					return this.cards[player.id];
+				}
+				player.openDraw = () => {
+					this.cards.openDraw(player)
+				};
+				player.closedDraw = () => {
+					this.cards.closedDraw(player)
+				};
+				player.depositCard = (cardNo) => {
+					this.cards.depositCard(player, cardNo)
+				};
+			}
 		};
 	}
 	return new Game(player)
@@ -131,22 +146,7 @@ function makeCards(game) {
 	cards.depositCard = function (player, cardNo) {
 		game.cardHistory.push(new CardsInstance());
 		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
-	}
-
-	//allow these functions to be accessed from the player objects
-	for (let player of players) {
-		player.hand = () => {
-			return cards[player.id];
-		}
-		player.openDraw = () => {
-			cards.openDraw(player)
-		};
-		player.closedDraw = () => {
-			cards.closedDraw(player)
-		};
-		player.depositCard = (cardNo) => {
-			cards.depositCard(player, cardNo)
-		};
+		return player.hand();
 	}
 
 	return cards
