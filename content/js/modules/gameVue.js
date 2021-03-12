@@ -16,6 +16,7 @@ const makeGameInfoVue = function() {
                 if (game.state === 'play') {
                     // get the game stats if we're playing
                     this.getGameStats();
+                    startInterval();
                 }
                 return game.state;
             },
@@ -178,6 +179,31 @@ const setOpenDeck = (newOpenDeck) => {
 const showBackOfCard = () => {
     userCards.showBackOfCard = true;
 }
+
+let pollInterval = null;
+
+const startInterval = () => {pollInterval = setInterval(() => {
+    // todo fill in the other data that needs to get polled and how to process it
+    fetch(`/api/game/poll/${game.playerId}`, {
+        method: "GET",
+        headers: {"Authorization": "Basic " + game.userKey}
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`)
+        } else {
+            return res.json();
+        }
+    }).then((json) => {
+        console.log('Has started', json.gameHasStarted)
+    }).catch(err => console.log(err))
+
+}, 1000);}
+
+const clearInterval = () => {clearInterval(pollInterval)}
+
+// todo Poll server every 100 ms
+//  check if game has started
+//  if yes (get data) else wait another 100 ms
 
 export const makeGame = function() {
     makeGameInfoVue();

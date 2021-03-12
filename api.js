@@ -136,6 +136,18 @@ exports.makePlayerOnLogin = function (username) {
 	};
 }
 
+/**
+ * Collect data that is returned to the client on each poll request.
+ * @params playerId {string} the player ID
+ * */
+exports.pollGame = function(playerId) {
+	const game = getGameByPlayerId(playerId);
+	return {
+		gameHasStarted: game.timeStarted !== null,
+		// todo add more data that needs to be polled
+	}
+}
+
 exports.getScore = function (username) {
 	return users[username].score;
 }

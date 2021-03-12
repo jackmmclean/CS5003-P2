@@ -11,7 +11,8 @@ const {
 	depositCard,
 	registerUser,
 	gameStats,
-	declareGin
+	declareGin,
+	pollGame
 } = require("./api");
 
 const app = express();
@@ -41,6 +42,12 @@ app.get('/', (req, res) => {
 })
 
 // API routes
+app.get('/api/game/poll/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	const pollData = pollGame(playerId);
+	res.status(200).json(pollData)
+})
+
 app.get('/api/lobby/get-games', (req, res) => {
 	res.status(200).json({
 		games: getGames()
