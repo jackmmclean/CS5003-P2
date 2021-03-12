@@ -1,9 +1,10 @@
 const {
 	users,
-	games
+	games,
 } = require('./data/data')
 const {
 	makeGame,
+	makePlayer,
 	processGinDeclared,
 	getRoundGinScores
 } = require('./game')
@@ -12,8 +13,8 @@ const {
 	getHighestScoringPlayers
 } = require('./utils')
 
-exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
-	let game = makeGame(players[playerId], knockingAllowed, lowHighAceAllowed);
+exports.createGame = function (username, knockingAllowed, lowHighAceAllowed) {
+	let game = makeGame(username, knockingAllowed, lowHighAceAllowed);
 	games[game.id] = game;
 
 	return {
@@ -27,7 +28,7 @@ exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
 exports.joinGame = function (playerId, gameId) {
-	games[gameId].addPlayer(players[playerId]);
+	games[gameId].addPlayer(playerId);
 
 	return {
 		status: 200,
@@ -114,8 +115,11 @@ exports.registerUser = function (username, password) {
 	}
 }
 
-exports.login = function (username, password) {
-	return {};
+exports.makePlayerOnLogin = function (username) {
+	const player = makePlayer(username)
+	return {
+		playerId: player.id
+	};
 }
 
 exports.getScore = function (username) {

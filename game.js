@@ -15,7 +15,7 @@ const {
 } = require('uuid');
 
 //define a players object
-function makePlayer(username) {
+exports.makePlayer = function (username) {
 
 	function Player(username) {
 		this.username = username;
@@ -27,7 +27,7 @@ function makePlayer(username) {
 	return new Player(username)
 }
 
-exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
+exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 	function Game() {
 		this.id = uuidv4();
 		this.timeStarted = null;
@@ -43,7 +43,8 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 			this.gameOver = true;
 			this.timeFinished = new Date;
 		};
-		this.addPlayer = (player) => {
+		this.addPlayer = (username) => {
+			let player = makePlayer(username);
 			this.players[player.id] = player;
 
 		};
@@ -68,7 +69,7 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 		};
 	}
 	let game = new Game();
-	game.addPlayer(player);
+	game.addPlayer(username);
 	return game;
 }
 

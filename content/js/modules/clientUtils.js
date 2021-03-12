@@ -3,6 +3,8 @@
 export const game = Vue.observable({
     state: 'login',
     userKey: '',
+    playerId: '',
+    gameId: '',
 });
 
 // all allowed states
@@ -36,5 +38,11 @@ export const login = function() {
     return fetch("/api/users/login", {
         method: "POST",
         headers: {"Authorization": "Basic " + game.userKey}
-    }).then((res) => {return res.status})
+    }).then((res) => {
+        if (!res.ok) {
+            return res.status;
+        } else {
+            return res.json()
+        }
+    })
 }

@@ -45,13 +45,25 @@ const makeNewGameVue = function() {
                 // todo create a new game -> try - catch
                 //  if successful, enter this game and display gameID
                 //  else, display msg
-                if (true) {
-                    console.log(`Sending data to API: Create game.`);
-                    setState('play')
-                } else {
-                    // Show a message to the user why they couldn't create a game
-                    this.message = "Couldn't create game."
-                }
+
+                fetch('/api/game/create', {
+                    method: "POST",
+                    headers: {"Authorization": "Basic " + game.userKey},
+                    playerId: game.playerId,
+                    // todo user choice
+                    knockingAllowed: true,
+                    lowHighAceAllowed: true,
+                }).then((res) => {
+                    if (!res.ok) {
+                        this.message = "Couldn't create game."
+                    } else {
+                        return res.json()
+                    }
+                }).then((json) => {
+                    game.gameId = json.gameId
+                    console.log(json.text)
+                    setState('play');
+                })
             }
         }
     })
@@ -86,7 +98,7 @@ const makeOpenGamesVue = function() {
                 }).then((json) => {
                     this.openGames = json.games;
                     console.log(this.openGames)
-                }).catch((err) => {console.log('There was an error.', err)})
+                }).catch(err => console.log('There was an error.', err))
 
                 this.openGames = ['uuid1', 'uuid2', 'uuid3', 'uuid4']
             },
@@ -95,11 +107,18 @@ const makeOpenGamesVue = function() {
                 //  if successful, enter this game
                 //  else, display msg
                 if (true) {
-                    console.log(`Sending data to API: ${this.gameId}`);
-                    setState('play')
-                } else {
-                    // show a message to the user why they could not join the game
-                    this.message = "Could not join game.";
+                    fetch(`/api/lobby/join-game/${gameId}`, {
+                        method: "POST",
+                        headers: {"Authorization": "Basic " + game.userKey}
+                    }).then((res) => {
+                        if (!res.ok) {
+                            throw new Error(`Response has status ${res.status}`)
+                        }
+                        return res.json();
+                    }).then((json) => {
+                        console.log('JSON', json);
+                        setState('play')
+                    }).catch(err => console.log('Could not join game.', err))
                 }
             },
         },

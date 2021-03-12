@@ -48,10 +48,11 @@ app.get('/api/lobby/get-games', (req, res) => {
 	});
 })
 
-app.post('/api/lobby/join-game/:gameId', (req, res) => {
-	let gameId = req.params.gameId;
-	let game = joinGame(gameId);
-	res.json(game);
+app.post('/api/game/join', authenticate, (req, res) => {
+	let playerId = req.body.playerId;
+	let gameId = req.body.gameId;
+	let game = joinGame(playerId, gameId);
+	res.status(200).json(game);
 })
 
 app.post('/api/game/create/', (req, res) => {
@@ -61,7 +62,7 @@ app.post('/api/game/create/', (req, res) => {
 
 	let game = createGame(name, knockingAllowed, lowHighAceAllowed);
 
-	res.json(game);
+	res.status(200).json(game);
 })
 
 app.get('/api/game/start/:playerId', (req, res) => {
@@ -105,10 +106,10 @@ app.post('/api/users/register-user', (req, res) => {
 })
 
 app.post('/api/users/login', authenticate, (req, res) => {
-	// let username = req.body.username;
-	// let password = req.body.password;
-	// login(username, password);
-	res.sendStatus(200);
+	// make a new player
+	const playerId = makePlayerOnLogin(req.username)
+
+	res.status(200).json(playerId);
 })
 
 app.get('/api/users/scores/:username', (req, res) => {

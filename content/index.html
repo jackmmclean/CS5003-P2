@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/style.css">
-	<title>Gin Rummy | Login</title>
+	<title>Gin Rummy</title>
 </head>
 
 <body>
@@ -33,6 +33,7 @@
 					<button class="button is-small" v-on:click="setLogin">Login</button>
 					<button class="button is-small" v-on:click="setLobby">Lobby</button>
 					<button class="button is-small" v-on:click="setPlay">Play</button>
+<!--					<button class="button is-small" v-on:click="devGames">Create Games</button>-->
 				</div>
 			</div>
 		</div>
@@ -165,6 +166,7 @@
 			<div class="card" id="open-games" v-show="state === 'lobby'">
 				<header class="card-header">
 					<p class="card-header-title">Open games.</p>
+					<!-- Refresh button -->
 					<button v-on:click="getGames" class="button is-white">
                     <span class="icon">
                       <i class="fas fa-sync"></i>
@@ -174,8 +176,8 @@
 				<div class="card-content">
 					<div class="content">
 						<table>
-							<tr v-for="(v, k) of openGames">
-								<td>{{ k }}: {{ v.someGameInfo }}</td>
+							<tr v-for="game of openGames">
+								<td>{{ game.id }}</td>
 								<td><button class="button is-small" v-on:click="join(gameId)">Join!</button></td>
 							</tr>
 						</table>
