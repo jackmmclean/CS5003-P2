@@ -23,9 +23,8 @@ const makeLoginVue = function() {
                 // get login response and process it
                 let loginResponse = await login();
 
-                if (loginResponse.hasOwnProperty('playerId')) {
+                if (loginResponse === 200) {
                     console.log('Authentication successful')
-                    game.playerId = loginResponse.playerId
                     setState("lobby");
                     this.hideRegistrationCard();
                 } else {
@@ -107,9 +106,8 @@ const makeGuestVue = function() {
                 // get the login response and process it
                 let loginResponse = await login();
 
-                if (loginResponse.hasOwnProperty('playerId')) {
+                if (loginResponse === 200) {
                     console.log('Authentication successful')
-                    game.playerId = loginResponse.playerId
                     setState("lobby");
                 } else {
                     alert("Could not login as guest. Try registering a user.")

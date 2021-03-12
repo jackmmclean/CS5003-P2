@@ -39,10 +39,6 @@ export const login = function() {
         method: "POST",
         headers: {"Authorization": "Basic " + game.userKey}
     }).then((res) => {
-        if (!res.ok) {
-            return res.status;
-        } else {
-            return res.json()
-        }
+        return res.status;
     })
 }

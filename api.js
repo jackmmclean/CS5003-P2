@@ -20,22 +20,22 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed) {
 	return {
 		status: 200,
 		gameId: game.id,
+		playerId: Object.keys(game.players)[0],
 		text: `Game with id ${game.id} successfully created.`
 	}
-
 }
 
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
-exports.joinGame = function (playerId, gameId) {
-	games[gameId].addPlayer(playerId);
+exports.joinGame = function (username, gameId) {
+	const playerId = games[gameId].addPlayer(username);
 
 	return {
 		status: 200,
-		gameId: game.id,
-		text: `Successfully joined game with id ${game.id}.`,
+		gameId: gameId,
+		playerId: playerId,
+		text: `Successfully joined game with id ${gameId}.`,
 	}
-
 }
 
 exports.startGame = function (gameId) {

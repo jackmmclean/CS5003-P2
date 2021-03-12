@@ -46,9 +46,9 @@
 			</header>
 			<div class="card-content">
 				<div class="content">
-					<form name="join-form" v-on:submit.prevent="join(gameId)">
+					<form name="join-form" v-on:submit.prevent="join">
 						<label>
-							<input type="text" class="input is-small" v-model="gameId" placeholder="Game ID">
+							<input type="text" class="input is-small" v-model="gameIdJoin" placeholder="Game ID">
 						</label>
 						<input type="submit" class="button is-small" value="Join">
 					</form>
@@ -178,7 +178,7 @@
 						<table>
 							<tr v-for="game of openGames">
 								<td>{{ game.id }}</td>
-								<td><button class="button is-small" v-on:click="join(gameId)">Join!</button></td>
+								<td><button class="button is-small" v-on:click="join(game.id)">Join!</button></td>
 							</tr>
 						</table>
 					</div>
