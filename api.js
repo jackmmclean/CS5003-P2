@@ -11,7 +11,6 @@ exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
 	games[game.id] = game;
 	return game.id;
 }
-const {users, games} = require('./data/data')
 
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
