@@ -34,7 +34,7 @@ app.get('/api/lobby/get-games', (req, res) => {
 	res.status(200).json({games: getGames()});
 })
 
-app.post('/api/lobby/joinGame/:gameId', (req, res) => {
+app.post('/api/lobby/join-game/:gameId', (req, res) => {
 	let gameId = req.params.gameId;
 	let game = joinGame(gameId);
 	res.json(game);
