@@ -3,6 +3,8 @@
 
 <head>
 	<meta charset="UTF-8">
+	<!-- attribution https://thenounproject.com/term/playing-cards/29425/ creative commons license -->
+	<link rel="icon" type="image/png" href="./media/playingCardIcon.png">
 	<!-- todo Use production version of Vue-->
 	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 	<!-- Custom Javascript -->
@@ -10,7 +12,7 @@
 	<!-- Bulma CSS library-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 	<!-- Font Awesome Icons -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/style.css">
 	<title>Gin Rummy</title>
@@ -114,7 +116,8 @@
 								<input class="input is-small" type="text" v-model="username" placeholder="Username">
 							</label>
 							<label>
-								<input class="input is-small" type="password" v-model="password" placeholder="Password" autocomplete="on">
+								<input class="input is-small" type="password" v-model="password" placeholder="Password"
+									autocomplete="on">
 							</label>
 							<input class="button is-small" type="submit" value="Login">
 						</form>
@@ -135,10 +138,12 @@
 								<input class="input is-small" type="text" v-model="username" placeholder="Username">
 							</label>
 							<label>
-								<input class="input is-small" type="password" v-model="password" placeholder="Password" autocomplete="on">
+								<input class="input is-small" type="password" v-model="password" placeholder="Password"
+									autocomplete="on">
 							</label>
 							<label>
-								<input class="input is-small" type="password" v-model="passwordConfirm" placeholder="Confirm Password" autocomplete="on">
+								<input class="input is-small" type="password" v-model="passwordConfirm"
+									placeholder="Confirm Password" autocomplete="on">
 							</label>
 							<input type="submit" class="button is-small" value="Register">
 						</form>
@@ -167,9 +172,9 @@
 					<p class="card-header-title">Open games.</p>
 					<!-- Refresh button -->
 					<button v-on:click="getGames" class="button is-white">
-                    <span class="icon">
-                      <i class="fas fa-sync"></i>
-                    </span>
+						<span class="icon">
+							<i class="fas fa-sync"></i>
+						</span>
 					</button>
 				</header>
 				<div class="card-content">
@@ -188,15 +193,18 @@
 
 			<div class="board">
 				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
-					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"></div>
+					<div class="playing-card" v-for="card in hand" v-html="card.card"
+						v-bind:style="{color: card.color}"></div>
 				</div>
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
-					<div class="playing-card" v-for="i in 8" v-html="backOfCard.card" v-bind:style="{color: backOfCard.color}"></div>
+					<div class="playing-card" v-for="i in 8" v-html="backOfCard.card"
+						v-bind:style="{color: backOfCard.color}"></div>
 				</div>
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
-					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card" v-bind:style="{color: card.color}"></div>
+					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card"
+						v-bind:style="{color: card.color}"></div>
 				</div>
 			</div>
 		</div>
