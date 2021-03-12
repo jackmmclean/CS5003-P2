@@ -16,14 +16,12 @@ const {
 
 //define a players object
 exports.makePlayer = function (username) {
-
 	function Player(username) {
 		this.username = username;
 		this.id = uuidv4();
 		this.melds = null;
 		this.score = 0;
 	}
-
 	return new Player(username)
 }
 
