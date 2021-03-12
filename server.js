@@ -38,7 +38,7 @@ app.post('/api/lobby/join-game', authenticate, (req, res) => {
 	let playerId = req.body.playerId
 	let gameId = req.body.gameId;
 	let game = joinGame(playerId, gameId);
-	res.json(game);
+	res.status(200).json(game);
 })
 
 app.post('/api/game/create', (req, res) => {
@@ -48,7 +48,7 @@ app.post('/api/game/create', (req, res) => {
 
 	let game = createGame(playerId, knockingAllowed, lowHighAceAllowed);
 
-	res.json(game);
+	res.status(200).json(game);
 })
 
 app.get('/api/game/start/:playerId', (req, res) => {

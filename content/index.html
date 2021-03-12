@@ -176,8 +176,8 @@
 				<div class="card-content">
 					<div class="content">
 						<table>
-							<tr v-for="(v, gameId) of openGames">
-								<td>{{ gameId }}: {{ v.someGameInfo }}</td>
+							<tr v-for="game of openGames">
+								<td>{{ game.id }}</td>
 								<td><button class="button is-small" v-on:click="join(gameId)">Join!</button></td>
 							</tr>
 						</table>

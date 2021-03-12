@@ -22,13 +22,13 @@ exports.players = {
 }
 
 exports.games = {
-	'someUUID1': {
-		someGameInfo: 'interesting info1'
-	},
-	'someUUID2': {
-		someGameInfo: 'interesting info2'
-	},
-	'someUUID3': {
-		someGameInfo: 'interesting info3'
-	},
+	// 'someUUID1': {
+	// 	someGameInfo: 'interesting info1'
+	// },
+	// 'someUUID2': {
+	// 	someGameInfo: 'interesting info2'
+	// },
+	// 'someUUID3': {
+	// 	someGameInfo: 'interesting info3'
+	// },
 }

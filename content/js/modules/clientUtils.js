@@ -4,6 +4,7 @@ export const game = Vue.observable({
     state: 'login',
     userKey: '',
     playerId: '',
+    gameId: '',
 });
 
 // all allowed states

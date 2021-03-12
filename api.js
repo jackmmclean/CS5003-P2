@@ -1,6 +1,6 @@
 const {
 	users,
-	games
+	games,
 } = require('./data/data')
 const {
 	makeGame, makePlayer,
@@ -13,7 +13,7 @@ const {
 } = require('./utils')
 
 exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
-	let game = makeGame(players[playerId], knockingAllowed, lowHighAceAllowed);
+	let game = makeGame(playerId, knockingAllowed, lowHighAceAllowed);
 	games[game.id] = game;
 
 	return {

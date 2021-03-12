@@ -45,13 +45,25 @@ const makeNewGameVue = function() {
                 // todo create a new game -> try - catch
                 //  if successful, enter this game and display gameID
                 //  else, display msg
-                if (true) {
-                    console.log(`Sending data to API: Create game.`);
-                    setState('play')
-                } else {
-                    // Show a message to the user why they couldn't create a game
-                    this.message = "Couldn't create game."
-                }
+
+                fetch('/api/game/create', {
+                    method: "POST",
+                    headers: {"Authorization": "Basic " + game.userKey},
+                    playerId: game.playerId,
+                    // todo user choice
+                    knockingAllowed: true,
+                    lowHighAceAllowed: true,
+                }).then((res) => {
+                    if (!res.ok) {
+                        this.message = "Couldn't create game."
+                    } else {
+                        return res.json()
+                    }
+                }).then((json) => {
+                    game.gameId = json.gameId
+                    console.log(json.text)
+                    setState('play');
+                })
             }
         }
     })
