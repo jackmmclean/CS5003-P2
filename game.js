@@ -36,7 +36,7 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 		this.round = 1;
 		this.players = [player];
 		this.cardHistory = [];
-		this.cardsPerPlayer = null;
+		this.cards = null;
 		this.knockingAllowed = knockingAllowed;
 		this.highOrLowAces = lowHighAceAllowed;
 		this.endGame = () => {
@@ -49,14 +49,16 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 		};
 		this.startGame = () => {
 			this.timeStarted = new Date;
-			player.length > 2 ? this.cardsPerPlayer = 7 : 10;
+			this.cards = makeCards(this);
 		};
 	}
 	return new Game(player)
 }
 
 //define function (use of closure) that will create the distribution of cards
-function makeCards(players, game) {
+function makeCards(game) {
+
+	let players = game.players;
 
 	//initialise variables
 	var deck = [];
@@ -151,7 +153,7 @@ function makeCards(players, game) {
 }
 
 function processGinDeclared(player) {
-	melds = player.melds;
+	melds = makeMelds(player.hand());
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
 
