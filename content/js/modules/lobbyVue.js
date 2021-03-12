@@ -65,13 +65,29 @@ const makeOpenGamesVue = function() {
         },
         computed: {
             state() {
+                if (game.state === 'lobby') {
+                    // get the games if we're in the lobby
+                    this.getGames();
+                }
                 return game.state;
             },
         },
         methods: {
             getGames: function() {
-                // todo get games from API
-                console.log('getting games from API')
+                console.log('Getting games from /api/lobby/get-games')
+                fetch('/api/lobby/get-games', {
+                    method: "GET",
+                    headers: {"Authorization": "Basic " + game.userKey}
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`Response has status ${res.status}`)
+                    }
+                    return res.json();
+                }).then((json) => {
+                    this.openGames = json.games;
+                    console.log(this.openGames)
+                }).catch((err) => {console.log('There was an error.', err)})
+
                 this.openGames = ['uuid1', 'uuid2', 'uuid3', 'uuid4']
             },
             join: function (gameId) {
@@ -87,9 +103,6 @@ const makeOpenGamesVue = function() {
                 }
             },
         },
-        created: function() {
-            this.getGames();
-        }
     })
 }
 

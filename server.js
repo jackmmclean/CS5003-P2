@@ -15,7 +15,6 @@ app.use(express.static("content"))
 // Basic authentication
 let authenticate = function(req, res, next) {
 	let user = basicAuth(req);
-	console.log(user)
 	if (!user || !users.hasOwnProperty(user.name) || users[user.name].password !== user.pass) {
 		//make the browser ask for credentials if none/wrong are provided
 		// res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
@@ -31,9 +30,8 @@ app.get('/', (req, res) => {
 })
 
 // API routes
-app.get('/api/lobby/getGames', (req, res) => {
-	let games = getGames();
-	res.json(games);
+app.get('/api/lobby/get-games', (req, res) => {
+	res.status(200).json({games: getGames()});
 })
 
 app.post('/api/lobby/joinGame/:gameId', (req, res) => {
