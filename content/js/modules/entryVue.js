@@ -133,11 +133,6 @@ export const makeEntry = function() {
             setLogin: () => setState("login"),
             setLobby: () => setState("lobby"),
             setPlay: () => setState("play"),
-            devGames: () => {
-                // fetch()
-                console.log('created some games')
-                console.log('created some games')
-            },
         }
     })
 }

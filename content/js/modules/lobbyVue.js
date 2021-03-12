@@ -15,6 +15,7 @@ const makeJoinGameByIdVue = function() {
         methods: {
             join: function () {
 
+                // POST a new join request
                 fetch('/api/game/join', {
                     method: "POST",
                     headers: {
@@ -25,17 +26,21 @@ const makeJoinGameByIdVue = function() {
                         gameId: this.gameIdJoin
                     })
                 }).then((res) => {
+                    // Check if response is ok
                     if (!res.ok) {
                         throw new Error('Could not join game.')
                     } else {
                         return res.json()
                     }
                 }).then((json) => {
+                    // Process returned values
                     game.playerId = json.playerId;
                     game.gameId = json.gameId;
                     console.log(json.text);
                     setState('play');
-                }).catch(err => {this.message = "Couldn't join game."})
+                }).catch(err => {
+                    this.message = "Couldn't join game."
+                })
             }
         }
     })
@@ -55,6 +60,7 @@ const makeNewGameVue = function() {
         methods: {
             createNewGame: function () {
 
+                // POST new game creation request
                 fetch('/api/game/create', {
                     method: "POST",
                     headers: {
@@ -62,18 +68,19 @@ const makeNewGameVue = function() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        // playerId: game.playerId,
                         // todo user choice
                         knockingAllowed: true,
                         lowHighAceAllowed: true,
                     })
                 }).then((res) => {
+                    // Make sure we got a 200 response
                     if (!res.ok) {
                         this.message = "Couldn't create game."
                     } else {
                         return res.json()
                     }
                 }).then((json) => {
+                    // Process returned values
                     game.playerId = json.playerId;
                     game.gameId = json.gameId;
                     console.log(json.text)
