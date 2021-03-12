@@ -71,7 +71,12 @@ app.post('/api/game/create/', authenticate, (req, res) => {
 
 app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 	let game = startGame(req.params.playerId);
-	res.status(200).json(game)
+	if (game.status === 400) {
+		// error because player !=== owner tried to start game
+		res.status(400).json(game)
+	} else {
+		res.status(200).json(game)
+	}
 })
 
 app.get('/api/game/draw-open-card/:playerId', (req, res) => {

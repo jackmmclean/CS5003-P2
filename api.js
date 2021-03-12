@@ -20,7 +20,7 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed) {
 	return {
 		status: 200,
 		gameId: game.id,
-		playerId: Object.keys(game.players)[0],
+		playerId: game.owner.id,
 		text: `Game with id ${game.id} successfully created.`
 	}
 }
@@ -40,11 +40,18 @@ exports.joinGame = function (username, gameId) {
 
 exports.startGame = function (playerId) {
 	let game = getGameByPlayerId(playerId)
+	if (game.owner.id === playerId) {
+		return {
+			status: 400,
+			text: "Only the owner of the game can start the game."
+		};
+	}
 	game.startGame();
 	let hand = game.players[playerId].hand();
 	let openDeck = game.cards.openDeck;
 
 	return {
+		status: 200,
 		gameId: game.id,
 		hand: hand,
 		openDeck: openDeck,

@@ -37,6 +37,8 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 		this.cards = null;
 		this.knockingAllowed = knockingAllowed;
 		this.highOrLowAces = lowHighAceAllowed;
+		// owner of the game (the player who created it)
+		this.owner = null;
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
@@ -44,6 +46,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 		this.addPlayer = (username) => {
 			let player = makePlayer(username);
 			this.players[player.id] = player;
+			this.owner = player;
 			return player.id;
 		};
 		this.startGame = () => {
