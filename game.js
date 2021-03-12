@@ -17,8 +17,8 @@ const {
 //define a players object
 function makePlayer(username) {
 
-	function Player() {
-		this.username = 'get a username';
+	function Player(username) {
+		this.username = username;
 		this.id = uuidv4();
 		this.melds = null;
 		this.score = 0;
@@ -61,8 +61,8 @@ exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
 				player.closedDraw = () => {
 					this.cards.closedDraw(player)
 				};
-				player.depositCard = (cardNo) => {
-					this.cards.depositCard(player, cardNo)
+				player.depositCard = (card) => {
+					this.cards.depositCard(player, card)
 				};
 			}
 		};
@@ -143,21 +143,21 @@ function makeCards(game) {
 	}
 
 	//define a method for a player to deposit one of their cards onto the open deck
-	cards.depositCard = function (player, cardNo) {
+	cards.depositCard = function (player, card) {
 		game.cardHistory.push(new CardsInstance());
-		cards['openDeck'].push(cards[player.id].splice(cardNo, cardNo + 1)[0]);
+		cards['openDeck'].push(cards[player.id].splice(cards[player.id].indexOf(card), cards[player.id].indexOf(card) + 1)[0]);
 		return player.hand();
 	}
 
 	return cards
 }
 
-function processGinDeclared(player) {
-	melds = makeMelds(player.hand());
+exports.processGinDeclared = function (player) {
+	player.melds = makeMelds(player.hand());
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
 
-	for (let meld of melds) {
+	for (let meld of player.melds) {
 		if (!(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
 	}
 
@@ -182,8 +182,9 @@ function getRoundKnockScores(players, declaringPlayer) {
 
 }
 
-//player argument is player who declared gin
-function getRoundGinScores(players, declaringPlayer) {
+//player argument is player who declared gin (correctly)
+exports.getRoundGinScores = function (game, declaringPlayer) {
+	players = game.players;
 	//add up the score of all players and store in opponentScores
 	let opponentScores;
 	for (let player of players) {

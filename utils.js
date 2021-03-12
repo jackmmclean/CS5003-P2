@@ -300,3 +300,11 @@ exports.getGameByPlayerId = function (searchedPlayerID) {
 		}
 	}
 }
+
+exports.getHighestScoringPlayers = function (playerArray) {
+	let highScorers = [...playerArray];
+	for (let player of highScorers) {
+		highScorers = highScorers.filter(el => el.score >= player.score)
+	}
+	return highScorers
+}

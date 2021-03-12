@@ -3,28 +3,49 @@ const {
 	games
 } = require('./data/data')
 const {
-	makeGame
+	makeGame,
+	processGinDeclared,
+	getRoundGinScores
 } = require('./game')
 const {
-	getGameByPlayerId
+	getGameByPlayerId,
+	getHighestScoringPlayers
 } = require('./utils')
 
 exports.createGame = function (playerId, knockingAllowed, lowHighAceAllowed) {
 	let game = makeGame(players[playerId], knockingAllowed, lowHighAceAllowed);
 	games[game.id] = game;
-	return game.id;
+
+	return {
+		status: 200,
+		gameId: game.id,
+		text: `Game with id ${game.id} successfully created.`
+	}
+
 }
 
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
 exports.joinGame = function (playerId, gameId) {
 	games[gameId].addPlayer(players[playerId]);
-	return games[gameId].players;
+
+	return {
+		status: 200,
+		gameId: game.id,
+		text: `Successfully joined game with id ${game.id}.`,
+	}
+
 }
 
 exports.startGame = function (gameId) {
 	games[gameId].startGame();
-	return games[gameId];
+
+	return {
+		status: 200,
+		gameId: game.id,
+		text: `Game with id ${game.id} successfully started.`
+	}
+
 }
 
 exports.getGames = function () {
@@ -45,15 +66,27 @@ exports.drawClosedCard = function (playerId) {
 	return card;
 }
 
-exports.depositCard = function (playerId, cardNo) {
+exports.depositCard = function (playerId, card) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	player.depositCard(cardNo);
+	let hand = player.depositCard(card);
+	return hand;
 }
 
 exports.declareGin = function (playerId) {
-
-	return {};
+	let game = getGameByPlayerId(playerId);
+	let player = game.players[playerId];
+	//need some more logic here to deal with winning and losing etc
+	if (processGinDeclared(player)) {
+		getRoundGinScores(game, player);
+		game.endGame();
+	} else {
+		game.endGame();
+	}
+	return {
+		text: 'Game is over',
+		winners: getHighestScoringPlayers(game.players)
+	};
 
 }
 
@@ -86,5 +119,5 @@ exports.login = function (username, password) {
 }
 
 exports.getScore = function (username) {
-	return {};
+	users[username].score;
 }
