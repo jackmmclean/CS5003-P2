@@ -104,12 +104,13 @@
 							</label>
 							<input class="button is-small" type="submit" value="Login">
 						</form>
+						<a v-on:click="showRegistrationCard">Or register a new User.</a>
 						{{ message }}
 					</div>
 				</div>
 			</div>
 
-			<div class="card" id="register" v-show="state === 'login'">
+			<div class="card" id="register" v-show="state === 'login' && showRegistrationCard">
 				<header class="card-header">
 					<p class="card-header-title">Register a new user.</p>
 				</header>

@@ -26,10 +26,17 @@ const makeLoginVue = function() {
                 if (loginResponse === 200) {
                     console.log('Authentication successful.')
                     setState("lobby");
+                    this.hideRegistrationCard();
                 } else {
                     console.log('Authentication failed.')
                     this.message = "Wrong password or username.";
                 }
+            },
+            showRegistrationCard: function() {
+                registrationCard.show = true;
+            },
+            hideRegistrationCard: function() {
+                registrationCard.show = false;
             }
         }
     })
@@ -48,6 +55,9 @@ const makeRegisterVue = function() {
             state() {
                 return game.state;
             },
+            showRegistrationCard() {
+                return registrationCard.show;
+            }
         },
         methods: {
             register: function () {
@@ -106,6 +116,10 @@ const makeGuestVue = function() {
         }
     })
 }
+
+const registrationCard = Vue.observable({
+    show: false,
+})
 
 export const makeEntry = function() {
     makeLoginVue();
