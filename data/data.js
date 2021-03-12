@@ -16,10 +16,6 @@ exports.users = {
 	}
 }
 
-exports.games = {
-
-}
-
 exports.players = {
 
 }

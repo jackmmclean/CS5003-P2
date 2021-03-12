@@ -24,7 +24,7 @@ function makePlayer(username) {
 		this.score = 0;
 	}
 
-	return New Player(username)
+	return new Player(username)
 }
 
 exports.makeGame = function (player, knockingAllowed, lowHighAceAllowed) {
