@@ -1,4 +1,5 @@
 // define function to shuffle cards
+const {games} = require("./data/data");
 exports.shuffle = function (array) {
 
 	var currentIndex = array.length,
@@ -295,7 +296,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 
 exports.getGameByPlayerId = function (searchedPlayerID) {
 	for (let gameId in games) {
-		if (games[gameId].players.some(player => player.id === searchedPlayerID)) {
+		if (games[gameId].players.hasOwnProperty(searchedPlayerID)) {
 			return games[gameId];
 		}
 	}

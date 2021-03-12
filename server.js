@@ -9,7 +9,6 @@ const {
 	getScore,
 	getGames,
 	depositCard,
-	login,
 	registerUser,
 	gameStats,
 	declareGin
@@ -88,9 +87,11 @@ app.post('/api/game/declare-gin/:playerId', (req, res) => {
 	res.json(winOrLose);
 })
 
-app.get('/api/game/game-stats/:gameId', (req, res) => {
-	let gameStats = gameStats();
-	res.json(gameStats);
+app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	let stats = gameStats(playerId);
+	stats.username = req.username;
+	res.status(200).json(stats);
 })
 
 app.post('/api/users/register-user', (req, res) => {

@@ -13,6 +13,10 @@ const makeGameInfoVue = function() {
         },
         computed: {
             state() {
+                if (game.state === 'play') {
+                    // get the game stats if we're playing
+                    this.getGameStats();
+                }
                 return game.state;
             },
         },
@@ -23,8 +27,22 @@ const makeGameInfoVue = function() {
             },
             getUserData: function() {
                 // todo get userName from API
-                //  Question: how do we make sure to get the right user? or game for that matter?
                 this.generalInfo.Username = "some name"
+            },
+            getGameStats: function () {
+                fetch(`/api/game/game-stats/${game.playerId}`, {
+                    method: "GET",
+                    headers: {"Authorization": "Basic " + game.userKey}
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP Error ${res.status}`)
+                    } else {
+                        return res.json();
+                    }
+                }).then((json) => {
+                    this.generalInfo.Username = json.username;
+                    this.generalInfo.Players = json.numPlayers;
+                }).catch(err => console.log('Could not get stats.', err))
             }
         },
         created: function() {

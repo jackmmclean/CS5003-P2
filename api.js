@@ -91,8 +91,18 @@ exports.declareGin = function (playerId) {
 
 }
 
-exports.gameStats = function (gameId) {
-	return {};
+/**
+ * Get info about the game.
+ * @param playerId {string} Id of the requesting player
+ * @returns {Object} Game stats
+ * */
+exports.gameStats = function (playerId) {
+	const game = getGameByPlayerId(playerId);
+	const numPlayers = Object.keys(game.players).length;
+	return {
+		numPlayers: numPlayers,
+		// todo what else should we return here?
+	};
 }
 
 exports.registerUser = function (username, password) {
