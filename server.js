@@ -145,7 +145,7 @@ app.get('/api/game/get-cards/:playerId', authenticate, (req, res) => {
 })
 
 // Register a new user
-app.post('/api/users/register-user', authenticate, (req, res) => {
+app.post('/api/users/register-user', (req, res) => {
 	let username = req.headers.username;
 	let password = req.headers.password;
 	console.log(users)
