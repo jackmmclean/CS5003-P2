@@ -25,9 +25,9 @@ makePlayer = function (username) {
 	return new Player(username)
 }
 
-exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
+exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameId = '') {
 	function Game() {
-		this.id = uuidv4();
+		this.id = (gameId !== '') ? gameId : uuidv4();
 		this.timeStarted = null;
 		this.timeFinished = null;
 		this.gameOver = false;
@@ -43,10 +43,12 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 			this.gameOver = true;
 			this.timeFinished = new Date;
 		};
-		this.addPlayer = (username) => {
+		this.addPlayer = (username, owner = false) => {
 			let player = makePlayer(username);
 			this.players[player.id] = player;
-			this.owner = player;
+			if (owner === true) {
+				this.owner = player;
+			}
 			return player.id;
 		};
 		this.startGame = () => {
@@ -70,7 +72,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 		};
 	}
 	let game = new Game();
-	game.addPlayer(username);
+	game.addPlayer(username, true);
 	return game;
 }
 

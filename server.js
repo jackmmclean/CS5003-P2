@@ -63,10 +63,12 @@ app.post('/api/game/join', authenticate, (req, res) => {
 app.post('/api/game/create/', authenticate, (req, res) => {
 	let knockingAllowed = req.body.knockingAllowed;
 	let lowHighAceAllowed = req.body.lowHighAceAllowed;
+	let gameId = req.body.gameId;
 
-	let game = createGame(req.username, knockingAllowed, lowHighAceAllowed);
+	let game = createGame(req.username, knockingAllowed, lowHighAceAllowed, gameId);
 
-	res.status(200).json(game);
+	res.status(game.status).json(game);
+
 })
 
 app.get('/api/game/start/:playerId', authenticate, (req, res) => {

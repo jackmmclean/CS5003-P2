@@ -63,11 +63,22 @@
 				<p class="card-header-title">Create new game.</p>
 			</header>
 			<div class="card-content">
-				<div class="content">
+				<form name="join-form" v-on:submit.prevent="createNewGame">
+					<label>
+						<input type="text" class="input is-small" v-model="gameId" placeholder="Game ID - Optional">
+					</label>
+					<input type="checkbox" id="checkboxKnock" v-model="knockingAllowed">
+					<label for="checkboxKnock">Knocking</label>
+					<input type="checkbox" id="checkboxAce" v-model="lowHighAceAllowed">
+					<label for="checkboxAce">High or Low Aces</label>
+					<input type="submit" class="button is-small" value="Create">
+				</form>
+				{{ message }}
+				<!-- <div class="content">
 					<button class="button is-small" v-on:click="createNewGame">Create!</button>
 					<br>
 					{{ message }}
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -200,7 +211,7 @@
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
 					<div class="playing-card" v-html="backOfCard.card" v-show="showBackOfCard"
-						 v-bind:style="{color: backOfCard.color}"></div>
+						v-bind:style="{color: backOfCard.color}"></div>
 				</div>
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">

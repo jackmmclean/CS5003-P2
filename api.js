@@ -13,15 +13,29 @@ const {
 	getHighestScoringPlayers
 } = require('./utils')
 
-exports.createGame = function (username, knockingAllowed, lowHighAceAllowed) {
-	let game = makeGame(username, knockingAllowed, lowHighAceAllowed);
+exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gameId = '') {
+
+	gameId = gameId.trim();
+
+	if (games.hasOwnProperty(gameId)) {
+
+		return {
+			status: 409,
+			gameId: gameId,
+			text: `Could not create game. Game with id "${gameId}" already exists.`
+		}
+	}
+
+	let game = makeGame(username, knockingAllowed, lowHighAceAllowed, gameId);
 	games[game.id] = game;
+	const knockAllowTxt = knockingAllowed ? 'Knocking allowed.' : '';
+	const aceAllowTxt = lowHighAceAllowed ? 'Low or high aces allowed.' : '';
 
 	return {
 		status: 200,
 		gameId: game.id,
 		playerId: game.owner.id,
-		text: `Game with id ${game.id} successfully created.`
+		text: `Game with id "${game.id}" successfully created. ${knockAllowTxt} ${aceAllowTxt}`
 	}
 }
 
@@ -110,8 +124,18 @@ exports.declareGin = function (playerId) {
 exports.gameStats = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	const numPlayers = Object.keys(game.players).length;
+	const scores = {};
+	const gameDuration = (game.gameOver ? game.timeStarted - game.timeFinished : game.timeStarted - new Date);
+	for (let id in game.players) {
+		scores[id] = game.players[id].score;
+	}
 	return {
+		gameId: game.id,
 		numPlayers: numPlayers,
+		scores: scores,
+		round: game.round,
+		gameDuration: new Date(gameDuration).toISOString().substr(11, 8)
+
 		// todo what else should we return here?
 	};
 }
@@ -147,7 +171,7 @@ exports.makePlayerOnLogin = function (username) {
  * Collect data that is returned to the client on each poll request.
  * @params playerId {string} the player ID
  * */
-exports.pollGame = function(playerId) {
+exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
