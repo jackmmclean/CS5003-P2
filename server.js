@@ -162,7 +162,7 @@ app.post('/api/users/login', authenticate, (req, res) => {
 
 // Get the all time scores for a user
 app.get('/api/users/scores/:username', authenticate, (req, res) => {
-	username = req.params.username;
+	const username = req.params.username;
 	getScore(username);
 })
 
