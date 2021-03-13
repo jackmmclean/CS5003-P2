@@ -156,7 +156,9 @@ function makeCards(game) {
 	//define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, card) {
 		game.cardHistory.push(new CardsInstance());
-		cards['openDeck'].push(cards[player.id].splice(cards[player.id].indexOf(card), cards[player.id].indexOf(card) + 1)[0]);
+		cards['openDeck'].push(
+			cards[player.id].splice(cards[player.id].indexOf(card), 1)[0]
+		);
 		return player.hand();
 	}
 
