@@ -8,6 +8,7 @@ const makeGameInfoVue = function () {
 		el: "#game-info",
 		data: {
 			generalInfo: {
+				GameID: "1234",
 				Username: "",
 				Turn: "who's turn",
 				Action: "possible action",
@@ -218,6 +219,13 @@ const makeUserActionsVue = function () {
 		}
 	})
 }
+
+const makeMessagesVue = function () {
+	const messagesVue = new Vue ({
+		el: "#messages"
+	})
+}
+
 const transformCards = function (numericCards) {
 	let cards = []
 	for (let c of numericCards) {

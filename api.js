@@ -6,12 +6,14 @@ const {
 	makeGame,
 	makePlayer,
 	processGinDeclared,
-	getRoundGinScores
+	getRoundGinScores,
+	createMessage
 } = require('./game')
 const {
 	getGameByPlayerId,
 	getHighestScoringPlayers
 } = require('./utils')
+
 
 exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gameId = '') {
 
@@ -146,7 +148,8 @@ exports.gameStats = function (playerId) {
 		numPlayers: numPlayers,
 		scores: scores,
 		round: game.round,
-		gameDuration: new Date(gameDuration).toISOString().substr(11, 8)
+		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
+		messageCount: game.messages.length
 
 		// todo what else should we return here?
 	};
@@ -192,7 +195,7 @@ exports.pollGame = function (playerId) {
 	}
 }
 
-exports.getCards = function(playerId) {
+exports.getCards = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	// check if game has started
 	if (game.timeStarted !== null) {
@@ -212,4 +215,41 @@ exports.getCards = function(playerId) {
 
 exports.getScore = function (username) {
 	return users[username].score;
+}
+
+exports.getMessages = function (gameId) {
+	if (games.hasOwnProperty(gameId)) {
+
+		return {
+			status: 200,
+			messages: games[gameId].messages
+		}
+	} else {
+		return {
+			status: 409,
+			text: `Game with ID "${gameId}" not found.`
+		}
+	}
+
+}
+
+exports.sendMessage = function (playerId, text) {
+	if (text.length == 0) {
+		return {
+			status: 409,
+			text: 'Cannot send empty message.'
+		}
+	} else if (getGameByPlayerId(playerId) == undefined) {
+		return {
+			status: 409,
+			text: `Cannot find game containing player with player ID "${playerId}".`
+		}
+	} else {
+		const message = createMessage(playerId, text)
+		return {
+			status: 200,
+			text: `Message posted to game with game ID "${getGameByPlayerId(playerId).id}"`,
+			message: message
+		}
+	}
 }
