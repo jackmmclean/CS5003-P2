@@ -192,8 +192,14 @@
 				<div class="card-content">
 					<div class="content">
 						<table>
+							<tr v-if="openGames.length > 0">
+								<th>Game ID</th>
+								<th>Players waiting</th>
+								<th></th>
+							</tr>
 							<tr v-for="game of openGames">
 								<td>{{ game.id }}</td>
+								<td>{{ game.numPlayers }}</td>
 								<td><button class="button is-small" v-on:click="join(game.id)">Join!</button></td>
 							</tr>
 						</table>

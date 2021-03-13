@@ -79,7 +79,15 @@ exports.startGame = function (playerId) {
 
 exports.getGames = function () {
 	// return games that haven't started yet
-	return Object.entries(games).filter(arr => arr[1].timeStarted === null).map(arr => arr[1])
+	const openGames = Object.entries(games).filter(arr => arr[1].timeStarted === null)
+	const value = []
+	openGames.forEach((arr, i) => {
+		let obj = {}
+		obj['id'] = arr[0]
+		obj['numPlayers'] = Object.keys(arr[1].players).length
+		value.push(obj)
+	})
+	return value;
 }
 
 exports.drawOpenCard = function (playerId) {
