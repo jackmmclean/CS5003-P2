@@ -78,7 +78,8 @@ exports.startGame = function (playerId) {
 }
 
 exports.getGames = function () {
-	return games;
+	// return games that haven't started yet
+	return Object.entries(games).filter(arr => arr[1].timeStarted === null).map(arr => arr[1])
 }
 
 exports.drawOpenCard = function (playerId) {
@@ -190,7 +191,8 @@ exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
-		isOwner: game.owner.id === playerId
+		isOwner: game.owner.id === playerId,
+		numPlayers: game.players.length,
 		// todo add more data that needs to be polled
 	}
 }

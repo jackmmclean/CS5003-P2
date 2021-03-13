@@ -64,3 +64,18 @@ export const getCards = function () {
 		}
 	}).catch(err => console.log(err))
 }
+
+export const getStats = function () {
+	return fetch(`/api/game/game-stats/${game.playerId}`, {
+		method: "GET",
+		headers: {
+			"Authorization": "Basic " + game.userKey
+		},
+	}).then((res) => {
+		if (!res.ok) {
+			throw new Error(`HTTP Error ${res.status}`)
+		} else {
+			return res.json();
+		}
+	})
+}

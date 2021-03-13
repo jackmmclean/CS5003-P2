@@ -1,22 +1,14 @@
 import {
 	game,
 	getCards,
+	getStats,
 	setState
 } from "./clientUtils.js";
 
 const makeGameInfoVue = function () {
 	const gameInfoVue = new Vue({
 		el: "#game-info",
-		data: {
-			generalInfo: {
-				GameID: "1234",
-				Username: "",
-				Turn: "who's turn",
-				Action: "possible action",
-				Time: "some time",
-				Players: "a number"
-			}
-		},
+		data: {},
 		computed: {
 			state() {
 				if (game.state === 'play') {
@@ -26,31 +18,21 @@ const makeGameInfoVue = function () {
 				}
 				return game.state;
 			},
+			generalInfo() {
+				return sharedGameInfo.generalInfo;
+			}
 		},
 		methods: {
 			getGameStats: function () {
-				fetch(`/api/game/game-stats/${game.playerId}`, {
-					method: "GET",
-					headers: {
-						"Authorization": "Basic " + game.userKey
-					},
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP Error ${res.status}`)
-					} else {
-						return res.json();
-					}
-				}).then((json) => {
-					this.generalInfo.GameID = json.gameId;
-					this.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
-					this.generalInfo.Players = json.numPlayers;
+				getStats().then((json) => {
+					sharedGameInfo.generalInfo.GameID = json.gameId;
+					sharedGameInfo.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
+					sharedGameInfo.generalInfo.Players = json.numPlayers;
 				}).catch(err => console.log('Could not get stats.', err))
 			}
 		},
 	})
 }
-
-
 
 const makePlayerHandVue = function () {
 	const playerHandVue = new Vue({
@@ -272,7 +254,7 @@ const makeMessagesVue = function () {
 		beforeDestroy: function () {
 			clearInterval(this.polling)
 		},
-		
+
 		computed: {
 			state() {
 				if (game.state === 'play') {
@@ -302,7 +284,15 @@ const sharedGameInfo = Vue.observable({
 	hand: [],
 	closedDeckCards: [],
 	showBackOfCard: false,
-	showStartGameBtn: false
+	showStartGameBtn: false,
+	generalInfo: {
+		GameID: "1234",
+		Username: "",
+		Turn: "who's turn",
+		Action: "possible action",
+		Time: "some time",
+		Players: 0,
+	}
 });
 
 const setHand = (newHand) => {
@@ -355,13 +345,23 @@ const startInterval = () => {
 		}).then(async (json) => {
 			// let only owner start the game
 			setStartGameBtn(json.isOwner)
+
+			// get game stats (even if game hasn't started yet)
+			getStats().then((json) => {
+				sharedGameInfo.generalInfo.GameID = json.gameId;
+				sharedGameInfo.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
+				sharedGameInfo.generalInfo.Players = json.numPlayers;
+			}).catch(err => console.log('Could not get stats.', err))
+
 			// only once the game is started
 			if (json.gameHasStarted) {
-				const cards = await getCards()
-				setHand(cards.hand);
-				setOpenDeck(cards.openDeck);
-				setClosedDeck(cards.deck);
-				showBackOfCard();
+				// get cards
+				getCards().then((cards) => {
+					setHand(cards.hand);
+					setOpenDeck(cards.openDeck);
+					setClosedDeck(cards.deck);
+					showBackOfCard();
+				}).catch(err => console.log('Could not get cards.', err))
 			}
 
 		}).catch(err => console.log(err))
