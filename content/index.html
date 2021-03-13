@@ -205,7 +205,7 @@
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
 					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card"
-						v-bind:style="{color: card.color}"></div>
+						v-bind:style="{color: card.color}" v-on:click="drawFromOpenDeck"></div>
 				</div>
 			</div>
 		</div>

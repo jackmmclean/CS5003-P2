@@ -128,7 +128,7 @@ function makeCards(game) {
 		this.time = new Date;
 		this.openDeck = Object.assign({}, cards.openDeck);
 		this.deck = Object.assign({}, cards.deck);
-		for (let player of players) {
+		for (let [k, player] of Object.entries(players)) {
 			this[player.id] = Object.assign({}, cards[player.id]);
 		}
 	}

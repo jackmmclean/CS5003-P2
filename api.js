@@ -65,10 +65,14 @@ exports.getGames = function () {
 }
 
 exports.drawOpenCard = function (playerId) {
+	// todo check if draw is even possible
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.openDraw();
-	return card;
+	return {
+		drawnCard: card,
+		hand: player.hand(),
+	};
 }
 
 exports.drawClosedCard = function (playerId) {

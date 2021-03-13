@@ -92,10 +92,6 @@ const makeOpenDeckVue = function() {
         data: {},
         computed: {
             state() {
-                if (game.state === 'play') {
-                    // get the game stats if we're playing
-                    this.getOpenDeck();
-                }
                 return game.state;
             },
             openDeckCards() {
@@ -103,9 +99,20 @@ const makeOpenDeckVue = function() {
             }
         },
         methods: {
-            getOpenDeck: function() {
-                // get open deck cards from cards
-            },
+            drawFromOpenDeck: () => {
+                return fetch(`/api/game/draw-open-card/${game.playerId}`, {
+                    method: "GET",
+                    headers: {"Authorization": "Basic " + game.userKey}
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`)
+                    } else {
+                        return res.json();
+                    }
+                }).then((json) => {
+                    setHand(json.hand);
+                }).catch(err => console.log(err))
+            }
         },
     })
 }
@@ -187,7 +194,6 @@ const setStartGameBtn = (show) => {sharedGameInfo.showStartGameBtn = show}
 let pollInterval = null;
 
 const startInterval = () => {pollInterval = setInterval(() => {
-    // todo fill in the other data that needs to get polled and how to process it
     fetch(`/api/game/poll/${game.playerId}`, {
         method: "GET",
         headers: {"Authorization": "Basic " + game.userKey}
@@ -198,16 +204,14 @@ const startInterval = () => {pollInterval = setInterval(() => {
             return res.json();
         }
     }).then(async (json) => {
-        // todo if game has started, pull game
+        // let only owner start the game
         setStartGameBtn(json.isOwner)
+        // only once the game is started
         if (json.gameHasStarted) {
-            console.log('Game started')
             const cards = await getCards()
             setHand(cards.hand);
             setOpenDeck(cards.openDeck);
             showBackOfCard();
-        } else {
-            console.log('Game not started yet')
         }
 
     }).catch(err => console.log(err))

@@ -82,7 +82,7 @@ app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 // Let the user draw the top card from the open deck
 app.get('/api/game/draw-open-card/:playerId', authenticate, (req, res) => {
 	let card = drawOpenCard(req.params.playerId);
-	res.json(card);
+	res.status(200).json(card);
 })
 
 // Let the user draw the top card from the closed deck
