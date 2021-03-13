@@ -195,7 +195,7 @@
 			<div class="board">
 				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
 					<div class="playing-card" v-for="card in hand" v-html="card.card"
-						v-bind:style="{color: card.color}"></div>
+						v-bind:style="{color: card.color}" v-on:click="depositCard(card.cardNo)"></div>
 				</div>
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">

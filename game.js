@@ -63,7 +63,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 					this.cards.closedDraw(player)
 				};
 				player.depositCard = (card) => {
-					this.cards.depositCard(player, card)
+					return this.cards.depositCard(player, card)
 				};
 			}
 		};

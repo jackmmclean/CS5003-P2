@@ -64,6 +64,28 @@ const makePlayerHandVue = function() {
             setHand: function(newHand) {
                 sharedGameInfo.hand = newHand;
             },
+            depositCard: (cardNo) => {
+                // todo for some reason, the body is not passed on
+                console.log(cardNo)
+                fetch(`/api/game/deposit-card/${game.playerId}`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Basic " + game.userKey
+                    },
+                    body: JSON.stringify({
+                        cardNo: cardNo,
+                        test: 123
+                    })
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`)
+                    } else {
+                        return res.json();
+                    }
+                }).then((json) => {
+                    setHand(json.hand);
+                }).catch(err => console.log(err))
+            },
         },
     })
 }
@@ -84,7 +106,7 @@ const makeClosedDeckVue = function() {
         },
         methods: {
             drawFromClosedDeck: () => {
-                return fetch(`/api/game/draw-closed-card/${game.playerId}`, {
+                fetch(`/api/game/draw-closed-card/${game.playerId}`, {
                     method: "GET",
                     headers: {"Authorization": "Basic " + game.userKey}
                 }).then((res) => {
@@ -115,7 +137,7 @@ const makeOpenDeckVue = function() {
         },
         methods: {
             drawFromOpenDeck: () => {
-                return fetch(`/api/game/draw-open-card/${game.playerId}`, {
+                fetch(`/api/game/draw-open-card/${game.playerId}`, {
                     method: "GET",
                     headers: {"Authorization": "Basic " + game.userKey}
                 }).then((res) => {
@@ -182,7 +204,11 @@ const makeUserActionsVue = function() {
 const transformCards = function(numericCards) {
     let cards = []
     for (let c of numericCards) {
-        cards.push({card: '&#'+c+';', color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred"})
+        cards.push({
+            card: '&#'+c+';',
+            color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred",
+            cardNo: c
+        })
     }
     return cards;
 }

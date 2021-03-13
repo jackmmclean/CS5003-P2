@@ -93,8 +93,8 @@ app.get('/api/game/draw-closed-card/:playerId', authenticate, (req, res) => {
 
 // Let the user deposit a card to the open deck
 app.post('/api/game/deposit-card/:playerId', authenticate, (req, res) => {
-	depositCard(req.params.playerId, req.body.cardNo)
-	res.send(200);
+	const hand = depositCard(req.params.playerId, req.body.cardNo)
+	res.status(200).json(hand);
 })
 
 // Let the user declare Gin

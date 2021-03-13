@@ -87,10 +87,12 @@ exports.drawClosedCard = function (playerId) {
 }
 
 exports.depositCard = function (playerId, card) {
+	// todo check if player is allowed to deposit this card
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	let hand = player.depositCard(card);
-	return hand;
+	return {
+		hand: player.depositCard(card)
+	}
 }
 
 exports.declareGin = function (playerId) {
