@@ -1,5 +1,6 @@
 import {
 	game,
+	getCards,
 	setState
 } from "./clientUtils.js";
 const makeGameInfoVue = function () {
@@ -7,8 +8,7 @@ const makeGameInfoVue = function () {
 		el: "#game-info",
 		data: {
 			generalInfo: {
-				GameID: "game id",
-				Username: "users username",
+				Username: "",
 				Turn: "who's turn",
 				Action: "possible action",
 				Time: "some time",
@@ -48,6 +48,8 @@ const makeGameInfoVue = function () {
 	})
 }
 
+
+
 const makePlayerHandVue = function () {
 	const playerHandVue = new Vue({
 		el: "#player-hand",
@@ -61,7 +63,7 @@ const makePlayerHandVue = function () {
 				return game.state;
 			},
 			hand() {
-				return userCards.hand;
+				return sharedGameInfo.hand;
 			}
 		},
 		methods: {
@@ -69,7 +71,29 @@ const makePlayerHandVue = function () {
 				// get cards from api
 			},
 			setHand: function (newHand) {
-				userCards.hand = newHand;
+				sharedGameInfo.hand = newHand;
+			},
+			depositCard: (cardNo) => {
+				// todo for some reason, the body is not passed on
+				console.log(cardNo)
+				fetch(`/api/game/deposit-card/${game.playerId}`, {
+					method: "POST",
+					headers: {
+						"Authorization": "Basic " + game.userKey
+					},
+					body: JSON.stringify({
+						cardNo: cardNo,
+						test: 123
+					})
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					setHand(json.hand);
+				}).catch(err => console.log(err))
 			},
 		},
 	})
@@ -89,10 +113,27 @@ const makeClosedDeckVue = function () {
 				return game.state;
 			},
 			showBackOfCard() {
-				return userCards.showBackOfCard;
+				return sharedGameInfo.showBackOfCard;
 			}
 		},
-		methods: {}
+		methods: {
+			drawFromClosedDeck: () => {
+				fetch(`/api/game/draw-closed-card/${game.playerId}`, {
+					method: "GET",
+					headers: {
+						"Authorization": "Basic " + game.userKey
+					}
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					setHand(json.hand);
+				}).catch(err => console.log(err))
+			},
+		}
 	})
 }
 
@@ -102,19 +143,28 @@ const makeOpenDeckVue = function () {
 		data: {},
 		computed: {
 			state() {
-				if (game.state === 'play') {
-					// get the game stats if we're playing
-					this.getOpenDeck();
-				}
 				return game.state;
 			},
 			openDeckCards() {
-				return userCards.openDeckCards;
+				return sharedGameInfo.openDeckCards;
 			}
 		},
 		methods: {
-			getOpenDeck: function () {
-				// get open deck cards from cards
+			drawFromOpenDeck: () => {
+				fetch(`/api/game/draw-open-card/${game.playerId}`, {
+					method: "GET",
+					headers: {
+						"Authorization": "Basic " + game.userKey
+					}
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					setHand(json.hand);
+				}).catch(err => console.log(err))
 			},
 		},
 	})
@@ -128,6 +178,9 @@ const makeUserActionsVue = function () {
 			state() {
 				return game.state;
 			},
+			showStartGameBtn() {
+				return sharedGameInfo.showStartGameBtn;
+			}
 		},
 		methods: {
 			startGame: function () {
@@ -158,10 +211,10 @@ const makeUserActionsVue = function () {
 				console.log('Knock');
 			},
 			setHand: function (newHand) {
-				userCards.hand = newHand;
+				sharedGameInfo.hand = newHand;
 			},
 			setOpenDeck: function (newOpenDeck) {
-				userCards.openDeckCards = newOpenDeck;
+				sharedGameInfo.openDeckCards = newOpenDeck;
 			}
 		}
 	})
@@ -171,35 +224,40 @@ const transformCards = function (numericCards) {
 	for (let c of numericCards) {
 		cards.push({
 			card: '&#' + c + ';',
-			color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred"
+			color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred",
+			cardNo: c
 		})
 	}
 	return cards;
 }
 
-const userCards = Vue.observable({
+const sharedGameInfo = Vue.observable({
 	openDeckCards: [],
 	hand: [],
 	showBackOfCard: false,
+	showStartGameBtn: false,
 });
 
 const setHand = (newHand) => {
-	userCards.hand = transformCards(newHand.map(el => el.char));
+	sharedGameInfo.hand = transformCards(newHand.map(el => el.char));
 }
 
 const setOpenDeck = (newOpenDeck) => {
-	userCards.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
+	sharedGameInfo.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
 }
 
 const showBackOfCard = () => {
-	userCards.showBackOfCard = true;
+	sharedGameInfo.showBackOfCard = true;
+}
+
+const setStartGameBtn = (show) => {
+	sharedGameInfo.showStartGameBtn = show
 }
 
 let pollInterval = null;
 
 const startInterval = () => {
 	pollInterval = setInterval(() => {
-		// todo fill in the other data that needs to get polled and how to process it
 		fetch(`/api/game/poll/${game.playerId}`, {
 			method: "GET",
 			headers: {
@@ -211,9 +269,17 @@ const startInterval = () => {
 			} else {
 				return res.json();
 			}
-		}).then((json) => {
-			// todo if game has started, pull game
-			console.log('Has started', json.gameHasStarted)
+		}).then(async (json) => {
+			// let only owner start the game
+			setStartGameBtn(json.isOwner)
+			// only once the game is started
+			if (json.gameHasStarted) {
+				const cards = await getCards()
+				setHand(cards.hand);
+				setOpenDeck(cards.openDeck);
+				showBackOfCard();
+			}
+
 		}).catch(err => console.log(err))
 
 	}, 1000);

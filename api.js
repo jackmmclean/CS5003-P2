@@ -47,14 +47,14 @@ exports.joinGame = function (username, gameId) {
 	return {
 		status: 200,
 		gameId: gameId,
-		playerId: playerId,
+		playerId: playerId.id,
 		text: `Successfully joined game with id ${gameId}.`,
 	}
 }
 
 exports.startGame = function (playerId) {
 	let game = getGameByPlayerId(playerId)
-	if (game.owner.id === playerId) {
+	if (game.owner.id !== playerId) {
 		return {
 			status: 400,
 			text: "Only the owner of the game can start the game."
@@ -79,24 +79,34 @@ exports.getGames = function () {
 }
 
 exports.drawOpenCard = function (playerId) {
+	// todo check if draw is even possible
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.openDraw();
-	return card;
+	return {
+		drawnCard: card,
+		hand: player.hand(),
+	};
 }
 
 exports.drawClosedCard = function (playerId) {
+	// todo check if draw is even possible
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.closedDraw();
-	return card;
+	return {
+		drawnCard: card,
+		hand: player.hand(),
+	};
 }
 
 exports.depositCard = function (playerId, card) {
+	// todo check if player is allowed to deposit this card
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	let hand = player.depositCard(card);
-	return hand;
+	return {
+		hand: player.depositCard(card)
+	}
 }
 
 exports.declareGin = function (playerId) {
@@ -175,7 +185,25 @@ exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
+		isOwner: game.owner.id === playerId
 		// todo add more data that needs to be polled
+	}
+}
+
+exports.getCards = function(playerId) {
+	const game = getGameByPlayerId(playerId);
+	// check if game has started
+	if (game.timeStarted !== null) {
+		return {
+			status: 200,
+			hand: game.players[playerId].hand(),
+			openDeck: game.cards.openDeck,
+			// todo check what else needs to be send back
+		}
+	} else {
+		return {
+			status: 400
+		}
 	}
 }
 

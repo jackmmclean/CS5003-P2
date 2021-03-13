@@ -103,7 +103,7 @@
 		<div class="card" id="user-actions" v-show="state === 'play'">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame">Start Game</button>
+					<button class="button is-small" v-on:click="startGame" v-show="showStartGameBtn">Start Game</button>
 					<button class="button is-small" v-on:click="declareGin">Declare Gin</button>
 					<button class="button is-small" v-on:click="knock">Knock</button>
 				</div>
@@ -205,18 +205,18 @@
 
 			<div class="board">
 				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
-					<div class="playing-card" v-for="card in hand" v-html="card.card"
-						v-bind:style="{color: card.color}"></div>
+					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"
+						v-on:click="depositCard(card.cardNo)"></div>
 				</div>
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
 					<div class="playing-card" v-html="backOfCard.card" v-show="showBackOfCard"
-						v-bind:style="{color: backOfCard.color}"></div>
+						v-bind:style="{color: backOfCard.color}" v-on:click="drawFromClosedDeck"></div>
 				</div>
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
 					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card"
-						v-bind:style="{color: card.color}"></div>
+						v-bind:style="{color: card.color}" v-on:click="drawFromOpenDeck"></div>
 				</div>
 			</div>
 		</div>

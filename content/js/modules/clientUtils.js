@@ -42,3 +42,20 @@ export const login = function() {
         return res.status;
     })
 }
+
+/**
+ * Get the cards of the game (after the game has started)
+ * @returns {object} cards
+ * */
+export const getCards = function() {
+    return fetch(`/api/game/get-cards/${game.playerId}`, {
+        method: "GET",
+        headers: {"Authorization": "Basic " + game.userKey}
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`)
+        } else {
+            return res.json();
+        }
+    }).catch(err => console.log(err))
+}
