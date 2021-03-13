@@ -80,12 +80,10 @@ const makePlayerHandVue = function () {
 				fetch(`/api/game/deposit-card/${game.playerId}`, {
 					method: "POST",
 					headers: {
-						"Authorization": "Basic " + game.userKey
-					},
-					body: JSON.stringify({
-						cardNo: cardNo,
-						test: 123
-					})
+					    "Authorization": "Basic " + game.userKey,
+                        "Content-Type": "application/json",
+                    },
+					body: JSON.stringify({cardNo: cardNo, test: 123})
 				}).then((res) => {
 					if (!res.ok) {
 						throw new Error(`HTTP ${res.status}`)
@@ -155,7 +153,7 @@ const makeOpenDeckVue = function () {
 				fetch(`/api/game/draw-open-card/${game.playerId}`, {
 					method: "GET",
 					headers: {
-						"Authorization": "Basic " + game.userKey
+						"Authorization": "Basic " + game.userKey,
 					}
 				}).then((res) => {
 					if (!res.ok) {
