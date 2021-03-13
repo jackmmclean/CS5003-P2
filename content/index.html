@@ -200,7 +200,7 @@
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
 					<div class="playing-card" v-html="backOfCard.card" v-show="showBackOfCard"
-						 v-bind:style="{color: backOfCard.color}"></div>
+						 v-bind:style="{color: backOfCard.color}" v-on:click="drawFromClosedDeck"></div>
 				</div>
 
 				<div class="board-element deck" id="open-deck" v-show="state === 'play'">

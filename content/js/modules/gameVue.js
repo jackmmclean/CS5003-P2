@@ -82,7 +82,22 @@ const makeClosedDeckVue = function() {
                 return sharedGameInfo.showBackOfCard;
             }
         },
-        methods: {}
+        methods: {
+            drawFromClosedDeck: () => {
+                return fetch(`/api/game/draw-closed-card/${game.playerId}`, {
+                    method: "GET",
+                    headers: {"Authorization": "Basic " + game.userKey}
+                }).then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`)
+                    } else {
+                        return res.json();
+                    }
+                }).then((json) => {
+                    setHand(json.hand);
+                }).catch(err => console.log(err))
+            },
+        }
     })
 }
 
@@ -112,7 +127,7 @@ const makeOpenDeckVue = function() {
                 }).then((json) => {
                     setHand(json.hand);
                 }).catch(err => console.log(err))
-            }
+            },
         },
     })
 }
