@@ -100,10 +100,11 @@ exports.drawClosedCard = function (playerId) {
 	};
 }
 
-exports.depositCard = function (playerId, card) {
+exports.depositCard = function (playerId, cardNo) {
 	// todo check if player is allowed to deposit this card
-	let game = getGameByPlayerId(playerId);
-	let player = game.players[playerId];
+	const game = getGameByPlayerId(playerId);
+	const player = game.players[playerId];
+	const card = player.hand().filter(el => el.char === cardNo)[0]
 	return {
 		hand: player.depositCard(card)
 	}
