@@ -190,7 +190,8 @@ exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
-		isOwner: game.owner.id === playerId
+		isOwner: game.owner.id === playerId,
+		numPlayers: game.players.length,
 		// todo add more data that needs to be polled
 	}
 }
