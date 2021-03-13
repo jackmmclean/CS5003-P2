@@ -218,6 +218,13 @@ const makeUserActionsVue = function () {
 		}
 	})
 }
+
+const makeMessagesVue = function () {
+	const messagesVue = new Vue ({
+		el: "#messages"
+	})
+}
+
 const transformCards = function (numericCards) {
 	let cards = []
 	for (let c of numericCards) {

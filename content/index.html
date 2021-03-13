@@ -219,6 +219,11 @@
 						v-bind:style="{color: card.color}" v-on:click="drawFromOpenDeck"></div>
 				</div>
 			</div>
+			<div id="messages" v-show="state === 'play'">
+				<label>
+					<input class="input is-small" type="text" v-model="message">
+				</label>
+			</div>
 		</div>
 	</section>
 
