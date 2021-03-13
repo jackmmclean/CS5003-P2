@@ -1,4 +1,4 @@
-import {game, setState} from "./clientUtils.js";
+import {game, getCards, setState} from "./clientUtils.js";
 const makeGameInfoVue = function() {
     const gameInfoVue = new Vue({
         el: "#game-info",
@@ -54,7 +54,7 @@ const makePlayerHandVue = function() {
                 return game.state;
             },
             hand() {
-                return userCards.hand;
+                return sharedGameInfo.hand;
             }
         },
         methods: {
@@ -62,7 +62,7 @@ const makePlayerHandVue = function() {
                 // get cards from api
             },
             setHand: function(newHand) {
-                userCards.hand = newHand;
+                sharedGameInfo.hand = newHand;
             },
         },
     })
@@ -79,7 +79,7 @@ const makeClosedDeckVue = function() {
                 return game.state;
             },
             showBackOfCard() {
-                return userCards.showBackOfCard;
+                return sharedGameInfo.showBackOfCard;
             }
         },
         methods: {}
@@ -99,7 +99,7 @@ const makeOpenDeckVue = function() {
                 return game.state;
             },
             openDeckCards() {
-                return userCards.openDeckCards;
+                return sharedGameInfo.openDeckCards;
             }
         },
         methods: {
@@ -118,6 +118,9 @@ const makeUserActionsVue = function() {
             state() {
                 return game.state;
             },
+            showStartGameBtn() {
+                return sharedGameInfo.showStartGameBtn;
+            }
         },
         methods: {
             startGame: function() {
@@ -146,10 +149,10 @@ const makeUserActionsVue = function() {
                 console.log('Knock');
             },
             setHand: function(newHand) {
-                userCards.hand = newHand;
+                sharedGameInfo.hand = newHand;
             },
             setOpenDeck: function(newOpenDeck) {
-                userCards.openDeckCards = newOpenDeck;
+                sharedGameInfo.openDeckCards = newOpenDeck;
             }
         }
     })
@@ -162,23 +165,24 @@ const transformCards = function(numericCards) {
     return cards;
 }
 
-const userCards = Vue.observable({
+const sharedGameInfo = Vue.observable({
     openDeckCards: [],
     hand: [],
     showBackOfCard: false,
+    showStartGameBtn: false,
 });
 
 const setHand = (newHand) => {
-    userCards.hand = transformCards(newHand.map(el => el.char));
+    sharedGameInfo.hand = transformCards(newHand.map(el => el.char));
 }
 
 const setOpenDeck = (newOpenDeck) => {
-    userCards.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
+    sharedGameInfo.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
 }
 
-const showBackOfCard = () => {
-    userCards.showBackOfCard = true;
-}
+const showBackOfCard = () => {sharedGameInfo.showBackOfCard = true;}
+
+const setStartGameBtn = (show) => {sharedGameInfo.showStartGameBtn = show}
 
 let pollInterval = null;
 
@@ -193,9 +197,19 @@ const startInterval = () => {pollInterval = setInterval(() => {
         } else {
             return res.json();
         }
-    }).then((json) => {
+    }).then(async (json) => {
         // todo if game has started, pull game
-        console.log('Has started', json.gameHasStarted)
+        setStartGameBtn(json.isOwner)
+        if (json.gameHasStarted) {
+            console.log('Game started')
+            const cards = await getCards()
+            setHand(cards.hand);
+            setOpenDeck(cards.openDeck);
+            showBackOfCard();
+        } else {
+            console.log('Game not started yet')
+        }
+
     }).catch(err => console.log(err))
 
 }, 1000);}

@@ -33,14 +33,14 @@ exports.joinGame = function (username, gameId) {
 	return {
 		status: 200,
 		gameId: gameId,
-		playerId: playerId,
+		playerId: playerId.id,
 		text: `Successfully joined game with id ${gameId}.`,
 	}
 }
 
 exports.startGame = function (playerId) {
 	let game = getGameByPlayerId(playerId)
-	if (game.owner.id === playerId) {
+	if (game.owner.id !== playerId) {
 		return {
 			status: 400,
 			text: "Only the owner of the game can start the game."
@@ -151,7 +151,25 @@ exports.pollGame = function(playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
+		isOwner: game.owner.id === playerId
 		// todo add more data that needs to be polled
+	}
+}
+
+exports.getCards = function(playerId) {
+	const game = getGameByPlayerId(playerId);
+	// check if game has started
+	if (game.timeStarted !== null) {
+		return {
+			status: 200,
+			hand: game.players[playerId].hand(),
+			openDeck: game.cards.openDeck,
+			// todo check what else needs to be send back
+		}
+	} else {
+		return {
+			status: 400
+		}
 	}
 }
 

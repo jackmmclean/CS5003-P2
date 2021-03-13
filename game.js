@@ -46,8 +46,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 		this.addPlayer = (username) => {
 			let player = makePlayer(username);
 			this.players[player.id] = player;
-			this.owner = player;
-			return player.id;
+			return player;
 		};
 		this.startGame = () => {
 			this.timeStarted = new Date;
@@ -70,7 +69,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed) {
 		};
 	}
 	let game = new Game();
-	game.addPlayer(username);
+	game.owner = game.addPlayer(username);
 	return game;
 }
 

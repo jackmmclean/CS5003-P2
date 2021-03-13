@@ -12,7 +12,8 @@ const {
 	registerUser,
 	gameStats,
 	declareGin,
-	pollGame
+	pollGame,
+	getCards
 } = require("./api");
 
 const app = express();
@@ -41,25 +42,23 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/content/index.html')
 })
 
-// API routes
-app.get('/api/game/poll/:playerId', authenticate, (req, res) => {
-	const playerId = req.params.playerId;
-	const pollData = pollGame(playerId);
-	res.status(200).json(pollData)
-})
+// API routes ========
 
-app.get('/api/lobby/get-games', (req, res) => {
+// Get a list of open games
+app.get('/api/lobby/get-games', authenticate, (req, res) => {
 	res.status(200).json({
 		games: getGames()
 	});
 })
 
+// Let the user join an open game by its gameId
 app.post('/api/game/join', authenticate, (req, res) => {
 	let gameId = req.body.gameId;
 	let game = joinGame(req.username, gameId);
 	res.status(200).json(game);
 })
 
+// Let the user create a new game
 app.post('/api/game/create/', authenticate, (req, res) => {
 	let knockingAllowed = req.body.knockingAllowed;
 	let lowHighAceAllowed = req.body.lowHighAceAllowed;
@@ -69,6 +68,7 @@ app.post('/api/game/create/', authenticate, (req, res) => {
 	res.status(200).json(game);
 })
 
+// Let the user start a game (that they created themselves)
 app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 	let game = startGame(req.params.playerId);
 	if (game.status === 400) {
@@ -79,26 +79,31 @@ app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 	}
 })
 
-app.get('/api/game/draw-open-card/:playerId', (req, res) => {
+// Let the user draw the top card from the open deck
+app.get('/api/game/draw-open-card/:playerId', authenticate, (req, res) => {
 	let card = drawOpenCard(req.params.playerId);
 	res.json(card);
 })
 
-app.get('/api/game/draw-closed-card/:playerId', (req, res) => {
+// Let the user draw the top card from the closed deck
+app.get('/api/game/draw-closed-card/:playerId', authenticate, (req, res) => {
 	let card = drawClosedCard(req.params.playerId);
 	res.json(card);
 })
 
-app.post('/api/game/post-card/:playerId', (req, res) => {
+// Let the user deposit a card to the open deck
+app.post('/api/game/deposit-card/:playerId', authenticate, (req, res) => {
 	depositCard(req.params.playerId, req.body.cardNo)
 	res.send(200);
 })
 
-app.post('/api/game/declare-gin/:playerId', (req, res) => {
+// Let the user declare Gin
+app.post('/api/game/declare-gin/:playerId', authenticate, (req, res) => {
 	let winOrLose = declareGin(req.params.playerId);
 	res.json(winOrLose);
 })
 
+// Send information about the game back to the user
 app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	const playerId = req.params.playerId;
 	let stats = gameStats(playerId);
@@ -106,7 +111,21 @@ app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	res.status(200).json(stats);
 })
 
-app.post('/api/users/register-user', (req, res) => {
+// Let player poll every few ms to check data about the game
+app.get('/api/game/poll/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	const pollData = pollGame(playerId);
+	res.status(200).json(pollData)
+})
+
+app.get('/api/game/get-cards/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	const cards = getCards(playerId);
+	res.status(cards.status).json(cards);
+})
+
+// Register a new user
+app.post('/api/users/register-user', authenticate, (req, res) => {
 	let username = req.headers.username;
 	let password = req.headers.password;
 	console.log(users)
@@ -116,11 +135,13 @@ app.post('/api/users/register-user', (req, res) => {
 	res.status(registration.status).send(registration.text);
 })
 
+// Login to an existing user
 app.post('/api/users/login', authenticate, (req, res) => {
 	res.sendStatus(200);
 })
 
-app.get('/api/users/scores/:username', (req, res) => {
+// Get the all time scores for a user
+app.get('/api/users/scores/:username', authenticate, (req, res) => {
 	username = req.params.username;
 	getScore(username);
 })
