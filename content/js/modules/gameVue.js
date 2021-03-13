@@ -26,7 +26,7 @@ const makeGameInfoVue = function () {
 			getGameStats: function () {
 				getStats().then((json) => {
 					sharedGameInfo.generalInfo.GameID = json.gameId;
-					sharedGameInfo.generalInfo.Username = (json.username == 'guest') ? 'Guest' : json.username;
+					sharedGameInfo.generalInfo.Username = json.niceUsername;
 					sharedGameInfo.generalInfo.Players = json.numPlayers;
 				}).catch(err => console.log('Could not get stats.', err))
 			}
@@ -349,7 +349,7 @@ const startInterval = () => {
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
 				sharedGameInfo.generalInfo.GameID = json.gameId;
-				sharedGameInfo.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
+				sharedGameInfo.generalInfo.Username = json.niceUsername;
 				sharedGameInfo.generalInfo.Players = json.numPlayers;
 			}).catch(err => console.log('Could not get stats.', err))
 

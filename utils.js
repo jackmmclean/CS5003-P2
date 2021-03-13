@@ -1,5 +1,8 @@
+const {
+	games
+} = require("./data/data");
+
 // define function to shuffle cards
-const {games} = require("./data/data");
 exports.shuffle = function (array) {
 
 	var currentIndex = array.length,
@@ -294,7 +297,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 	return returnArray;
 }
 
-exports.getGameByPlayerId = function (searchedPlayerID) {
+getGameByPlayerId = function (searchedPlayerID) {
 	for (let gameId in games) {
 		if (games[gameId].players.hasOwnProperty(searchedPlayerID)) {
 			return games[gameId];
@@ -302,10 +305,28 @@ exports.getGameByPlayerId = function (searchedPlayerID) {
 	}
 }
 
+exports.getGameByPlayerId = getGameByPlayerId;
+
 exports.getHighestScoringPlayers = function (playerArray) {
 	let highScorers = [...playerArray];
 	for (let player of highScorers) {
 		highScorers = highScorers.filter(el => el.score >= player.score)
 	}
 	return highScorers
+}
+
+exports.niceUsername = function (playerId) {
+	const game = getGameByPlayerId(playerId);
+	const guests = {};
+	for (let playerKey in game.players) {
+		if (game.players[playerKey].username == 'guest') {
+			guests[playerKey] = (game.players[playerKey]);
+		}
+	}
+	const guestIDs = Object.keys(guests);
+	if (guestIDs.includes(playerId)) {
+		return `Guest ${guestIDs.indexOf(playerId) + 1}`
+	} else {
+		return username;
+	}
 }

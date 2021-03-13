@@ -222,7 +222,7 @@
 			<div id="messages" v-show="state === 'play'">
 
 				<!-- to do - fix a size and maybe location for the message box -->
-				<div v-for="msg in pastMessages">{{ msg.playerId }} : {{ msg.text }}
+				<div v-for="msg in pastMessages">{{ msg.niceUsername }} : {{ msg.text }}
 					({{ msg.timeStamp }})</div>
 
 				<form name="send-message" v-on:submit.prevent="sendMessage">
