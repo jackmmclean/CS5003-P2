@@ -39,7 +39,6 @@ const makeJoinGameByIdVue = function () {
 					// Process returned values
 					game.playerId = json.playerId;
 					game.gameId = json.gameId;
-					console.log(json.text);
 					setState('play');
 				}).catch(err => {
 					this.message = "Couldn't join game."
@@ -81,7 +80,7 @@ const makeNewGameVue = function () {
 				}).then((res) => {
 					// Make sure we got a 200 response
 					if (!res.ok) {
-						if (res.status == 409) {
+						if (res.status === 409) {
 							//how do i get this from the response??
 							this.message = `Could not create game. Game with id "${this.gameId.trim()}" already exists.`;
 						} else {
@@ -96,7 +95,6 @@ const makeNewGameVue = function () {
 					//Process returned values
 					game.playerId = json.playerId;
 					game.gameId = json.gameId;
-					console.log(json.text)
 					setState('play');
 
 				})
@@ -122,7 +120,6 @@ const makeOpenGamesVue = function () {
 		},
 		methods: {
 			getGames: function () {
-				console.log('Getting games from /api/lobby/get-games')
 				fetch('/api/lobby/get-games', {
 					method: "GET",
 					headers: {
@@ -135,7 +132,6 @@ const makeOpenGamesVue = function () {
 					return res.json();
 				}).then((json) => {
 					this.openGames = json.games;
-					console.log(this.openGames)
 				}).catch(err => console.log('There was an error.', err))
 
 				this.openGames = ['uuid1', 'uuid2', 'uuid3', 'uuid4']
@@ -159,7 +155,6 @@ const makeOpenGamesVue = function () {
 				}).then((json) => {
 					game.playerId = json.playerId;
 					game.gameId = json.gameId;
-					console.log(json.text);
 					setState('play');
 				}).catch(err => {
 					this.message = "Couldn't join game."

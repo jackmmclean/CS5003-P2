@@ -49,7 +49,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 			if (owner === true) {
 				this.owner = player;
 			}
-			return player.id;
+			return player;
 		};
 		this.startGame = () => {
 			this.timeStarted = new Date;
@@ -139,14 +139,14 @@ function makeCards(game) {
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
 		game.cardHistory.push(new CardsInstance());
-		cards[player.id].push(cards.deck.splice(0, 1)[0]);
+		cards[player.id].push(cards.deck.splice(cards.deck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
 		game.cardHistory.push(new CardsInstance());
-		cards[player.id].push(cards.openDeck.splice(0, 1)[0]);
+		cards[player.id].push(cards.openDeck.splice(cards.openDeck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 

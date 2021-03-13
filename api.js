@@ -42,12 +42,12 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gam
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
 exports.joinGame = function (username, gameId) {
-	const playerId = games[gameId].addPlayer(username);
+	const player = games[gameId].addPlayer(username);
 
 	return {
 		status: 200,
 		gameId: gameId,
-		playerId: playerId.id,
+		playerId: player.id,
 		text: `Successfully joined game with id ${gameId}.`,
 	}
 }
@@ -69,6 +69,7 @@ exports.startGame = function (playerId) {
 		gameId: game.id,
 		hand: hand,
 		openDeck: openDeck,
+		deck: game.cards.deck,
 		text: `Game with id ${game.id} successfully started.`
 	}
 
@@ -199,6 +200,7 @@ exports.getCards = function(playerId) {
 			status: 200,
 			hand: game.players[playerId].hand(),
 			openDeck: game.cards.openDeck,
+			deck: game.cards.deck,
 			// todo check what else needs to be send back
 		}
 	} else {

@@ -75,7 +75,6 @@ const makePlayerHandVue = function () {
 			},
 			depositCard: (cardNo) => {
 				// todo for some reason, the body is not passed on
-				console.log(cardNo)
 				fetch(`/api/game/deposit-card/${game.playerId}`, {
 					method: "POST",
 					headers: {
@@ -112,7 +111,10 @@ const makeClosedDeckVue = function () {
 			},
 			showBackOfCard() {
 				return sharedGameInfo.showBackOfCard;
-			}
+			},
+            closedDeckCards() {
+                return sharedGameInfo.closedDeckCards;
+            }
 		},
 		methods: {
 			drawFromClosedDeck: () => {
@@ -197,7 +199,9 @@ const makeUserActionsVue = function () {
 				}).then((json) => {
 					setHand(json.hand);
 					setOpenDeck(json.openDeck);
+					setClosedDeck(json.deck)
 					showBackOfCard();
+
 				}).catch(err => console.log(err))
 			},
 			declareGin: function () {
@@ -211,9 +215,6 @@ const makeUserActionsVue = function () {
 			setHand: function (newHand) {
 				sharedGameInfo.hand = newHand;
 			},
-			setOpenDeck: function (newOpenDeck) {
-				sharedGameInfo.openDeckCards = newOpenDeck;
-			}
 		}
 	})
 }
@@ -232,6 +233,7 @@ const transformCards = function (numericCards) {
 const sharedGameInfo = Vue.observable({
 	openDeckCards: [],
 	hand: [],
+    closedDeckCards: [],
 	showBackOfCard: false,
 	showStartGameBtn: false,
 });
@@ -241,7 +243,16 @@ const setHand = (newHand) => {
 }
 
 const setOpenDeck = (newOpenDeck) => {
-	sharedGameInfo.openDeckCards = transformCards(newOpenDeck.map(el => el.char));
+    // show only top 5 cards of open deck
+	sharedGameInfo.openDeckCards = transformCards(newOpenDeck.map(el => el.char))
+        .slice(Math.max(newOpenDeck.length - 5, 0));
+}
+
+const setClosedDeck = (newClosedDeck) => {
+    // show only 5 cards of closed deck
+    sharedGameInfo.closedDeckCards = newClosedDeck
+        .map(el => {return {card: "&#127136", color: "#0d47a1"}})
+        .slice(Math.max(newClosedDeck.length - 5, 0))
 }
 
 const showBackOfCard = () => {
@@ -254,6 +265,8 @@ const setStartGameBtn = (show) => {
 
 let pollInterval = null;
 
+// Poll server every 100 ms: check if game has started
+//  if yes (get data) else wait another 100 ms
 const startInterval = () => {
 	pollInterval = setInterval(() => {
 		fetch(`/api/game/poll/${game.playerId}`, {
@@ -275,6 +288,7 @@ const startInterval = () => {
 				const cards = await getCards()
 				setHand(cards.hand);
 				setOpenDeck(cards.openDeck);
+				setClosedDeck(cards.deck);
 				showBackOfCard();
 			}
 
@@ -286,10 +300,6 @@ const startInterval = () => {
 const clearInterval = () => {
 	clearInterval(pollInterval)
 }
-
-// todo Poll server every 100 ms
-//  check if game has started
-//  if yes (get data) else wait another 100 ms
 
 export const makeGame = function () {
 	makeGameInfoVue();
