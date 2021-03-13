@@ -110,13 +110,13 @@ function makeCards(game) {
 		}
 	}
 
-	let numOfPlayers = players.length;
+	let numOfPlayers = Object.keys(players).length;
 
 	//if there are 2 players then players get 10 cards, else get 7 cards
-	cardsPerPlayer = (numOfPlayers === 2) ? 10 : 7;
+	const cardsPerPlayer = (numOfPlayers === 2) ? 10 : 7;
 
 	//define cards object, deck is shuffled deck define before
-	cards = {
+	let cards = {
 		openDeck: deck.splice(0, 1),
 		deck: shuffle(deck)
 	}
