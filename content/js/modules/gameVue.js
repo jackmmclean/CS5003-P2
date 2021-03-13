@@ -8,6 +8,7 @@ const makeGameInfoVue = function () {
 		el: "#game-info",
 		data: {
 			generalInfo: {
+				GameID: "1234",
 				Username: "",
 				Turn: "who's turn",
 				Action: "possible action",

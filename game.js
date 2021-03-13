@@ -32,6 +32,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 		this.timeFinished = null;
 		this.gameOver = false;
 		this.round = 1;
+		this.messages = [];
 		this.players = {};
 		this.cardHistory = [];
 		this.cards = null;
@@ -229,66 +230,15 @@ function makeMelds(cards) {
 
 }
 
-testCards = [{
-	rank: 2,
-	suit: 'Diamonds'
-}, {
-	rank: 3,
-	suit: 'Diamonds'
-}, {
-	rank: 4,
-	suit: 'Diamonds'
-}, {
-	rank: 6,
-	suit: 'Diamonds'
-}, {
-	rank: 7,
-	suit: 'Diamonds'
-}, {
-	rank: 8,
-	suit: 'Diamonds'
-}, {
-	rank: 9,
-	suit: 'Diamonds'
-}, {
-	rank: 'A',
-	suit: 'Diamonds'
-}, {
-	rank: 'A',
-	suit: 'Hearts'
-}, {
-	rank: 'A',
-	suit: 'Clubs'
-}]
+exports.createMessage = function (playerId, text) {
+	const game = getGameByPlayerId(playerId);
 
-testCards2 = [{
-	rank: 2,
-	suit: 'Diamonds'
-}, {
-	rank: 3,
-	suit: 'Diamonds'
-}, {
-	rank: 4,
-	suit: 'Diamonds'
-}, {
-	rank: 6,
-	suit: 'Hearts'
-}, {
-	rank: 7,
-	suit: 'Hearts'
-}, {
-	rank: 8,
-	suit: 'Hearts'
-}, {
-	rank: 9,
-	suit: 'Diamonds'
-}, {
-	rank: 'A',
-	suit: 'Diamonds'
-}, {
-	rank: 'A',
-	suit: 'Hearts'
-}, {
-	rank: 'A',
-	suit: 'Clubs'
-}]
+	function Message(playerId, text) {
+		this.timeStamp = new Date;
+		this.playerId = playerId;
+		this.text = text;
+	}
+	const message = new Message(playerId, text);
+	game.messages.push(message);
+	return message
+}

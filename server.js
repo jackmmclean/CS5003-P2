@@ -13,7 +13,9 @@ const {
 	gameStats,
 	declareGin,
 	pollGame,
-	getCards
+	getCards,
+	sendMessage,
+	getMessages
 } = require("./api");
 
 const app = express();
@@ -111,6 +113,22 @@ app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	let stats = gameStats(playerId);
 	stats.username = req.username;
 	res.status(200).json(stats);
+})
+
+//get messages from server
+app.get('/api/game/messages/:gameId', (req, res) => {
+	const gameId = req.params.gameId;
+	res.status(getMessages(gameId).status).json(getMessages(gameId));
+})
+
+app.post('/api/game/messages', (req, res) => {
+	const playerId = req.body.playerId;
+	const text = req.body.text;
+
+	const message = sendMessage(playerId, text);
+
+	res.status(message.status).json(message);
+
 })
 
 // Let player poll every few ms to check data about the game
