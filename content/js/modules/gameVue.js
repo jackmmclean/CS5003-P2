@@ -1,8 +1,10 @@
 import {
 	game,
-	getCards, getStats,
+	getCards,
+	getStats,
 	setState
 } from "./clientUtils.js";
+
 const makeGameInfoVue = function () {
 	const gameInfoVue = new Vue({
 		el: "#game-info",
@@ -24,7 +26,7 @@ const makeGameInfoVue = function () {
 			getGameStats: function () {
 				getStats().then((json) => {
 					sharedGameInfo.generalInfo.GameID = json.gameId;
-					sharedGameInfo.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
+					sharedGameInfo.generalInfo.Username = json.niceUsername;
 					sharedGameInfo.generalInfo.Players = json.numPlayers;
 				}).catch(err => console.log('Could not get stats.', err))
 			}
@@ -66,10 +68,13 @@ const makePlayerHandVue = function () {
 				fetch(`/api/game/deposit-card/${game.playerId}`, {
 					method: "POST",
 					headers: {
-					    "Authorization": "Basic " + game.userKey,
-                        "Content-Type": "application/json",
-                    },
-					body: JSON.stringify({cardNo: cardNo, test: 123})
+						"Authorization": "Basic " + game.userKey,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						cardNo: cardNo,
+						test: 123
+					})
 				}).then((res) => {
 					if (!res.ok) {
 						throw new Error(`HTTP ${res.status}`)
@@ -100,9 +105,9 @@ const makeClosedDeckVue = function () {
 			showBackOfCard() {
 				return sharedGameInfo.showBackOfCard;
 			},
-            closedDeckCards() {
-                return sharedGameInfo.closedDeckCards;
-            }
+			closedDeckCards() {
+				return sharedGameInfo.closedDeckCards;
+			}
 		},
 		methods: {
 			drawFromClosedDeck: () => {
@@ -208,8 +213,63 @@ const makeUserActionsVue = function () {
 }
 
 const makeMessagesVue = function () {
-	const messagesVue = new Vue ({
-		el: "#messages"
+	const messagesVue = new Vue({
+		el: "#messages",
+		data: {
+			pastMessages: [],
+			message: '',
+			polling: null
+		},
+		methods: {
+			sendMessage: function () {
+				fetch('/api/game/messages', {
+						method: "POST",
+						headers: {
+							//might change to require authentication, might not
+							"Authorization": "Basic " + game.userKey,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							playerId: game.playerId,
+							text: this.message
+						})
+					})
+					.then((res) => {
+						if (!res.ok) {
+							throw new Error(`HTTP ${res.status}`)
+						} else {
+							return res.json();
+						}
+					})
+					.then(msg => {
+						this.message = '';
+					})
+					.catch(err => console.log(err))
+			},
+			pollMessages: function () {
+				this.polling = setInterval(() => {
+					fetch(`/api/game/messages/${game.gameId}`)
+						.then(res => res.json())
+						.then(res => {
+							this.pastMessages = res.messages;
+						})
+						.catch(err => console.log(err))
+				}, 100)
+			}
+		},
+		beforeDestroy: function () {
+			clearInterval(this.polling)
+		},
+
+		computed: {
+			state() {
+				if (game.state === 'play') {
+					this.pollMessages();
+				}
+				return game.state
+			}
+		}
+
 	})
 }
 
@@ -230,7 +290,7 @@ const sharedGameInfo = Vue.observable({
 	playerIsOwner: false,
 	openDeckCards: [],
 	hand: [],
-    closedDeckCards: [],
+	closedDeckCards: [],
 	showBackOfCard: false,
 	generalInfo: {
 		GameID: "1234",
@@ -247,16 +307,21 @@ const setHand = (newHand) => {
 }
 
 const setOpenDeck = (newOpenDeck) => {
-    // show only top 5 cards of open deck
+	// show only top 5 cards of open deck
 	sharedGameInfo.openDeckCards = transformCards(newOpenDeck.map(el => el.char))
-        .slice(Math.max(newOpenDeck.length - 5, 0));
+		.slice(Math.max(newOpenDeck.length - 5, 0));
 }
 
 const setClosedDeck = (newClosedDeck) => {
-    // show only 5 cards of closed deck
-    sharedGameInfo.closedDeckCards = newClosedDeck
-        .map(el => {return {card: "&#127136", color: "#0d47a1"}})
-        .slice(Math.max(newClosedDeck.length - 5, 0))
+	// show only 5 cards of closed deck
+	sharedGameInfo.closedDeckCards = newClosedDeck
+		.map(el => {
+			return {
+				card: "&#127136",
+				color: "#0d47a1"
+			}
+		})
+		.slice(Math.max(newClosedDeck.length - 5, 0))
 }
 
 const showBackOfCard = () => {
@@ -287,7 +352,7 @@ const startInterval = () => {
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
 				sharedGameInfo.generalInfo.GameID = json.gameId;
-				sharedGameInfo.generalInfo.Username = json.username.charAt(0).toUpperCase() + json.username.slice(1);
+				sharedGameInfo.generalInfo.Username = json.niceUsername;
 				sharedGameInfo.generalInfo.Players = json.numPlayers;
 			}).catch(err => console.log('Could not get stats.', err))
 
@@ -308,6 +373,8 @@ const startInterval = () => {
 	}, 1000);
 }
 
+
+
 const clearInterval = () => {
 	clearInterval(pollInterval)
 }
@@ -318,4 +385,5 @@ export const makeGame = function () {
 	makeClosedDeckVue();
 	makeOpenDeckVue();
 	makeUserActionsVue();
+	makeMessagesVue();
 }

@@ -1,6 +1,6 @@
 const {
 	users,
-	games,
+	games
 } = require('./data/data')
 const {
 	makeGame,
@@ -11,7 +11,8 @@ const {
 } = require('./game')
 const {
 	getGameByPlayerId,
-	getHighestScoringPlayers
+	getHighestScoringPlayers,
+	niceUsername
 } = require('./utils')
 
 
@@ -152,6 +153,7 @@ exports.gameStats = function (playerId) {
 	}
 	return {
 		gameId: game.id,
+		niceUsername: niceUsername(playerId),
 		numPlayers: numPlayers,
 		scores: scores,
 		round: game.round,

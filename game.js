@@ -7,7 +7,9 @@ const {
 	getAllPossibleMelds,
 	getDistinctRuns,
 	sortByCards,
-	clearDuplicateCards
+	clearDuplicateCards,
+	getGameByPlayerId,
+	niceUsername
 } = require("./utils.js");
 
 const {
@@ -234,7 +236,10 @@ exports.createMessage = function (playerId, text) {
 	const game = getGameByPlayerId(playerId);
 
 	function Message(playerId, text) {
-		this.timeStamp = new Date;
+		//we will only display time, but timeStamp is stored as full date for potential future use 
+		//eg including user messages with long term scores
+		this.niceUsername = niceUsername(playerId);
+		this.timeStamp = new Date().toISOString().substr(11, 8);
 		this.playerId = playerId;
 		this.text = text;
 	}
