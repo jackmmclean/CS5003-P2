@@ -103,7 +103,7 @@
 		<div class="card" id="user-actions" v-show="state === 'play'">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame" v-show="showStartGameBtn">Start Game</button>
+					<button class="button is-small" v-on:click="startGame" v-show="isOwner">Start Game</button>
 					<button class="button is-small" v-on:click="declareGin">Declare Gin</button>
 					<button class="button is-small" v-on:click="knock">Knock</button>
 				</div>
@@ -212,7 +212,10 @@
 			<div class="board">
 				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
 					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"
-						v-on:click="depositCard(card.cardNo)"></div>
+						v-on:click="depositCard(card.cardNo)" v-if="gameHasStarted"></div>
+					<div v-if="!gameHasStarted" style="color: black">
+						Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}
+					</div>
 				</div>
 
 				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">

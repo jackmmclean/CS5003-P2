@@ -46,6 +46,12 @@ const makePlayerHandVue = function () {
 			},
 			hand() {
 				return sharedGameInfo.hand;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
+			},
+			isOwner() {
+				return sharedGameInfo.playerIsOwner;
 			}
 		},
 		methods: {
@@ -160,8 +166,8 @@ const makeUserActionsVue = function () {
 			state() {
 				return game.state;
 			},
-			showStartGameBtn() {
-				return sharedGameInfo.showStartGameBtn;
+			isOwner() {
+				return sharedGameInfo.playerIsOwner;
 			}
 		},
 		methods: {
@@ -220,11 +226,12 @@ const transformCards = function (numericCards) {
 }
 
 const sharedGameInfo = Vue.observable({
+	gameHasStarted: false,
+	playerIsOwner: false,
 	openDeckCards: [],
 	hand: [],
     closedDeckCards: [],
 	showBackOfCard: false,
-	showStartGameBtn: false,
 	generalInfo: {
 		GameID: "1234",
 		Username: "",
@@ -256,10 +263,6 @@ const showBackOfCard = () => {
 	sharedGameInfo.showBackOfCard = true;
 }
 
-const setStartGameBtn = (show) => {
-	sharedGameInfo.showStartGameBtn = show
-}
-
 let pollInterval = null;
 
 // Poll server every 100 ms: check if game has started
@@ -279,7 +282,7 @@ const startInterval = () => {
 			}
 		}).then(async (json) => {
 			// let only owner start the game
-			setStartGameBtn(json.isOwner)
+			sharedGameInfo.playerIsOwner = json.isOwner;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
@@ -290,6 +293,7 @@ const startInterval = () => {
 
 			// only once the game is started
 			if (json.gameHasStarted) {
+				sharedGameInfo.gameHasStarted = true;
 				// get cards
 				getCards().then((cards) => {
 					setHand(cards.hand);
