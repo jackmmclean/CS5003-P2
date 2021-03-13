@@ -104,7 +104,7 @@ app.post('/api/game/deposit-card/:playerId', authenticate, (req, res) => {
 // Let the user declare Gin
 app.post('/api/game/declare-gin/:playerId', authenticate, (req, res) => {
 	let winOrLose = declareGin(req.params.playerId);
-	res.json(winOrLose);
+	res.status(200).json(winOrLose);
 })
 
 // Send information about the game back to the user

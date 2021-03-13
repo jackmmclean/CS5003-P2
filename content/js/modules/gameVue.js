@@ -199,7 +199,23 @@ const makeUserActionsVue = function () {
 			},
 			declareGin: function () {
 				// todo send declare gin to API and process response
-				console.log('Declare gin');
+				fetch(`/api/game/declare-gin/${game.playerId}`, {
+					method: "POST",
+					headers: {
+						//might change to require authentication, might not
+						"Authorization": "Basic " + game.userKey,
+						"Content-Type": "application/json",
+					}
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP Error ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					console.log(json.text)
+					console.log('Winner is', json.winners)
+				})
 			},
 			knock: function () {
 				// todo send knock to API and process response

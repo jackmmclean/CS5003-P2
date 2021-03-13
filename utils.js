@@ -58,7 +58,9 @@ exports.isSet = function (cardArray) {
 	return true;
 }
 
-exports.isRun, isRun = function (cardArray, highOrLowAces) {
+exports.isRun = (cardArray, highOrLowAces) => isRun(cardArray, highOrLowAces);
+
+isRun = function (cardArray, highOrLowAces) {
 	//check at that the meld is at least 3 cards
 	if (cardArray.length < 3) return false;
 

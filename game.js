@@ -165,7 +165,7 @@ function makeCards(game) {
 	return cards
 }
 
-exports.processGinDeclared = function (player) {
+exports.processGinDeclared = function (player, game) {
 	player.melds = makeMelds(player.hand());
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
@@ -197,10 +197,10 @@ function getRoundKnockScores(players, declaringPlayer) {
 
 //player argument is player who declared gin (correctly)
 exports.getRoundGinScores = function (game, declaringPlayer) {
-	players = game.players;
+	let players = game.players;
 	//add up the score of all players and store in opponentScores
 	let opponentScores;
-	for (let player of players) {
+	for (let [k, player] of Object.entries(players)) {
 		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 	}
 

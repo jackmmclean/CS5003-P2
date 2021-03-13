@@ -124,8 +124,8 @@ exports.depositCard = function (playerId, cardNo) {
 exports.declareGin = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	//need some more logic here to deal with winning and losing etc
-	if (processGinDeclared(player)) {
+	// todo need some more logic here to deal with winning and losing etc
+	if (processGinDeclared(player, game)) {
 		getRoundGinScores(game, player);
 		game.endGame();
 	} else {
