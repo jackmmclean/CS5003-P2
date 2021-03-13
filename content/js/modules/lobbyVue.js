@@ -108,12 +108,13 @@ const makeOpenGamesVue = function () {
 		el: "#open-games",
 		data: {
 			openGames: [],
+			polling: null
 		},
 		computed: {
 			state() {
 				if (game.state === 'lobby') {
-					// get the games if we're in the lobby
-					this.getGames();
+					// poll the games if we're in the lobby
+					this.pollGames();
 				}
 				return game.state;
 			},
@@ -133,8 +134,6 @@ const makeOpenGamesVue = function () {
 				}).then((json) => {
 					this.openGames = json.games;
 				}).catch(err => console.log('There was an error.', err))
-
-				this.openGames = ['uuid1', 'uuid2', 'uuid3', 'uuid4']
 			},
 			join: function (gameId) {
 				fetch('/api/game/join', {
@@ -160,7 +159,15 @@ const makeOpenGamesVue = function () {
 					this.message = "Couldn't join game."
 				})
 			},
+			pollGames: function () {
+				this.polling = setInterval(() => {
+					this.getGames();
+				}, 100)
+			}
 		},
+		beforeDestroy: function () {
+			clearInterval(this.polling)
+		}
 	})
 }
 
