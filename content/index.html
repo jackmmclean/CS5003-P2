@@ -220,9 +220,15 @@
 				</div>
 			</div>
 			<div id="messages" v-show="state === 'play'">
-				<label>
+
+				<!-- to do - fix a size and maybe location for the message box -->
+				<div v-for="msg in pastMessages">{{ msg.playerId }} : {{ msg.text }}
+					({{ msg.timeStamp }})</div>
+
+				<form name="send-message" v-on:submit.prevent="sendMessage">
 					<input class="input is-small" type="text" v-model="message">
-				</label>
+				</form>
+
 			</div>
 		</div>
 	</section>
