@@ -132,20 +132,25 @@ exports.depositCard = function (playerId, cardNo) {
  * @returns {Object} information sent back to the user
  * */
 exports.declareGin = function (playerId) {
+	let status, text;
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	// todo need some more logic here to deal with winning and losing etc
 	if (processGinDeclared(player, game)) {
 		getRoundGinScores(game, player);
 		game.endGame();
+		status = 200;
+		text = "Game is over."
 	} else {
-		// todo what should we do if the player who declared gin in fact does not have a gin? -> Let them play? Game over?
-		game.endGame();
+		// If the player who declared gin in fact does not have a gin -> Let them play
+		status = 405;
+		text = "No Gin."
 	}
 	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	// todo don't return full player objects -> only return relevant data
 	return {
-		text: 'Game is over',
+		status: status,
+		text: text,
 		winners: winners,
 	};
 }
@@ -169,6 +174,7 @@ exports.knock = function(playerId) {
 	game.endGame();
 	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	return {
+		status: 200,
 		text: 'Game is over',
 		winners: winners,
 	};
