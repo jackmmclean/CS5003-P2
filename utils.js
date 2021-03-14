@@ -2,20 +2,24 @@ const {
 	games
 } = require("./data/data");
 
-// define function to shuffle cards
+/**
+ * Shuffle elements in an array. Implements Fisher-Yates Shuffle.
+ * Attribution: https://bost.ocks.org/mike/shuffle/
+ * @param array {Array} The array to be shuffled
+ * @returns {Array} The shuffled array
+ * */
 exports.shuffle = function (array) {
 
-	var currentIndex = array.length,
-		temporaryValue, randomIndex;
+	let currentIndex = array.length, temporaryValue, randomIndex;
 
-	// While there remain elements to shuffle...
+	// While there remain elements to shuffle
 	while (0 !== currentIndex) {
 
-		// Pick a remaining element...
+		// Select next remaining element and reduce number of remaining
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
 
-		// And swap it with the current element.
+		// Swap the element and the last element in-place
 		temporaryValue = array[currentIndex];
 		array[currentIndex] = array[randomIndex];
 		array[randomIndex] = temporaryValue;
@@ -24,6 +28,12 @@ exports.shuffle = function (array) {
 	return array;
 }
 
+/**
+ * Calculate the value of a card.
+ * @param card {Object} A card object
+ * @param highAce {Boolean} whether Aces are high
+ * @return {Number} Value of the card
+ * */
 cardValue = function cardValue(card, highAce = false) {
 	const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 	const ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
@@ -35,7 +45,12 @@ cardValue = function cardValue(card, highAce = false) {
 	}
 }
 
-// define function to sort by card value
+/**
+ * Sort the cards by value.
+ * @param arrayCards {Array} array of cards to sort
+ * @param highAce {Boolean} whether Aces are high
+ * @return {Array} sorted cards
+ * */
 sortByValue = function (arrayCards, highAce = false) {
 
 	function compareValue(a, b) {
@@ -50,6 +65,11 @@ sortByValue = function (arrayCards, highAce = false) {
 	return [].slice.call(arrayCards).sort(compareValue);
 }
 
+/**
+ * Evaluate whether an array of cards is a set.
+ * @param cardArray {Array} an array of cards to check.
+ * @returns {Boolean} true if the array is a set, else false.
+ * */
 exports.isSet = function (cardArray) {
 	if (cardArray.length < 3) return false;
 	for (let i = 0; i < cardArray.length - 1; i++) {
@@ -61,7 +81,9 @@ exports.isSet = function (cardArray) {
 exports.isRun = (cardArray, highOrLowAces) => isRun(cardArray, highOrLowAces);
 
 /**
- *
+ * Evaluate whether an array of cards is a run.
+ * @param cardArray {Array} an array of cards to check.
+ * @returns {Boolean} true if the array is a run, else false.
  * */
 isRun = function (cardArray, highOrLowAces) {
 	//check at that the meld is at least 3 cards
@@ -101,11 +123,14 @@ isRun = function (cardArray, highOrLowAces) {
 	return false;
 }
 
-
-
+/**
+ * Get the score of a card.
+ * @param card {Object} the card whose score to get.
+ * @return {Number} the score of the card
+ * */
 exports.cardScore = function (card) {
 	if (!isNaN(card.rank)) {
-		return card.rank;
+		return parseInt(card.rank);
 	} else if (card.rank === 'A') {
 		return 1;
 	} else return 10;

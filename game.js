@@ -181,7 +181,8 @@ exports.processGinDeclared = function (player, game) {
 }
 
 /**
- * Process the knock of a player, that is
+ * Process the knock of a player
+ * @param game {Object} current game
  * */
 exports.processKnock = function (game) {
 	// make the melds for all players
@@ -197,9 +198,9 @@ exports.processKnock = function (game) {
  * */
 exports.getRoundKnockScores = function(game, declaringPlayer) {
 	let players = game.players;
-	//assuming that player.melds is an array as above but that all unmatched
-	//cards are loose in the array eg for cards 7-9 unmatched
-	//  player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
+	// assuming that player.melds is an array as above but that all unmatched
+	// cards are loose in the array eg for cards 7-9 unmatched
+	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
 
 	//add up the score of all players and store in opponentScores
 	let opponentScores;
