@@ -121,7 +121,7 @@ exports.depositCard = function (playerId, cardNo) {
 	if (card.length !== 1) {
 		return {status: 405, text: 'Depositing this card is not allowed.'}
 	} else {
-		return {status: 200, hand: player.depositCard(card), text: 'Deposited card'}
+		return {status: 200, hand: player.depositCard(card[0]), text: 'Deposited card'}
 	}
 }
 
@@ -139,6 +139,7 @@ exports.declareGin = function (playerId) {
 		getRoundGinScores(game, player);
 		game.endGame();
 	} else {
+		// todo what should we do if the player who declared gin in fact does not have a gin? -> Let them play? Game over?
 		game.endGame();
 	}
 	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))

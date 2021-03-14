@@ -165,15 +165,19 @@ function makeCards(game) {
 	return cards
 }
 
-exports.processGinDeclared = function (player, game) {
-	player.melds = makeMelds(player.hand());
+exports.processGinDeclared = function (declaringPlayer, game) {
+	// declaringPlayer.melds = makeMelds(declaringPlayer.hand());
+
+	for (let [k, player] of Object.entries(game.players)) {
+		player.melds = makeMelds(player.hand());
+	}
 
 	// todo @Jack please confirm: I think we need to call makeMelds not just on the declaring player but on all players
 
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
 
-	for (let meld of player.melds) {
+	for (let meld of declaringPlayer.melds) {
 		if (!Array.isArray(meld) || !(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
 	}
 
