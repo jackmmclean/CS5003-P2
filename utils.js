@@ -211,7 +211,7 @@ exports.getAllPossibleMelds = function (cards) {
 		}
 	}
 
-	var allPossibleMelds = {};
+	let allPossibleMelds = {};
 	allPossibleMelds.sets = {};
 	allPossibleMelds.runs = {};
 
@@ -234,7 +234,12 @@ exports.getAllPossibleMelds = function (cards) {
 	return allPossibleMelds
 }
 
-//for a single suit, check if two runs are distinct ie do not share cards
+/**
+ * For a single suit, check if two runs are distinct, i.e. do not share cards
+ * @param runA {Array} First run
+ * @param runB {Array} Second Run
+ * @returns {Boolean} true if the runs are distinct
+ * */
 arraysDistinct = function (runA, runB) {
 	let crossoverCards = runA.filter(el => runB.includes(el));
 	return (crossoverCards.length === 0);
@@ -273,8 +278,11 @@ exports.getDistinctRuns = function (possibleRuns) {
 	return distinctRuns
 }
 
-
-// define function to sort by number of cards in array type [[[card,card],[card,card,card.]..],[card,..]..]
+/**
+ * Sort by number of cards in array type [[[card,card],[card,card,card.]..],[card,..]..].
+ * @param cardsArrayOfArraysOfArrays {Array<Array<Array<Object>>>}
+ * @returns {Array<Array<Array<Object>>>}
+ * */
 exports.sortByCards = function (cardsArrayOfArraysOfArrays) {
 
 	let cardCount = function (arrayOfArrays) {
@@ -297,6 +305,12 @@ exports.sortByCards = function (cardsArrayOfArraysOfArrays) {
 	return [].slice.call(cardsArrayOfArraysOfArrays).sort(compareValue);
 }
 
+/**
+ * Get overlapping cards between two arrays
+ * @param {Array} distinctRunsArray
+ * @param {Array} setArray
+ * @returns {Array} An array containing the cards that overlap
+ * */
 overlappingCards = function (distinctRunsArray, setArray) {
 	let overlappingCardArray = [];
 	for (let array of distinctRunsArray) {
@@ -354,6 +368,11 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 	return returnArray;
 }
 
+/**
+ * Get the game that a player is part of based on the playerId
+ * @param searchedPlayerID {string}
+ * @returns {Object} Game
+ * */
 getGameByPlayerId = function (searchedPlayerID) {
 	for (let gameId in games) {
 		if (games[gameId].players.hasOwnProperty(searchedPlayerID)) {
@@ -364,6 +383,11 @@ getGameByPlayerId = function (searchedPlayerID) {
 
 exports.getGameByPlayerId = getGameByPlayerId;
 
+/**
+ * Get the player(s) with the highest scores.
+ * @param playerArray {Array} the array of players to check
+ * @returns {Array<Object>} Array of player(s) with highest scores.
+ * */
 exports.getHighestScoringPlayers = function (playerArray) {
 	let highScorers = [...playerArray];
 	for (let player of highScorers) {
@@ -372,6 +396,11 @@ exports.getHighestScoringPlayers = function (playerArray) {
 	return highScorers
 }
 
+/**
+ * Give guest players a nicer name, i.e. name them Guest 1, Guest 2, ...
+ * @param playerId {string} The guest player whose name needs to be nicer
+ * @returns {string} a nicer username
+ * */
 exports.niceUsername = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	const guests = {};
@@ -384,6 +413,6 @@ exports.niceUsername = function (playerId) {
 	if (guestIDs.includes(playerId)) {
 		return `Guest ${guestIDs.indexOf(playerId) + 1}`
 	} else {
-		return username;
+		return game.players[playerId].username;
 	}
 }
