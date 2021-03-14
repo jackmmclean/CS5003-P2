@@ -154,11 +154,8 @@ app.get('/api/game/get-cards/:playerId', authenticate, (req, res) => {
 app.post('/api/users/register-user', (req, res) => {
 	let username = req.headers.username;
 	let password = req.headers.password;
-	console.log(users)
 	let registration = registerUser(username, password);
-	// todo send text too
-	console.log(users)
-	res.status(registration.status).send(registration.text);
+	res.status(registration.status).json(registration);
 })
 
 // Login to an existing user
@@ -168,6 +165,7 @@ app.post('/api/users/login', authenticate, (req, res) => {
 
 // Get the all time scores for a user
 app.get('/api/users/scores/:username', authenticate, (req, res) => {
+	// todo
 	const username = req.params.username;
 	getScore(username);
 })

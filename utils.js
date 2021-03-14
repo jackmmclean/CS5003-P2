@@ -333,8 +333,6 @@ overlappingCards = function (distinctRunsArray, setArray) {
 exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 	let distRunChoice = 0;
 
-	// todo there still seems to be an issue if a card is included in both a set and a run (see Teams 14/03 ~ 12:00)
-
 	// for every run we check it against the sets for overlapping cards
 	for (let suit in distinctRuns) {
 		for (let rank in possibleSets) {
@@ -347,9 +345,6 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 							run.splice(run.indexOf(overlappingCard), 1);
 							break
 						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard !== -1)) {
-							// possibleSets[rank](possibleSets[rank].indexOf(overlappingCard), 1);
-							// todo @Jack -> I changed this to the following... could you just have another look and check
-							//  if this is what you originally intended?
 							possibleSets[rank].splice(possibleSets[rank].indexOf(overlappingCard), 1);
 						} else {
 							delete distinctRuns[suit][distRunChoice]

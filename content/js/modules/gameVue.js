@@ -65,7 +65,6 @@ const makePlayerHandVue = function () {
 				sharedGameInfo.hand = newHand;
 			},
 			depositCard: (cardNo) => {
-				// todo for some reason, the body is not passed on
 				fetch(`/api/game/deposit-card/${game.playerId}`, {
 					method: "POST",
 					headers: {
@@ -201,7 +200,6 @@ const makeUserActionsVue = function () {
 				}).catch(err => console.log(err))
 			},
 			declareGin: function () {
-				// todo send declare gin to API and process response
 				fetch(`/api/game/declare-gin/${game.playerId}`, {
 					method: "POST",
 					headers: {
