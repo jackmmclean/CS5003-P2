@@ -1,3 +1,5 @@
+const {getRoundKnockScores} = require("./game");
+const {processKnock} = require("./game");
 const {
 	users,
 	games
@@ -115,12 +117,20 @@ exports.depositCard = function (playerId, cardNo) {
 	// todo check if player is allowed to deposit this card
 	const game = getGameByPlayerId(playerId);
 	const player = game.players[playerId];
-	const card = player.hand().filter(el => el.char === cardNo)[0]
-	return {
-		hand: player.depositCard(card)
+	const card = player.hand().filter(el => el.char === cardNo)
+	if (card.length !== 1) {
+		return {status: 405, text: 'Depositing this card is not allowed.'}
+	} else {
+		return {status: 200, hand: player.depositCard(card), text: 'Deposited card'}
 	}
 }
 
+/**
+ * Assemble information that's sent back to the user when they declare a gin and end the game if the declared Gin
+ * is appropriate/
+ * @param playerId {string} ID of the declaring player
+ * @returns {Object} information sent back to the user
+ * */
 exports.declareGin = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
@@ -131,12 +141,38 @@ exports.declareGin = function (playerId) {
 	} else {
 		game.endGame();
 	}
+	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+	// todo don't return full player objects -> only return relevant data
 	return {
 		text: 'Game is over',
-		winners: getHighestScoringPlayers(game.players)
+		winners: winners,
 	};
-
 }
+
+/**
+ * Assemble information that's sent back to the user when they knocks and end the game if knocking is
+ * is appropriate/
+ * @param playerId {string} ID of the knocking player
+ * @returns {Object} information sent back to the user
+ * */
+exports.knock = function(playerId) {
+	let game = getGameByPlayerId(playerId);
+	// make sure knocking is allowed
+	if (!game.knockingAllowed) return {status: 405, text: "Knocking is not allowed in this game."}
+
+	let player = game.players[playerId];
+
+	// process knock (make melds)
+	processKnock(game);
+	getRoundKnockScores(game, player);
+	game.endGame();
+	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+	return {
+		text: 'Game is over',
+		winners: winners,
+	};
+}
+
 
 /**
  * Get info about the game.
@@ -199,8 +235,10 @@ exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
+		gameHasFinished: game.timeFinished !== null,
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
+		knockingAllowed: game.knockingAllowed,
 		// todo add more data that needs to be polled
 	}
 }

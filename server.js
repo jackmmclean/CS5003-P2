@@ -23,6 +23,7 @@ const {
 	users
 } = require('./data/data')
 const basicAuth = require('basic-auth');
+const {knock} = require("./api");
 
 app.use(bodyParser.json());
 app.use(express.static("content"))
@@ -98,12 +99,17 @@ app.get('/api/game/draw-closed-card/:playerId', authenticate, (req, res) => {
 // Let the user deposit a card to the open deck
 app.post('/api/game/deposit-card/:playerId', authenticate, (req, res) => {
 	const hand = depositCard(req.params.playerId, req.body.cardNo)
-	res.status(200).json(hand);
+	res.status(hand.status).json(hand);
 })
 
 // Let the user declare Gin
 app.post('/api/game/declare-gin/:playerId', authenticate, (req, res) => {
 	let winOrLose = declareGin(req.params.playerId);
+	res.status(200).json(winOrLose);
+})
+
+app.post('/api/game/knock/:playerId', authenticate, (req, res) => {
+	let winOrLose = knock(req.params.playerId);
 	res.status(200).json(winOrLose);
 })
 

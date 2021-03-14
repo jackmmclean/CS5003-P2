@@ -103,7 +103,7 @@
 				<div class="content">
 					<button class="button is-small" v-on:click="startGame" v-show="isOwner">Start Game</button>
 					<button class="button is-small" v-on:click="declareGin">Declare Gin</button>
-					<button class="button is-small" v-on:click="knock">Knock</button>
+					<button class="button is-small" v-on:click="knock" v-show="isKnockingAllowed">Knock</button>
 				</div>
 			</div>
 		</div>

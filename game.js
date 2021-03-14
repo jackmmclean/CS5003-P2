@@ -167,32 +167,50 @@ function makeCards(game) {
 
 exports.processGinDeclared = function (player, game) {
 	player.melds = makeMelds(player.hand());
+
+	// todo @Jack please confirm: I think we need to call makeMelds not just on the declaring player but on all players
+
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
 
 	for (let meld of player.melds) {
-		if (!(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
+		if (!Array.isArray(meld) || !(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
 	}
 
 	return true;
 }
 
-//function to process knock score
-function getRoundKnockScores(players, declaringPlayer) {
-	//assuming that player.melds is an array as above but that all unmatched
-	//cards are loose in the array eg for cards 7-9 unmatched
-	//  player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
+/**
+ * Process the knock of a player
+ * @param game {Object} current game
+ * */
+exports.processKnock = function (game) {
+	// make the melds for all players
+	for (let [k, player] of Object.entries(game.players)) {
+		player.melds = makeMelds(player.hand());
+	}
+}
+
+/**
+ * Calculate the scores for each player after a player knocked.
+ * @param game {Object} The current game
+ * @param declaringPlayer {Object} The one who knocks (Walter White)  ... sorry, I could not resist ;-)
+ * */
+exports.getRoundKnockScores = function(game, declaringPlayer) {
+	let players = game.players;
+	// assuming that player.melds is an array as above but that all unmatched
+	// cards are loose in the array eg for cards 7-9 unmatched
+	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
 
 	//add up the score of all players and store in opponentScores
 	let opponentScores;
-	for (let player of players) {
+	for (let [k, player] of Object.entries(players)) {
 		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 	}
 
 	//declaring player's round score is value of all opponents cards minus their own - therefore opponentScores minus
 	//double their own scores
 	declaringPlayer.score += (opponentScores - 2 * unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0))
-
 }
 
 //player argument is player who declared gin (correctly)
@@ -213,17 +231,17 @@ function makeMelds(cards) {
 	let possibleRuns = possibleMelds.runs;
 	let possibleSets = possibleMelds.sets;
 
-	distinctRuns = getDistinctRuns(possibleRuns);
+	let distinctRuns = getDistinctRuns(possibleRuns);
 
 	for (let suit in distinctRuns) {
 		distinctRuns[suit] = sortByCards(distinctRuns[suit]);
 	}
 
-	//we have all combinations of distinct runs and we have sets but cards may overlap
-	//therefore we need to choose whether to remove from runs or sets
+	// We have all combinations of distinct runs and we have sets but cards may overlap
+	// therefore we need to choose whether to remove from runs or sets
 	let returnArray = clearDuplicateCards(distinctRuns, possibleSets);
 
-	//put unmatched cars in, not in an array
+	// put unmatched cards in (not in an array)
 	for (let array of returnArray) {
 		cards = cards.filter(el => !array.includes(el))
 	}
