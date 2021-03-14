@@ -207,9 +207,10 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
 
 	//add up the score of all players and store in opponentScores
-	let opponentScores;
+	let opponentScores = 0;
 	for (let [k, player] of Object.entries(players)) {
-		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		opponentScores += player.score;
 	}
 
 	//declaring player's round score is value of all opponents cards minus their own - therefore opponentScores minus
@@ -221,9 +222,10 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 exports.getRoundGinScores = function (game, declaringPlayer) {
 	let players = game.players;
 	//add up the score of all players and store in opponentScores
-	let opponentScores;
+	let opponentScores = 0;
 	for (let [k, player] of Object.entries(players)) {
-		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		opponentScores += player.score;
 	}
 
 	//the players score is the value of opponents cards plus 20 points
