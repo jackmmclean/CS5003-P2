@@ -74,7 +74,6 @@ const makePlayerHandVue = function () {
 					},
 					body: JSON.stringify({
 						cardNo: cardNo,
-						test: 123
 					})
 				}).then((res) => {
 					if (!res.ok) {

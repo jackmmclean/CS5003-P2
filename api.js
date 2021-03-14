@@ -117,9 +117,11 @@ exports.depositCard = function (playerId, cardNo) {
 	// todo check if player is allowed to deposit this card
 	const game = getGameByPlayerId(playerId);
 	const player = game.players[playerId];
-	const card = player.hand().filter(el => el.char === cardNo)[0]
-	return {
-		hand: player.depositCard(card)
+	const card = player.hand().filter(el => el.char === cardNo)
+	if (card.length !== 1) {
+		return {status: 405, text: 'Depositing this card is not allowed.'}
+	} else {
+		return {status: 200, hand: player.depositCard(card), text: 'Deposited card'}
 	}
 }
 
