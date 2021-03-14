@@ -2,7 +2,8 @@ import {
 	game,
 	getCards,
 	getStats,
-	setState
+	setState,
+	messageArraysEqual
 } from "./clientUtils.js";
 
 const makeGameInfoVue = function () {
@@ -212,7 +213,8 @@ const makeMessagesVue = function () {
 		data: {
 			pastMessages: [],
 			message: '',
-			polling: null
+			polling: null,
+			playerId: game.playerId
 		},
 		methods: {
 			sendMessage: function () {
@@ -242,19 +244,31 @@ const makeMessagesVue = function () {
 			},
 			pollMessages: function () {
 				this.polling = setInterval(() => {
-					fetch(`/api/game/messages/${game.gameId}`)
-						.then(res => res.json())
-						.then(res => {
-							this.pastMessages = res.messages;
-						})
-						.catch(err => console.log(err))
+					if (game.state === 'play') {
+						fetch(`/api/game/messages/${game.gameId}`)
+							.then(res => res.json())
+							.then(res => {
+								if (!messageArraysEqual(this.pastMessages, res.messages)) {
+									this.pastMessages = res.messages;
+									for (let pastMessage of this.pastMessages) {
+										pastMessage['isMyMsg'] = (game.playerId === pastMessage.playerId) ? true : false;
+									}
+									setTimeout(function () {
+										//have to ensure that the element has rendered before scrolling to bottom, 
+										//kept having it scroll to second last element!! tried using an interval to keep checking
+										//but couldn't get it to work, this is hacky but clean!
+										document.getElementById('messagesData').scrollTop = document.getElementById('messagesData').scrollHeight;
+									}, 200)
+								}
+							})
+							.catch(err => console.log(err))
+					}
 				}, 100)
 			}
 		},
 		beforeDestroy: function () {
 			clearInterval(this.polling)
 		},
-
 		computed: {
 			state() {
 				if (game.state === 'play') {
@@ -263,7 +277,6 @@ const makeMessagesVue = function () {
 				return game.state
 			}
 		}
-
 	})
 }
 

@@ -238,6 +238,7 @@ exports.createMessage = function (playerId, text) {
 	function Message(playerId, text) {
 		//we will only display time, but timeStamp is stored as full date for potential future use 
 		//eg including user messages with long term scores
+		this.id = uuidv4();
 		this.niceUsername = niceUsername(playerId);
 		this.timeStamp = new Date().toISOString().substr(11, 8);
 		this.playerId = playerId;

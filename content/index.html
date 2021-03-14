@@ -220,16 +220,31 @@
 				</div>
 			</div>
 			<div id="messages" v-show="state === 'play'">
+				<div id="messagesData">
+					<!-- to do - fix a size and maybe location for the message box -->
+					<!-- <article class="message" v-for="msg in pastMessages">
+					{{ msg.niceUsername }} : {{ msg.text }}
+					({{ msg.timeStamp }})</div> -->
 
-				<!-- to do - fix a size and maybe location for the message box -->
-				<div v-for="msg in pastMessages">{{ msg.niceUsername }} : {{ msg.text }}
-					({{ msg.timeStamp }})</div>
-
-				<form name="send-message" v-on:submit.prevent="sendMessage">
-					<input class="input is-small" type="text" v-model="message">
+					<article v-for="msg in pastMessages" v-bind:id="msg.isMyMsg ? 'myMsg' : 'othersMsg'"
+						v-bind:class="'message is-small ' + (msg.isMyMsg ? 'is-link' : 'is-info')">
+						<div class="message-header">
+							<p>{{ msg.niceUsername }} ({{ msg.timeStamp }})</p>
+						</div>
+						<div class="message-body">
+							{{ msg.text }}
+						</div>
+					</article>
+				</div>
+				<form id="messageSender" name="send-message" v-on:submit.prevent="sendMessage"
+					v-show="state === 'play'">
+					<input class="input is-rounded is-small is-info" type="text" v-model="message"
+						placeholder="eMessage">
 				</form>
 
 			</div>
+
+
 		</div>
 	</section>
 

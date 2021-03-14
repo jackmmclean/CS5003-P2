@@ -38,7 +38,9 @@ body, html {
     display: grid;
     grid-template-areas:
             "a a"
-            "b c";
+            "b c"
+			"d d"
+			"e e";
 }
 
 .board-element {
@@ -113,4 +115,43 @@ body, html {
 #player-hand > .playing-card:hover {
     color: rgba(255, 255, 255, 1);
     box-shadow: 0 5px 15px rgb(128, 203, 115);
+}
+
+#messagesData {
+	grid-area: d;
+	height: 300px;
+	overflow-y: auto;
+}
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+#messagesData::-webkit-scrollbar {
+	display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  #messagesData{
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+  } 
+
+#messageSender{
+	grid-area: e;
+	width: 100%;
+}
+
+#othersMsg {
+	width: 70%;
+	display: block;
+	margin-bottom:15px;
+	margin-top: 0;
+	margin-left: 15px;
+}
+
+#myMsg {
+	display: block;
+	width: 70%;
+	float: right;
+	margin-bottom:15px;
+	margin-top: 0;
+	margin-right: 15px;
 }
