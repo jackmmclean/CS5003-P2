@@ -49,6 +49,12 @@ const makePlayerHandVue = function () {
 			},
 			hand() {
 				return sharedGameInfo.hand;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
+			},
+			isOwner() {
+				return sharedGameInfo.playerIsOwner;
 			}
 		},
 		methods: {
@@ -166,8 +172,8 @@ const makeUserActionsVue = function () {
 			state() {
 				return game.state;
 			},
-			showStartGameBtn() {
-				return sharedGameInfo.showStartGameBtn;
+			isOwner() {
+				return sharedGameInfo.playerIsOwner;
 			}
 		},
 		methods: {
@@ -194,7 +200,23 @@ const makeUserActionsVue = function () {
 			},
 			declareGin: function () {
 				// todo send declare gin to API and process response
-				console.log('Declare gin');
+				fetch(`/api/game/declare-gin/${game.playerId}`, {
+					method: "POST",
+					headers: {
+						//might change to require authentication, might not
+						"Authorization": "Basic " + game.userKey,
+						"Content-Type": "application/json",
+					}
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP Error ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					console.log(json.text)
+					console.log('Winner is', json.winners)
+				})
 			},
 			knock: function () {
 				// todo send knock to API and process response
@@ -293,11 +315,12 @@ const transformCards = function (numericCards) {
 }
 
 const sharedGameInfo = Vue.observable({
+	gameHasStarted: false,
+	playerIsOwner: false,
 	openDeckCards: [],
 	hand: [],
 	closedDeckCards: [],
 	showBackOfCard: false,
-	showStartGameBtn: false,
 	generalInfo: {
 		GameID: "1234",
 		Username: "",
@@ -334,10 +357,6 @@ const showBackOfCard = () => {
 	sharedGameInfo.showBackOfCard = true;
 }
 
-const setStartGameBtn = (show) => {
-	sharedGameInfo.showStartGameBtn = show
-}
-
 let pollInterval = null;
 
 // Poll server every 100 ms: check if game has started
@@ -357,7 +376,7 @@ const startInterval = () => {
 			}
 		}).then(async (json) => {
 			// let only owner start the game
-			setStartGameBtn(json.isOwner)
+			sharedGameInfo.playerIsOwner = json.isOwner;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
@@ -368,6 +387,7 @@ const startInterval = () => {
 
 			// only once the game is started
 			if (json.gameHasStarted) {
+				sharedGameInfo.gameHasStarted = true;
 				// get cards
 				getCards().then((cards) => {
 					setHand(cards.hand);

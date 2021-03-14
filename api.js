@@ -80,7 +80,13 @@ exports.startGame = function (playerId) {
 
 exports.getGames = function () {
 	// return games that haven't started yet
-	return Object.entries(games).filter(arr => arr[1].timeStarted === null).map(arr => arr[1])
+	const openGames = Object.entries(games).filter(arr => arr[1].timeStarted === null)
+	return openGames.map((arr) => {
+		let obj = {};
+		obj['id'] = arr[0];
+		obj['numPlayers'] = Object.keys(arr[1].players).length;
+		return obj
+	})
 }
 
 exports.drawOpenCard = function (playerId) {
@@ -118,8 +124,8 @@ exports.depositCard = function (playerId, cardNo) {
 exports.declareGin = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	//need some more logic here to deal with winning and losing etc
-	if (processGinDeclared(player)) {
+	// todo need some more logic here to deal with winning and losing etc
+	if (processGinDeclared(player, game)) {
 		getRoundGinScores(game, player);
 		game.endGame();
 	} else {
