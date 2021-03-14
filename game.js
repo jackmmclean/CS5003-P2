@@ -196,7 +196,7 @@ exports.processKnock = function (game) {
  * @param game {Object} The current game
  * @param declaringPlayer {Object} The one who knocks (Walter White)  ... sorry, I could not resist ;-)
  * */
-exports.getRoundKnockScores = function(game, declaringPlayer) {
+exports.getRoundKnockScores = function (game, declaringPlayer) {
 	let players = game.players;
 	// assuming that player.melds is an array as above but that all unmatched
 	// cards are loose in the array eg for cards 7-9 unmatched
@@ -268,3 +268,32 @@ exports.createMessage = function (playerId, text) {
 	game.messages.push(message);
 	return message
 }
+
+let cardTest = [{
+	rank: 'Q',
+	suit: 'Clubs'
+}, {
+	rank: 10,
+	suit: 'Hearts'
+}, {
+	rank: 9,
+	suit: 'Clubs'
+}, {
+	rank: 'J',
+	suit: 'Clubs'
+}, {
+	rank: 10,
+	suit: 'Clubs'
+}, {
+	rank: 7,
+	suit: 'Clubs'
+}, {
+	rank: 8,
+	suit: 'Clubs'
+}, {
+	rank: 10,
+	suit: 'Diamonds'
+}, {
+	rank: 10,
+	suit: 'Spades'
+}]

@@ -10,7 +10,8 @@ const {
  * */
 exports.shuffle = function (array) {
 
-	let currentIndex = array.length, temporaryValue, randomIndex;
+	let currentIndex = array.length,
+		temporaryValue, randomIndex;
 
 	// While there remain elements to shuffle
 	while (0 !== currentIndex) {
@@ -328,7 +329,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 			if (overlappingCardsArray.length > 0) {
 				for (let overlappingCard of overlappingCardsArray) {
 					for (let run of distinctRuns[suit][distRunChoice]) {
-						if ((run.length > 3) && run.indexOf(overlappingCard !== -1)) {
+						if ((run.length > 3) && run.indexOf(overlappingCard !== -1) && isRun(run.filter(el => el != overlappingCard))) {
 							run.splice(run.indexOf(overlappingCard), 1);
 							break
 						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard !== -1)) {
