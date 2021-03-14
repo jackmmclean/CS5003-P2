@@ -167,6 +167,9 @@ function makeCards(game) {
 
 exports.processGinDeclared = function (player, game) {
 	player.melds = makeMelds(player.hand());
+
+	// todo @Jack please confirm: I think we need to call makeMelds not just on the declaring player but on all players
+
 	//assuming that player.melds is an array that contains arrays - eg
 	// player.melds = [[card, card, card], [card,card,card]...]
 
@@ -177,22 +180,36 @@ exports.processGinDeclared = function (player, game) {
 	return true;
 }
 
-//function to process knock score
-function getRoundKnockScores(players, declaringPlayer) {
+/**
+ * Process the knock of a player, that is
+ * */
+exports.processKnock = function (game) {
+	// make the melds for all players
+	for (let [k, player] of Object.entries(game.players)) {
+		player.melds = makeMelds(player.hand());
+	}
+}
+
+/**
+ * Calculate the scores for each player after a player knocked.
+ * @param game {Object} The current game
+ * @param declaringPlayer {Object} The one who knocks (Walter White)  ... sorry, I could not resist ;-)
+ * */
+exports.getRoundKnockScores = function(game, declaringPlayer) {
+	let players = game.players;
 	//assuming that player.melds is an array as above but that all unmatched
 	//cards are loose in the array eg for cards 7-9 unmatched
 	//  player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
 
 	//add up the score of all players and store in opponentScores
 	let opponentScores;
-	for (let player of players) {
+	for (let [k, player] of Object.entries(players)) {
 		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 	}
 
 	//declaring player's round score is value of all opponents cards minus their own - therefore opponentScores minus
 	//double their own scores
 	declaringPlayer.score += (opponentScores - 2 * unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0))
-
 }
 
 //player argument is player who declared gin (correctly)
@@ -204,7 +221,6 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 	}
 
-	console.log('ok')
 	//the players score is the value of opponents cards plus 20 points
 	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }

@@ -1,3 +1,5 @@
+const {getRoundKnockScores} = require("./game");
+const {processKnock} = require("./game");
 const {
 	users,
 	games
@@ -121,6 +123,12 @@ exports.depositCard = function (playerId, cardNo) {
 	}
 }
 
+/**
+ * Assemble information that's sent back to the user when they declare a gin and end the game if the declared Gin
+ * is appropriate/
+ * @param playerId {string} ID of the declaring player
+ * @returns {Object} information sent back to the user
+ * */
 exports.declareGin = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
@@ -138,6 +146,31 @@ exports.declareGin = function (playerId) {
 		winners: winners,
 	};
 }
+
+/**
+ * Assemble information that's sent back to the user when they knocks and end the game if knocking is
+ * is appropriate/
+ * @param playerId {string} ID of the knocking player
+ * @returns {Object} information sent back to the user
+ * */
+exports.knock = function(playerId) {
+	let game = getGameByPlayerId(playerId);
+	// make sure knocking is allowed
+	if (!game.knockingAllowed) return {status: 405, text: "Knocking is not allowed in this game."}
+
+	let player = game.players[playerId];
+
+	// process knock (make melds)
+	processKnock(game);
+	getRoundKnockScores(game, player);
+	game.endGame();
+	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+	return {
+		text: 'Game is over',
+		winners: winners,
+	};
+}
+
 
 /**
  * Get info about the game.

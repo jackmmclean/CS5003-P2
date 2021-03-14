@@ -206,7 +206,6 @@ const makeUserActionsVue = function () {
 				fetch(`/api/game/declare-gin/${game.playerId}`, {
 					method: "POST",
 					headers: {
-						//might change to require authentication, might not
 						"Authorization": "Basic " + game.userKey,
 						"Content-Type": "application/json",
 					}
@@ -222,8 +221,22 @@ const makeUserActionsVue = function () {
 				})
 			},
 			knock: function () {
-				// todo send knock to API and process response
-				console.log('Knock');
+				fetch(`/api/game/knock/${game.playerId}`, {
+					method: "POST",
+					headers: {
+						"Authorization": "Basic " + game.userKey,
+						"Content-Type": "application/json",
+					}
+				}).then((res) => {
+					if (!res.ok) {
+						throw new Error(`HTTP Error ${res.status}`)
+					} else {
+						return res.json();
+					}
+				}).then((json) => {
+					console.log(json.text)
+					console.log('Winner is', json.winners)
+				})
 			},
 			setHand: function (newHand) {
 				sharedGameInfo.hand = newHand;
