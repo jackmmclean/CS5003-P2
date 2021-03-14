@@ -414,6 +414,13 @@ const startInterval = () => {
 					showBackOfCard();
 				}).catch(err => console.log('Could not get cards.', err))
 			}
+			// process what happens when the game is over
+			if (json.gameHasFinished) {
+				// transfer to end screen
+				// todo implement end Vue
+				setState('end');
+			}
+
 
 		}).catch(err => console.log(err))
 

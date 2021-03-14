@@ -233,6 +233,7 @@ exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	return {
 		gameHasStarted: game.timeStarted !== null,
+		gameHasFinished: game.timeFinished !== null,
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
 		knockingAllowed: game.knockingAllowed,
