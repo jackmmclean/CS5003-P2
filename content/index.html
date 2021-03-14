@@ -233,15 +233,18 @@
 					{{ msg.niceUsername }} : {{ msg.text }}
 					({{ msg.timeStamp }})</div> -->
 
-					<article v-for="msg in pastMessages" v-bind:id="msg.isMyMsg ? 'myMsg' : 'othersMsg'"
-						v-bind:class="'message is-small ' + (msg.isMyMsg ? 'is-link' : 'is-info')">
-						<div class="message-header">
-							<p>{{ msg.niceUsername }} ({{ msg.timeStamp }})</p>
-						</div>
-						<div class="message-body">
-							{{ msg.text }}
-						</div>
-					</article>
+					<div class="widthDiv" v-for="msg in pastMessages">
+						<article v-bind:id="msg.isMyMsg ? 'myMsg' : 'othersMsg'"
+							v-bind:class="'message is-small ' + (msg.isMyMsg ? 'is-link' : 'is-info')">
+
+							<div class="message-header">
+								<p>{{ msg.niceUsername }} ({{ msg.timeStamp }})</p>
+							</div>
+							<div class="message-body">
+								{{ msg.text }}
+							</div>
+						</article>
+					</div>
 				</div>
 				<form id="messageSender" name="send-message" v-on:submit.prevent="sendMessage"
 					v-show="state === 'play'">

@@ -141,17 +141,20 @@ body, html {
 
 #othersMsg {
 	width: 70%;
-	display: block;
 	margin-bottom:15px;
 	margin-top: 0;
 	margin-left: 15px;
 }
 
 #myMsg {
-	display: block;
 	width: 70%;
 	float: right;
 	margin-bottom:15px;
 	margin-top: 0;
 	margin-right: 15px;
+}
+
+.widthDiv {
+	display: inline-block;
+	width: 100%;
 }
