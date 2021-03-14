@@ -60,6 +60,9 @@ exports.isSet = function (cardArray) {
 
 exports.isRun = (cardArray, highOrLowAces) => isRun(cardArray, highOrLowAces);
 
+/**
+ *
+ * */
 isRun = function (cardArray, highOrLowAces) {
 	//check at that the meld is at least 3 cards
 	if (cardArray.length < 3) return false;
@@ -109,7 +112,7 @@ exports.cardScore = function (card) {
 }
 
 exports.unmatchedCards = function (meldsArray) {
-	var unmatchedCards = [];
+	let unmatchedCards = [];
 	for (let entry of meldsArray) {
 		if (!Array.isArray(entry)) {
 			unmatchedCards.push(entry)
@@ -162,6 +165,17 @@ getPossibleRuns = function (cards, highOrLowAce = false) {
 
 }
 
+/**
+ * Return all possible melds of cards.
+ * @param cards {array}: cards to be checked
+ * @returns {Object} object containing two k-v pairs
+ * 		- sets: Object with the identifying card value as key and the cards constituting the meld in an array as value
+ * 		- runs: Object with the identifying suit as key and each run in an array of arrays as the value
+ * 		- e.g. {
+ * 				sets: {Q: [card, card, card]},
+ * 				runs: {Spades: [[card, card, card], [card, card, card]]}
+ * 				}
+ * */
 exports.getAllPossibleMelds = function (cards) {
 	//get an object that categorises cards into ranks and suits
 	let categories = categoriseCards(cards);
@@ -201,7 +215,12 @@ arraysDistinct = function (runA, runB) {
 	return (crossoverCards.length === 0);
 }
 
-
+/**
+ * Get distinct runs from all possible runs with possible duplicates
+ * @param possibleRuns {Object} suits as keys, array of arrays as values
+ * @returns {Object} suits as keys, array of arrays as values,
+ * 		e.g. {Spades: [[card, card, card], [card, card, card]]}
+ * */
 exports.getDistinctRuns = function (possibleRuns) {
 	let distinctRuns = {};
 	for (let suit in possibleRuns) {
@@ -265,22 +284,33 @@ overlappingCards = function (distinctRunsArray, setArray) {
 	return overlappingCardArray
 }
 
+/**
+ * Remove either set or run if one of the cards in them is present in both.
+ * @param distinctRuns {Object} suits as keys, array of arrays as values
+ * @param possibleSets {Object} card value as keys, array of arrays as values
+ * @returns {Array.<Array>} array of arrays with all melds
+ * */
 exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
-	distRunChoice = 0;
+	let distRunChoice = 0;
 
-	//for every run we check it against the sets for overlapping cards
+	// todo there still seems to be an issue if a card is included in both a set and a run (see Teams 14/03 ~ 12:00)
+
+	// for every run we check it against the sets for overlapping cards
 	for (let suit in distinctRuns) {
 		for (let rank in possibleSets) {
-			//if it has overlapping cards we remove them
+			// if it has overlapping cards we remove them
 			let overlappingCardsArray = overlappingCards(distinctRuns[suit][distRunChoice], possibleSets[rank]);
 			if (overlappingCardsArray.length > 0) {
 				for (let overlappingCard of overlappingCardsArray) {
 					for (let run of distinctRuns[suit][distRunChoice]) {
-						if ((run.length > 3) && run.indexOf(overlappingCard != -1)) {
+						if ((run.length > 3) && run.indexOf(overlappingCard !== -1)) {
 							run.splice(run.indexOf(overlappingCard), 1);
 							break
-						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard != -1)) {
-							possibleSets[rank](possibleSets[rank].indexOf(overlappingCard), 1);
+						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard !== -1)) {
+							// possibleSets[rank](possibleSets[rank].indexOf(overlappingCard), 1);
+							// todo @Jack -> I changed this to the following... could you just have another look and check
+							//  if this is what you originally intended?
+							possibleSets[rank].splice(possibleSets[rank].indexOf(overlappingCard), 1);
 						} else {
 							delete distinctRuns[suit][distRunChoice]
 						}

@@ -171,7 +171,7 @@ exports.processGinDeclared = function (player, game) {
 	// player.melds = [[card, card, card], [card,card,card]...]
 
 	for (let meld of player.melds) {
-		if (!(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
+		if (!Array.isArray(meld) || !(isRun(meld, game.highOrLowAces) || isSet(meld))) return false;
 	}
 
 	return true;
@@ -204,6 +204,7 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 		opponentScores += unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 	}
 
+	console.log('ok')
 	//the players score is the value of opponents cards plus 20 points
 	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }
@@ -213,17 +214,17 @@ function makeMelds(cards) {
 	let possibleRuns = possibleMelds.runs;
 	let possibleSets = possibleMelds.sets;
 
-	distinctRuns = getDistinctRuns(possibleRuns);
+	let distinctRuns = getDistinctRuns(possibleRuns);
 
 	for (let suit in distinctRuns) {
 		distinctRuns[suit] = sortByCards(distinctRuns[suit]);
 	}
 
-	//we have all combinations of distinct runs and we have sets but cards may overlap
-	//therefore we need to choose whether to remove from runs or sets
+	// We have all combinations of distinct runs and we have sets but cards may overlap
+	// therefore we need to choose whether to remove from runs or sets
 	let returnArray = clearDuplicateCards(distinctRuns, possibleSets);
 
-	//put unmatched cars in, not in an array
+	// put unmatched cards in (not in an array)
 	for (let array of returnArray) {
 		cards = cards.filter(el => !array.includes(el))
 	}

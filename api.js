@@ -131,9 +131,11 @@ exports.declareGin = function (playerId) {
 	} else {
 		game.endGame();
 	}
+	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+	// todo don't return full player objects -> only return relevant data
 	return {
 		text: 'Game is over',
-		winners: getHighestScoringPlayers(game.players)
+		winners: winners,
 	};
 
 }
