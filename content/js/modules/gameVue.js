@@ -174,6 +174,9 @@ const makeUserActionsVue = function () {
 			},
 			isOwner() {
 				return sharedGameInfo.playerIsOwner;
+			},
+			isKnockingAllowed() {
+				return sharedGameInfo.knockingAllowed;
 			}
 		},
 		methods: {
@@ -321,6 +324,7 @@ const sharedGameInfo = Vue.observable({
 	hand: [],
 	closedDeckCards: [],
 	showBackOfCard: false,
+	knockingAllowed: false,
 	generalInfo: {
 		GameID: "1234",
 		Username: "",
@@ -377,6 +381,7 @@ const startInterval = () => {
 		}).then(async (json) => {
 			// let only owner start the game
 			sharedGameInfo.playerIsOwner = json.isOwner;
+			sharedGameInfo.knockingAllowed = json.knockingAllowed;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {

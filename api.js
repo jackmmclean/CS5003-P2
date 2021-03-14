@@ -137,7 +137,6 @@ exports.declareGin = function (playerId) {
 		text: 'Game is over',
 		winners: winners,
 	};
-
 }
 
 /**
@@ -203,6 +202,7 @@ exports.pollGame = function (playerId) {
 		gameHasStarted: game.timeStarted !== null,
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
+		knockingAllowed: game.knockingAllowed,
 		// todo add more data that needs to be polled
 	}
 }
