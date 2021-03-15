@@ -23,6 +23,7 @@ const {
 	users
 } = require('./data/data')
 const basicAuth = require('basic-auth');
+const {validateAction} = require("./api");
 const {knock} = require("./api");
 
 app.use(bodyParser.json());
@@ -86,31 +87,56 @@ app.get('/api/game/start/:playerId', authenticate, (req, res) => {
 
 // Let the user draw the top card from the open deck
 app.get('/api/game/draw-open-card/:playerId', authenticate, (req, res) => {
-	let card = drawOpenCard(req.params.playerId);
-	res.status(200).json(card);
+	const validated = validateAction(req.params.playerId, 'draw')
+	if (validated.status !== 200) {
+		res.status(validated.status).json(validated)
+	} else {
+		const card = drawOpenCard(req.params.playerId);
+		res.status(200).json(card);
+	}
 })
 
 // Let the user draw the top card from the closed deck
 app.get('/api/game/draw-closed-card/:playerId', authenticate, (req, res) => {
-	let card = drawClosedCard(req.params.playerId);
-	res.status(200).json(card);
+	const validated = validateAction(req.params.playerId, 'draw')
+	if (validated.status !== 200) {
+		res.status(validated.status).json(validated)
+	} else {
+		const card = drawClosedCard(req.params.playerId);
+		res.status(200).json(card);
+	}
 })
 
 // Let the user deposit a card to the open deck
 app.post('/api/game/deposit-card/:playerId', authenticate, (req, res) => {
-	const hand = depositCard(req.params.playerId, req.body.cardNo)
-	res.status(hand.status).json(hand);
+	const validated = validateAction(req.params.playerId, 'deposit')
+	if (validated.status !== 200) {
+		res.status(validated.status).json(validated)
+	} else {
+		const hand = depositCard(req.params.playerId, req.body.cardNo)
+		res.status(hand.status).json(hand);
+	}
 })
 
 // Let the user declare Gin
 app.post('/api/game/declare-gin/:playerId', authenticate, (req, res) => {
-	let winOrLose = declareGin(req.params.playerId);
-	res.status(winOrLose.status).json(winOrLose);
+	const validated = validateAction(req.params.playerId, 'declare')
+	if (validated.status !== 200) {
+		res.status(validated.status).json(validated)
+	} else {
+		const winOrLose = declareGin(req.params.playerId);
+		res.status(winOrLose.status).json(winOrLose);
+	}
 })
 
 app.post('/api/game/knock/:playerId', authenticate, (req, res) => {
-	let winOrLose = knock(req.params.playerId);
-	res.status(winOrLose.status).json(winOrLose);
+	const validated = validateAction(req.params.playerId, 'knock')
+	if (validated.status !== 200) {
+		res.status(validated.status).json(validated)
+	} else {
+		const winOrLose = knock(req.params.playerId);
+		res.status(winOrLose.status).json(winOrLose);
+	}
 })
 
 // Send information about the game back to the user

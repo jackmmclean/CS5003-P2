@@ -291,7 +291,7 @@ exports.getMessages = function (gameId) {
 }
 
 exports.sendMessage = function (playerId, text) {
-	if (text.length == 0) {
+	if (text.length === 0) {
 		return {
 			status: 409,
 			text: 'Cannot send empty message.'
@@ -308,5 +308,31 @@ exports.sendMessage = function (playerId, text) {
 			text: `Message posted to game with game ID "${getGameByPlayerId(playerId).id}"`,
 			message: message
 		}
+	}
+}
+
+/**
+ * Validate that a requested user action is permitted for the requesting player.
+ * @param {string} playerId: The requesting player
+ * @param {string} requestedAction: The requested action
+ * @param {}
+ * */
+exports.validateAction = function(playerId, requestedAction) {
+	let game = getGameByPlayerId(playerId)
+
+	// check if it's the player's turn
+	if (game.turnOrder[game.turnPlayerIndex].id !== playerId) {
+		return {status: 405, text: "Not the player's turn"}
+	}
+
+	// check if the player can perform the requested action
+	else if ((game.currentAction !== requestedAction) ||
+		(requestedAction !== 'declare') ||
+		(requestedAction !== 'knock')) {
+		return {status: 405, text: "This action is currently not allowed"}
+	}
+
+	else {
+		return {status: 200}
 	}
 }
