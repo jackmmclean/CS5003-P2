@@ -59,7 +59,7 @@ app.get('/api/lobby/get-games', authenticate, (req, res) => {
 app.post('/api/game/join', authenticate, (req, res) => {
 	let gameId = req.body.gameId;
 	let game = joinGame(req.username, gameId);
-	res.status(200).json(game);
+	res.status(game.status).json(game);
 })
 
 // Let the user create a new game

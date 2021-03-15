@@ -53,11 +53,28 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gam
 exports.joinGame = function (username, gameId) {
 	const player = games[gameId].addPlayer(username);
 
-	return {
-		status: 200,
-		gameId: gameId,
-		playerId: player.id,
-		text: `Successfully joined game with id ${gameId}.`,
+	// process game that's already started
+	if (games[gameId].timeStarted !== null) {
+		return {
+			status: 405,
+			text: "This game has already started"
+		}
+	}
+	// process full game
+	else if (Object.keys(games[gameId]).length >= 4) {
+		return {
+			status: 405,
+			text: "This game is already full.",
+		}
+	}
+	// everything ok
+	else {
+		return {
+			status: 200,
+			gameId: gameId,
+			playerId: player.id,
+			text: `Successfully joined game with id ${gameId}.`,
+		}
 	}
 }
 
@@ -85,8 +102,10 @@ exports.startGame = function (playerId) {
 }
 
 exports.getGames = function () {
-	// return games that haven't started yet
-	const openGames = Object.entries(games).filter(arr => arr[1].timeStarted === null)
+	// return games that haven't started yet and have less than 4 players
+	const openGames = Object.entries(games).filter(arr => (
+		arr[1].timeStarted === null) && (Object.keys(arr[1].players) < 4)
+	)
 	return openGames.map((arr) => {
 		let obj = {};
 		obj['id'] = arr[0];
