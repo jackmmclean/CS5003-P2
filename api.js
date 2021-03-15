@@ -104,8 +104,7 @@ exports.startGame = function (playerId) {
 exports.getGames = function () {
 	// return games that haven't started yet and have less than 4 players
 	const openGames = Object.entries(games).filter(arr => (
-		arr[1].timeStarted === null) && (Object.keys(arr[1].players) < 4)
-	)
+		arr[1].timeStarted === null) && (Object.keys(arr[1].players) < 4))
 	return openGames.map((arr) => {
 		let obj = {};
 		obj['id'] = arr[0];
@@ -235,6 +234,10 @@ exports.gameStats = function (playerId) {
 	for (let id in game.players) {
 		scores[id] = game.players[id].score;
 	}
+	const niceUsernames = {};
+	for (let id in game.players) {
+		niceUsernames[id] = niceUsername(id);
+	}
 
 	return {
 		gameId: game.id,
@@ -244,8 +247,8 @@ exports.gameStats = function (playerId) {
 		round: game.round,
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
 		messageCount: game.messages.length,
-		cardHistory: game.cardHistory
-
+		cardHistory: game.cardHistory,
+		niceUsernames: niceUsernames
 		// todo what else should we return here?
 	};
 }
@@ -290,7 +293,8 @@ exports.pollGame = function (playerId) {
 		numPlayers: game.players.length,
 		knockingAllowed: game.knockingAllowed,
 		playerNames: game.turnOrder.map(el => el.username),
-		turnPlayerIndex: game.turnPlayerIndex
+		turnPlayerIndex: game.turnPlayerIndex,
+		winner: game.winner
 		// todo add more data that needs to be polled
 	}
 }

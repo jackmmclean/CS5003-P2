@@ -18,6 +18,6 @@ window.onload = () => {
 	makeEntry();
 	makeLobby();
 	makeGame();
-	makeHistory();
 	makeEnd();
+	makeHistory();
 };

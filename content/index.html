@@ -271,7 +271,9 @@
 			</div>
 
 			<div id="end" v-show="state === 'end'">
-				<p>hi</p>
+				<div v-for="pair in scores">{{pair.niceUsername}} : {{pair.score}}</div>
+
+				<button v-on:click="getScores">sdsds</button>
 			</div>
 
 			<div id="history" v-show="state === 'history'">
