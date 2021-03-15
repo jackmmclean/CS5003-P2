@@ -9,7 +9,8 @@ const {
 	sortByCards,
 	clearDuplicateCards,
 	getGameByPlayerId,
-	niceUsername
+	niceUsername,
+	transformCards
 } = require("./utils.js");
 
 const {
@@ -132,10 +133,10 @@ function makeCards(game) {
 	//storing locations of cards at every point in game
 	function CardsInstance() {
 		this.time = new Date;
-		this.openDeck = Object.assign({}, cards.openDeck);
-		this.deck = Object.assign({}, cards.deck);
+		this.openDeck = Object.assign({}, transformCards(cards.openDeck));
+		this.deck = Object.assign({}, transformCards(cards.deck));
 		for (let [k, player] of Object.entries(players)) {
-			this[player.id] = Object.assign({}, cards[player.id]);
+			this[niceUsername(player.id)] = Object.assign({}, transformCards(cards[player.id]));
 		}
 	}
 

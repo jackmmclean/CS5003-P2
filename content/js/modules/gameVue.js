@@ -3,7 +3,8 @@ import {
 	getCards,
 	getStats,
 	setState,
-	messageArraysEqual
+	messageArraysEqual,
+	transformCards
 } from "./clientUtils.js";
 
 const makeGameInfoVue = function () {
@@ -318,17 +319,7 @@ const makeMessagesVue = function () {
 	})
 }
 
-const transformCards = function (numericCards) {
-	let cards = []
-	for (let c of numericCards) {
-		cards.push({
-			card: '&#' + c + ';',
-			color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred",
-			cardNo: c
-		})
-	}
-	return cards;
-}
+
 
 const sharedGameInfo = Vue.observable({
 	gameHasStarted: false,

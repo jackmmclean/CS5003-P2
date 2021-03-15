@@ -33,6 +33,7 @@
 					<button class="button is-small" v-on:click="setLogin">Login</button>
 					<button class="button is-small" v-on:click="setLobby">Lobby</button>
 					<button class="button is-small" v-on:click="setPlay">Play</button>
+					<button class="button is-small" v-on:click="setEnd">End</button>
 				</div>
 			</div>
 		</div>
@@ -228,11 +229,6 @@
 			</div>
 			<div id="messages" v-show="state === 'play'">
 				<div id="messagesData">
-					<!-- to do - fix a size and maybe location for the message box -->
-					<!-- <article class="message" v-for="msg in pastMessages">
-					{{ msg.niceUsername }} : {{ msg.text }}
-					({{ msg.timeStamp }})</div> -->
-
 					<div class="widthDiv" v-for="msg in pastMessages">
 						<article v-bind:id="msg.isMyMsg ? 'myMsg' : 'othersMsg'"
 							v-bind:class="'message is-small ' + (msg.isMyMsg ? 'is-link' : 'is-info')">
@@ -251,6 +247,42 @@
 					<input class="input is-rounded is-small is-info" type="text" v-model="message"
 						placeholder="eMessage">
 				</form>
+
+			</div>
+
+			<div id="end" v-show="state === 'end'">
+				<!-- 3 options - end game, next round, replay cards -->
+				<button v-on:click="getCardHistory">initialise</button><br>
+				<div>Instance: {{index}}</div>
+
+				<article class="message">
+					<div class="message-header">
+						<p>Open Deck:</p>
+					</div>
+					<div class="message-body">
+						<div class="board-element">
+							<div v-for="card in cardHistoryInstance.openDeck" class="smaller-playing-card"
+								v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"></div>
+						</div>
+
+					</div>
+				</article>
+
+				<article v-for="(cards, key) in cardHistoryInstance"
+					v-if="!(['openDeck', 'deck', 'time'].includes(key))" class="message">
+					<div class="message-header">
+						<p>{{key}}:</p>
+					</div>
+					<div class="message-body">
+						<div class="board-element">
+							<div v-for="card in cards" class="smaller-playing-card" v-for="card in hand"
+								v-html="card.card" v-bind:style="{color: card.color}">
+							</div>
+						</div>
+					</div>
+				</article>
+
+				<button v-on:click=" getInstanceBack">back</i><button v-on:click="getInstanceForward">forward</i>
 
 			</div>
 

@@ -91,3 +91,16 @@ export const messageArraysEqual = function (array1, array2) {
 	}
 	return true;
 }
+
+export const transformCards = function (numericCards) {
+	let cards = []
+	for (let c of numericCards) {
+		cards.push({
+			card: '&#' + c + ';',
+			color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred",
+			cardNo: c
+		})
+	}
+	return cards;
+}
+

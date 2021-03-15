@@ -161,7 +161,8 @@ const makeOpenGamesVue = function () {
 			},
 			pollGames: function () {
 				this.polling = setInterval(() => {
-					this.getGames();
+					if (game.state === 'lobby')
+						this.getGames();
 				}, 100)
 			}
 		},
