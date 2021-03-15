@@ -1,3 +1,4 @@
+const {getHighestScoringPlayers} = require("./utils");
 const {
 	shuffle,
 	isRun,
@@ -211,7 +212,7 @@ function makeCards(game) {
  * @param game {Object} The current game
  * @returns {Boolean} true if the declared Gin is valid
  * */
-exports.processGinDeclared = function (declaringPlayer, game) {
+const processGinDeclared = function (declaringPlayer, game) {
 
 	// make melds for all players
 	for (let [k, player] of Object.entries(game.players)) {
@@ -228,6 +229,8 @@ exports.processGinDeclared = function (declaringPlayer, game) {
 
 	return true;
 }
+
+exports.processGinDeclared = (declaringPlayer, game) => {return processGinDeclared(declaringPlayer, game)}
 
 /**
  * Process the knock of a player

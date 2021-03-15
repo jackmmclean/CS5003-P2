@@ -129,7 +129,7 @@ isRun = function (cardArray, highOrLowAces) {
  * @param card {Object} the card whose score to get.
  * @return {Number} the score of the card
  * */
-exports.cardScore = function (card) {
+const cardScore = function (card) {
 	if (!isNaN(card.rank)) {
 		return parseInt(card.rank);
 	} else if (card.rank === 'A') {
@@ -137,7 +137,9 @@ exports.cardScore = function (card) {
 	} else return 10;
 }
 
-exports.unmatchedCards = function (meldsArray) {
+exports.cardScore = (card) => {return cardScore(card)}
+
+const unmatchedCards = function(meldsArray) {
 	let unmatchedCards = [];
 	for (let entry of meldsArray) {
 		if (!Array.isArray(entry)) {
@@ -146,6 +148,8 @@ exports.unmatchedCards = function (meldsArray) {
 	}
 	return unmatchedCards;
 }
+
+exports.unmatchedCards = function (meldsArray) {return unmatchedCards(meldsArray)}
 
 
 /**
