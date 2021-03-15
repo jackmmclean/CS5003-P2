@@ -16,5 +16,5 @@ window.onload = () => {
 	makeLobby();
 	makeGame();
 	makeHistory();
-	makeEnd();
+	//makeEnd();
 };
