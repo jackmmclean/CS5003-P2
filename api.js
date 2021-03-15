@@ -100,6 +100,8 @@ exports.drawOpenCard = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.openDraw();
+	// set action to 'deposit'
+	game.toggleAction();
 	return {
 		drawnCard: card,
 		hand: player.hand(),
@@ -111,6 +113,8 @@ exports.drawClosedCard = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.closedDraw();
+	// set action to 'deposit'
+	game.toggleAction();
 	return {
 		drawnCard: card,
 		hand: player.hand(),
@@ -128,6 +132,10 @@ exports.depositCard = function (playerId, cardNo) {
 			text: 'Depositing this card is not allowed.'
 		}
 	} else {
+		// set action to 'draw'
+		game.toggleAction();
+		// skip to next turn;
+		game.nextTurn();
 		return {
 			status: 200,
 			hand: player.depositCard(card[0]),
@@ -262,6 +270,8 @@ exports.pollGame = function (playerId) {
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
 		knockingAllowed: game.knockingAllowed,
+		playerNames: game.turnOrder.map(el => el.username),
+		turnPlayerIndex: game.turnPlayerIndex
 		// todo add more data that needs to be polled
 	}
 }
@@ -305,7 +315,7 @@ exports.getMessages = function (gameId) {
 }
 
 exports.sendMessage = function (playerId, text) {
-	if (text.length == 0) {
+	if (text.length === 0) {
 		return {
 			status: 409,
 			text: 'Cannot send empty message.'
@@ -321,6 +331,38 @@ exports.sendMessage = function (playerId, text) {
 			status: 200,
 			text: `Message posted to game with game ID "${getGameByPlayerId(playerId).id}"`,
 			message: message
+		}
+	}
+}
+
+/**
+ * Validate that a requested user action is permitted for the requesting player.
+ * @param {string} playerId: The requesting player
+ * @param {string} requestedAction: The requested action
+ * @param {}
+ * */
+exports.validateAction = function (playerId, requestedAction) {
+	let game = getGameByPlayerId(playerId)
+
+	// check if it's the player's turn
+	if (game.turnOrder[game.turnPlayerIndex].id !== playerId) {
+		return {
+			status: 405,
+			text: "Not the player's turn"
+		}
+	}
+
+	// check if the player can perform the requested action
+	else if ((game.currentAction !== requestedAction) ||
+		(requestedAction !== 'declare') ||
+		(requestedAction !== 'knock')) {
+		return {
+			status: 405,
+			text: "This action is currently not allowed"
+		}
+	} else {
+		return {
+			status: 200
 		}
 	}
 }

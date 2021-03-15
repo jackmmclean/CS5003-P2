@@ -37,12 +37,29 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 		this.round = 1;
 		this.messages = [];
 		this.players = {};
+		// turn order defines the turn order of players as the players object is unordered
+		this.turnOrder = [];
+		// turnPlayer is index of current turn's player in the turnOrder array
+		this.turnPlayerIndex = null;
+		// action: which action can currently be performed: can be 'draw', 'deposit'
+		this.currentAction = 'draw';
 		this.cardHistory = [];
 		this.cards = null;
 		this.knockingAllowed = knockingAllowed;
 		this.highOrLowAces = lowHighAceAllowed;
 		// owner of the game (the player who created it)
 		this.owner = null;
+
+		// skip to the next turn
+		this.nextTurn = () => {
+			this.turnPlayerIndex = (this.turnPlayerIndex + 1) < this.turnOrder.length ? this.turnPlayerIndex + 1 : 0
+		}
+
+		// toggle next action
+		this.toggleAction = () => {
+			this.currentAction = (this.currentAction === 'draw') ? 'deposit' : 'draw';
+		}
+
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
@@ -55,11 +72,29 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 			}
 			return player;
 		};
+		// remove a player from the game (e.g. when they don't respond)
+		this.removePlayer = (playerId) => {
+			let player = this.players[playerId]
+
+			// remove from turn order
+			this.turnOrder.splice(this.turnOrder.indexOf(player),  1)
+
+			// update turnPlayerIndex if the removed element was the last one in turnPlayer.order
+			// todo check that this works properly
+			this.turnPlayerIndex = (this.turnPlayerIndex < this.turnOrder.length) ? this.turnPlayerIndex : 0
+
+			// remove from players
+			delete this.players[playerId]
+		}
 		this.startGame = () => {
 			this.timeStarted = new Date;
 			this.cards = makeCards(this);
 			//allow these functions to be accessed from the player objects
 			for (let [k, player] of Object.entries(this.players)) {
+
+				// save the order of the players
+				this.turnOrder.push(player);
+
 				player.hand = () => {
 					return this.cards[player.id];
 				}
@@ -73,6 +108,9 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 					return this.cards.depositCard(player, card)
 				};
 			}
+
+			// set owner as starting player
+			this.turnPlayerIndex = this.turnOrder.indexOf(this.owner);
 		};
 	}
 	let game = new Game();

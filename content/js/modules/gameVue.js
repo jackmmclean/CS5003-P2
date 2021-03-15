@@ -329,6 +329,8 @@ const sharedGameInfo = Vue.observable({
 	closedDeckCards: [],
 	showBackOfCard: false,
 	knockingAllowed: false,
+	playerNames: [],
+	turnPlayerIndex: null,
 	generalInfo: {
 		GameID: "1234",
 		Username: "",
@@ -386,6 +388,8 @@ const startInterval = () => {
 			// let only owner start the game
 			sharedGameInfo.playerIsOwner = json.isOwner;
 			sharedGameInfo.knockingAllowed = json.knockingAllowed;
+			sharedGameInfo.playerNames = json.playerNames;
+			sharedGameInfo.turnPlayerIndex = json.turnPlayerIndex;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
