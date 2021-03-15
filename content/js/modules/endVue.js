@@ -6,7 +6,7 @@ const makeEndVue = function () {
 	const endVue = new Vue({
 		el: "#end",
 		data: {
-winner: 
+
 		},
 		computed: {
 			state() {
