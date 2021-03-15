@@ -148,7 +148,13 @@ exports.unmatchedCards = function (meldsArray) {
 }
 
 
-
+/**
+ * Organises cards into arrays based on their rank and suit - each card appearing in both 
+ * a rank array and a suit array.
+ * @param cards {Array<Object>} is the array of cards to be categorised.
+ * @return {Object} an object with properties that correspond to each suit and rank associated
+ * with a card in the input array.
+ * */
 categoriseCards = function (cards) {
 	let counts = {};
 	for (let card of cards) {
@@ -166,6 +172,12 @@ categoriseCards = function (cards) {
 	return counts
 }
 
+/**
+ * Returns all possible runs for a given array of cards.
+ * @param cards {Array} is the array of cards to look for runs in.
+ * @param highOrLowAce {Bool} is whether or not we allow high or low aces.
+ * @return {Array<Array<Object>>} an array whose elements are arrays of cards that correspond to runs.
+ * */
 //given an array of cards with matching suit, will return array of arrays with all possible runs
 getPossibleRuns = function (cards, highOrLowAce = false) {
 	let possibleRuns = [];
@@ -331,22 +343,36 @@ overlappingCards = function (distinctRunsArray, setArray) {
  * @returns {Array.<Array>} array of arrays with all melds
  * */
 exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
+	//we choose the first element in each suit property of the distinct
+	//runs object because it is the largest
 	let distRunChoice = 0;
 
 	// for every run we check it against the sets for overlapping cards
 	for (let suit in distinctRuns) {
 		for (let rank in possibleSets) {
-			// if it has overlapping cards we remove them
+			// if it has overlapping cards we remove them:
 			let overlappingCardsArray = overlappingCards(distinctRuns[suit][distRunChoice], possibleSets[rank]);
 			if (overlappingCardsArray.length > 0) {
+				//loop through each overlapping card - ie each card that appears in a run and a set
 				for (let overlappingCard of overlappingCardsArray) {
+					//for each of those cards, loop through each of the runs and determine whether we should remove the 
+					//duplicate/overlapping card from the suit or the run
 					for (let run of distinctRuns[suit][distRunChoice]) {
-						if ((run.length > 3) && run.indexOf(overlappingCard !== -1) && isRun(run.filter(el => el != overlappingCard))) {
+						//if the run contains the overlapping card and will still be a run without it then remove 
+						//it from the run
+						if (run.includes(overlappingCard) && isRun(run.filter(el => el != overlappingCard))) {
 							run.splice(run.indexOf(overlappingCard), 1);
 							break
-						} else if (possibleSets[rank].length > 3 && possibleSets[rank].indexOf(overlappingCard !== -1)) {
+						}
+						//otherwise, if the set includes the overlapping card and will still be a set without it
+						//(if it has 4 cards since in sets the order does not matter) then remove from set
+						else if (possibleSets[rank].includes(overlappingCard) && possibleSets[rank].length > 3) {
 							possibleSets[rank].splice(possibleSets[rank].indexOf(overlappingCard), 1);
-						} else {
+						}
+						//if removing the overlapping card from the run stops it being a run AND removing the card
+						//from the set stops it being a set then we leave the overlapping card in the set and
+						//delete the corresponding run
+						else {
 							delete distinctRuns[suit][distRunChoice]
 						}
 					}
@@ -354,6 +380,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 			}
 		}
 	}
+	//format the results into the format we need - [[run array], [set array], ...]
 	let returnArray = []
 	for (let rank in possibleSets) {
 		returnArray.push(possibleSets[rank])

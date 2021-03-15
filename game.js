@@ -237,13 +237,24 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }
 
+/**
+ * Calculate the best melds for a hand of cards.
+ * @param cards {Array<Object>} The players hand, an array of cards.
+ * @returns {Array<Array<Object>, Object>} an array containing arrays of cards that represent the possible melds
+ * and possibly some 'loose' (not in a second level array) unmatched cards.
+ * */
 function makeMelds(cards) {
+	//define a variable that contains all possible melds from a hand
 	let possibleMelds = getAllPossibleMelds(cards);
+	//split into the runs and sets
 	let possibleRuns = possibleMelds.runs;
 	let possibleSets = possibleMelds.sets;
 
+	//find the 'distinct runs', eg we do not want to simultaneously consider '7,8,9' and '8,9,10'
 	let distinctRuns = getDistinctRuns(possibleRuns);
 
+	//then we sort each suit property (containing the distinct runs for that suit) by the number of 
+	//cards that each set of distinct runs 'uses up'
 	for (let suit in distinctRuns) {
 		distinctRuns[suit] = sortByCards(distinctRuns[suit]);
 	}
@@ -252,14 +263,14 @@ function makeMelds(cards) {
 	// therefore we need to choose whether to remove from runs or sets
 	let returnArray = clearDuplicateCards(distinctRuns, possibleSets);
 
-	// put unmatched cards in (not in an array)
+	// put unmatched cards in (not in an array) 
+	// so we have return format like [[some run], [some run], [some set], unmatchedCard, unmatchedCard ...]
 	for (let array of returnArray) {
 		cards = cards.filter(el => !array.includes(el))
 	}
 	returnArray.push(...cards)
 
 	return returnArray
-	//need to review this - unsure if we need to consider the best possible way to determine which to choose
 
 }
 
