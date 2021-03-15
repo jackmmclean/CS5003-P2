@@ -57,6 +57,19 @@ body, html {
     display: inline-flex;
 }
 
+#turn-indicator {
+    color: white;
+}
+#turn-indicator i {
+    font-size: 300%;
+}
+#turn-indicator table {
+    width: 100%;
+}
+#turn-indicator .active {
+    color: crimson;
+}
+
 #closed-deck {
     grid-area: b;
     margin-right: 0.25rem;

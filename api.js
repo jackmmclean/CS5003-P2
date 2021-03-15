@@ -353,8 +353,8 @@ exports.validateAction = function (playerId, requestedAction) {
 	}
 
 	// check if the player can perform the requested action
-	else if ((game.currentAction !== requestedAction) ||
-		(requestedAction !== 'declare') ||
+	else if ((game.currentAction !== requestedAction) &&
+		(requestedAction !== 'declare') &&
 		(requestedAction !== 'knock')) {
 		return {
 			status: 405,
