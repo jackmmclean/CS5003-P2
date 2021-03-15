@@ -8,12 +8,13 @@ import {
 	makeGame
 } from "./modules/gameVue.js";
 import {
-	makeEnd
-} from "./modules/endVue.js";
+	makeHistory
+} from "./modules/historyVue.js";
 
 window.onload = () => {
 	makeEntry();
 	makeLobby();
 	makeGame();
+	makeHistory();
 	makeEnd();
 };
