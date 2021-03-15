@@ -11,6 +11,7 @@
 	<script src="js/index.js" type="module"></script>
 	<!-- Bulma CSS library-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/style.css">
 	<title>Gin Rummy</title>
@@ -206,6 +207,24 @@
 			</div>
 
 			<!--	Game Page		-->
+
+			<div id="turn-indicator" v-show="state === 'play'">
+
+				<table>
+					<tr>
+						<td v-for="(player, i) in playerNames" v-bind:class="[{active: isTurnPlayer(i)}]">
+							<i class="fas fa-user"></i>
+						</td>
+					</tr>
+					<tr>
+						<td v-for="(player, i) in playerNames" v-bind:class="[{active: isTurnPlayer(i)}]">
+							{{ player }}
+<!--							{{ (idx === turnPlayerIndex) ? 'x' : '' }}-->
+						</td>
+					</tr>
+				</table>
+
+			</div>
 
 			<div class="board">
 				<div class="board-element hand" id="player-hand" v-show="state === 'play'">

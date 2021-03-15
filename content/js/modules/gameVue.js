@@ -245,6 +245,29 @@ const makeUserActionsVue = function () {
 	})
 }
 
+const makeTurnIndicatorVue = function () {
+	const turnIndicatorVue = new Vue({
+		el: "#turn-indicator",
+		data: {},
+		computed: {
+			state() {
+				return game.state;
+			},
+			playerNames() {
+				return sharedGameInfo.playerNames;
+			},
+			turnPlayerIndex() {
+				return sharedGameInfo.turnPlayerIndex;
+			},
+		},
+		methods: {
+			isTurnPlayer(idx) {
+				return idx === this.turnPlayerIndex;
+			}
+		},
+	})
+}
+
 const makeMessagesVue = function () {
 	const messagesVue = new Vue({
 		el: "#messages",
@@ -443,5 +466,6 @@ export const makeGame = function () {
 	makeClosedDeckVue();
 	makeOpenDeckVue();
 	makeUserActionsVue();
+	makeTurnIndicatorVue();
 	makeMessagesVue();
 }
