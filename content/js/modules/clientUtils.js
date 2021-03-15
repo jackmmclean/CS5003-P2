@@ -9,7 +9,7 @@ export const game = Vue.observable({
 });
 
 // all allowed states
-const ALLOWED_STATES = ['login', 'lobby', 'play', 'end']
+const ALLOWED_STATES = ['login', 'lobby', 'play', 'end', 'history']
 
 /**
  * Set the userKey to the guest user key.

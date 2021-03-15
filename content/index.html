@@ -35,6 +35,7 @@
 					<button class="button is-small" v-on:click="setLobby">Lobby</button>
 					<button class="button is-small" v-on:click="setPlay">Play</button>
 					<button class="button is-small" v-on:click="setEnd">End</button>
+					<button class="button is-small" v-on:click="setHistory">History</button>
 				</div>
 			</div>
 		</div>
@@ -269,9 +270,10 @@
 
 			</div>
 
-			<div id="end" v-show="state === 'end'">
-				<!-- 3 options - end game, next round, replay cards -->
+			<div id="history" v-show="state === 'history'">
+				<!--todo: call getCardHistory when game replay page is opened. not with this button! -->
 				<button v-on:click="getCardHistory">initialise</button><br>
+
 				<div>Instance: {{index}}</div>
 
 				<article class="message">

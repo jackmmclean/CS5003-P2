@@ -139,6 +139,7 @@ export const makeEntry = function () {
 			setLogin: () => setState("login"),
 			setLobby: () => setState("lobby"),
 			setPlay: () => setState("play"),
+			setHistory: () => setState("history"),
 			setEnd: () => setState("end")
 		}
 	})
