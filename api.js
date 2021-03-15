@@ -297,7 +297,7 @@ exports.pollGame = function (playerId) {
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
 		knockingAllowed: game.knockingAllowed,
-		playerNames: game.turnOrder.map(el => el.username),
+		playerNames: game.turnOrder.map(el => niceUsername(el.id)),
 		turnPlayerIndex: game.turnPlayerIndex,
 		winner: game.winner
 		// todo add more data that needs to be polled

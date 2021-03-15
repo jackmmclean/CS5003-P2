@@ -84,6 +84,7 @@ exports.isRun = (cardArray, highOrLowAces) => isRun(cardArray, highOrLowAces);
 /**
  * Evaluate whether an array of cards is a run.
  * @param cardArray {Array} an array of cards to check.
+ * @param highOrLowAces {Boolean} If Ace low or high is allowed
  * @returns {Boolean} true if the array is a run, else false.
  * */
 isRun = function (cardArray, highOrLowAces) {
@@ -120,7 +121,7 @@ isRun = function (cardArray, highOrLowAces) {
 		}
 	}
 
-	//if we get here then it wasnt a run for either ace value
+	//if we get here then it wasn't a run for either ace value
 	return false;
 }
 
@@ -179,7 +180,7 @@ categoriseCards = function (cards) {
 /**
  * Returns all possible runs for a given array of cards.
  * @param cards {Array} is the array of cards to look for runs in.
- * @param highOrLowAce {Bool} is whether or not we allow high or low aces.
+ * @param highOrLowAce {Boolean} is whether or not we allow high or low aces.
  * @return {Array<Array<Object>>} an array whose elements are arrays of cards that correspond to runs.
  * */
 //given an array of cards with matching suit, will return array of arrays with all possible runs
@@ -197,9 +198,9 @@ getPossibleRuns = function (cards, highOrLowAce = false) {
 	for (let i = currentCards.length; i > 2; i--) {
 		for (let j = 0; j < currentCards.length; j++) {
 			if (currentCards.slice(j, j + i).length < i) break;
-			if (isRun(currentCards.slice(j, j + i))) {
+			if (isRun(currentCards.slice(j, j + i), highOrLowAce)) {
 				possibleRuns.push(currentCards.slice(j, j + i))
-			};
+			}
 		}
 	}
 
@@ -364,7 +365,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 					for (let run of distinctRuns[suit][distRunChoice]) {
 						//if the run contains the overlapping card and will still be a run without it then remove 
 						//it from the run
-						if (run.includes(overlappingCard) && isRun(run.filter(el => el != overlappingCard))) {
+						if (run.includes(overlappingCard) && isRun(run.filter(el => el !== overlappingCard))) {
 							run.splice(run.indexOf(overlappingCard), 1);
 							break
 						}
@@ -432,7 +433,7 @@ exports.niceUsername = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	const guests = {};
 	for (let playerKey in game.players) {
-		if (game.players[playerKey].username == 'guest') {
+		if (game.players[playerKey].username === 'guest') {
 			guests[playerKey] = (game.players[playerKey]);
 		}
 	}
@@ -465,13 +466,13 @@ exports.calculatePlayerScores = function (game) {
 
 	//add up the score of all players and store in opponentScores
 	let sumOfAllScores = 0;
-	for (let [k, player] of Object.entries(players)) {
+	for (let [, player] of Object.entries(players)) {
 		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 		sumOfAllScores += player.score;
 	}
 
 	//define each players score as the sum of opponents scores minus their own
-	for (let [k, player] of Object.entries(players)) {
+	for (let [, player] of Object.entries(players)) {
 		player.score = sumOfAllScores - 2 * player.score;
 	}
 }

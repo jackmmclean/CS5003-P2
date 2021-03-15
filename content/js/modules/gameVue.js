@@ -311,7 +311,7 @@ const makeMessagesVue = function () {
 								if (!messageArraysEqual(this.pastMessages, res.messages)) {
 									this.pastMessages = res.messages;
 									for (let pastMessage of this.pastMessages) {
-										pastMessage['isMyMsg'] = (game.playerId === pastMessage.playerId) ? true : false;
+										pastMessage['isMyMsg'] = (game.playerId === pastMessage.playerId);
 									}
 									setTimeout(function () {
 										//have to ensure that the element has rendered before scrolling to bottom, 
