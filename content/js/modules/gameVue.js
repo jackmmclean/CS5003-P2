@@ -209,15 +209,13 @@ const makeUserActionsVue = function () {
 					}
 				}).then((res) => {
 					if (!res.ok) {
-						if (res.status === 405) {
-							alert("You don't seem to have a Gin.\nYou may only declare Gin when you actually have on.")
-						}
 						throw new Error(`HTTP Error ${res.status}`)
 					} else {
 						return res.json();
 					}
 				}).then((json) => {
-					console.log(json.text)
+					alert(json.text)
+					setState('end');
 					console.log('Winner is', json.winners)
 				})
 			},

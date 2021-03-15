@@ -82,10 +82,18 @@ exports.startGame = function (playerId) {
 	let game = getGameByPlayerId(playerId)
 	if (game.owner.id !== playerId) {
 		return {
-			status: 400,
+			status: 405,
 			text: "Only the owner of the game can start the game."
 		};
 	}
+
+	if (Object.keys(game.players).length < 2) {
+		return {
+			status: 405,
+			text: "You can't start a game with only one player."
+		};
+	}
+
 	game.startGame();
 	let hand = game.players[playerId].hand();
 	let openDeck = game.cards.openDeck;
@@ -173,20 +181,17 @@ exports.declareGin = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	// todo need some more logic here to deal with winning and losing etc
-	if (processGinDeclared(player, game)) {
-		getRoundGinScores(game, player);
-		game.endGame();
-		status = 200;
-		text = "Game is over."
-	} else {
-		// If the player who declared gin in fact does not have a gin -> Let them play
-		status = 405;
-		text = "No Gin."
-	}
+	const validGin = processGinDeclared(player, game)
+
+	getRoundGinScores(game, player);
+	game.endGame();
+
+	text = validGin ? "Game is over." : "You incorrectly declared Gin.\nSorry, that means you lose and get a score of 0."
+
 	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	// todo don't return full player objects -> only return relevant data
 	return {
-		status: status,
+		status: 200,
 		text: text,
 		winners: winners,
 	};

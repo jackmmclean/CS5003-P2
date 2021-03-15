@@ -243,7 +243,7 @@ exports.getAllPossibleMelds = function (cards) {
 		}
 		//take run melds
 		else {
-			if (getPossibleRuns(categories[category]).length != 0) {
+			if (getPossibleRuns(categories[category]).length !== 0) {
 				allPossibleMelds.runs[category] = (getPossibleRuns(categories[category]));
 			}
 		}

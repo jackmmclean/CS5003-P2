@@ -271,6 +271,10 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 	if (processGinDeclared(declaringPlayer, game)) {
 		declaringPlayer.score += 25;
 	}
+	// Player incorrectly declaring Gin doesn't get any points
+	else {
+		declaringPlayer.score = 0;
+	}
 
 }
 
