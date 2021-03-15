@@ -4,7 +4,7 @@ import {
 } from "./clientUtils.js";
 
 const makeHistoryVue = function () {
-	const endVue = new Vue({
+	const historyVue = new Vue({
 		el: "#history",
 		data: {
 			cardHistoryInstance: [1, 2, 3, 4],
@@ -14,9 +14,6 @@ const makeHistoryVue = function () {
 		computed: {
 			state() {
 				return game.state;
-			},
-			init() {
-				this.getCardHistory();
 			}
 		},
 		methods: {
@@ -45,7 +42,7 @@ const makeHistoryVue = function () {
 
 			getInstanceForward: function () {
 				if (this.index === this.cardHistory.length - 1) {
-					console.log('too far up');
+					console.log('Cannot access earlier instance - this is the earliest instance.');
 					return
 				}
 				this.index++
@@ -53,7 +50,7 @@ const makeHistoryVue = function () {
 			},
 			getInstanceBack: function () {
 				if (this.index === 0) {
-					console.log('too far down');
+					console.log('Cannot access later instance - this is the latest instance.');
 					return
 				}
 				this.index--

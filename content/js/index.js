@@ -10,11 +10,14 @@ import {
 import {
 	makeHistory
 } from "./modules/historyVue.js";
+import {
+	makeEnd
+} from "./modules/endVue.js";
 
 window.onload = () => {
 	makeEntry();
 	makeLobby();
 	makeGame();
 	makeHistory();
-	//makeEnd();
+	makeEnd();
 };

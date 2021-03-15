@@ -452,3 +452,22 @@ exports.transformCards = function (cardsArr) {
 	}
 	return cards;
 }
+
+exports.calculatePlayerScores = function (game) {
+	let players = game.players;
+	// assuming that player.melds is an array as above but that all unmatched
+	// cards are loose in the array eg for cards 7-9 unmatched
+	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
+
+	//add up the score of all players and store in opponentScores
+	let sumOfAllScores = 0;
+	for (let [k, player] of Object.entries(players)) {
+		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		sumOfAllScores += player.score;
+	}
+
+	//define each players score as the sum of opponents scores minus their own
+	for (let [k, player] of Object.entries(players)) {
+		player.score = sumOfAllScores - 2 * player.score;
+	}
+}

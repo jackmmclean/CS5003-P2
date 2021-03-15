@@ -10,7 +10,8 @@ const {
 	clearDuplicateCards,
 	getGameByPlayerId,
 	niceUsername,
-	transformCards
+	transformCards,
+	calculatePlayerScores
 } = require("./utils.js");
 
 const {
@@ -77,7 +78,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 			let player = this.players[playerId]
 
 			// remove from turn order
-			this.turnOrder.splice(this.turnOrder.indexOf(player),  1)
+			this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
 
 			// update turnPlayerIndex if the removed element was the last one in turnPlayer.order
 			// todo check that this works properly
@@ -245,35 +246,29 @@ exports.processKnock = function (game) {
  * @param declaringPlayer {Object} The one who knocks (Walter White)  ... sorry, I could not resist ;-)
  * */
 exports.getRoundKnockScores = function (game, declaringPlayer) {
-	let players = game.players;
-	// assuming that player.melds is an array as above but that all unmatched
-	// cards are loose in the array eg for cards 7-9 unmatched
-	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
 
-	//add up the score of all players and store in opponentScores
-	let opponentScores = 0;
-	for (let [k, player] of Object.entries(players)) {
-		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
-		opponentScores += player.score;
+	calculatePlayerScores(game);
+
+	const winners = getHighestScoringPlayers(Object.entries(game.players).map(el => el[1]));
+
+	//if the knocking player does not have the highest score, winner(s) get a bonus 25 points
+	if (!winners.includes(declaringPlayer)) {
+		for (let winner of winners) {
+			winner.score += 25;
+		}
 	}
 
-	//declaring player's round score is value of all opponents cards minus their own - therefore opponentScores minus
-	//double their own scores
-	declaringPlayer.score += (opponentScores - 2 * unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0))
 }
 
 //player argument is player who declared gin (correctly)
 exports.getRoundGinScores = function (game, declaringPlayer) {
-	let players = game.players;
-	//add up the score of all players and store in opponentScores
-	let opponentScores = 0;
-	for (let [k, player] of Object.entries(players)) {
-		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
-		opponentScores += player.score;
+
+	calculatePlayerScores(game);
+
+	if (processGinDeclared(declaringPlayer, game)) {
+		declaringPlayer.score += 25;
 	}
 
-	//the players score is the value of opponents cards plus 20 points
-	declaringPlayer.score += (opponentScores - unmatchedCards(declaringPlayer.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0) + 20)
 }
 
 /**
