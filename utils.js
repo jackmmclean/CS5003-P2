@@ -439,3 +439,16 @@ exports.niceUsername = function (playerId) {
 		return game.players[playerId].username;
 	}
 }
+
+exports.transformCards = function (cardsArr) {
+	let numericCards = cardsArr.map(el => el.char)
+	let cards = []
+	for (let c of numericCards) {
+		cards.push({
+			card: '&#' + c + ';',
+			color: ((c <= 127150) || (c >= 127185)) ? "black" : "darkred",
+			cardNo: c
+		})
+	}
+	return cards;
+}

@@ -1,5 +1,9 @@
-const {getRoundKnockScores} = require("./game");
-const {processKnock} = require("./game");
+const {
+	getRoundKnockScores
+} = require("./game");
+const {
+	processKnock
+} = require("./game");
 const {
 	users,
 	games
@@ -123,13 +127,20 @@ exports.depositCard = function (playerId, cardNo) {
 	const player = game.players[playerId];
 	const card = player.hand().filter(el => el.char === cardNo)
 	if (card.length !== 1) {
-		return {status: 405, text: 'Depositing this card is not allowed.'}
+		return {
+			status: 405,
+			text: 'Depositing this card is not allowed.'
+		}
 	} else {
 		// set action to 'draw'
 		game.toggleAction();
 		// skip to next turn;
 		game.nextTurn();
-		return {status: 200, hand: player.depositCard(card[0]), text: 'Deposited card'}
+		return {
+			status: 200,
+			hand: player.depositCard(card[0]),
+			text: 'Deposited card'
+		}
 	}
 }
 
@@ -169,10 +180,13 @@ exports.declareGin = function (playerId) {
  * @param playerId {string} ID of the knocking player
  * @returns {Object} information sent back to the user
  * */
-exports.knock = function(playerId) {
+exports.knock = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	// make sure knocking is allowed
-	if (!game.knockingAllowed) return {status: 405, text: "Knocking is not allowed in this game."}
+	if (!game.knockingAllowed) return {
+		status: 405,
+		text: "Knocking is not allowed in this game."
+	}
 
 	let player = game.players[playerId];
 
@@ -202,6 +216,7 @@ exports.gameStats = function (playerId) {
 	for (let id in game.players) {
 		scores[id] = game.players[id].score;
 	}
+
 	return {
 		gameId: game.id,
 		niceUsername: niceUsername(playerId),
@@ -209,7 +224,8 @@ exports.gameStats = function (playerId) {
 		scores: scores,
 		round: game.round,
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
-		messageCount: game.messages.length
+		messageCount: game.messages.length,
+		cardHistory: game.cardHistory
 
 		// todo what else should we return here?
 	};
@@ -325,22 +341,28 @@ exports.sendMessage = function (playerId, text) {
  * @param {string} requestedAction: The requested action
  * @param {}
  * */
-exports.validateAction = function(playerId, requestedAction) {
+exports.validateAction = function (playerId, requestedAction) {
 	let game = getGameByPlayerId(playerId)
 
 	// check if it's the player's turn
 	if (game.turnOrder[game.turnPlayerIndex].id !== playerId) {
-		return {status: 405, text: "Not the player's turn"}
+		return {
+			status: 405,
+			text: "Not the player's turn"
+		}
 	}
 
 	// check if the player can perform the requested action
 	else if ((game.currentAction !== requestedAction) &&
 		(requestedAction !== 'declare') &&
 		(requestedAction !== 'knock')) {
-		return {status: 405, text: "This action is currently not allowed"}
-	}
-
-	else {
-		return {status: 200}
+		return {
+			status: 405,
+			text: "This action is currently not allowed"
+		}
+	} else {
+		return {
+			status: 200
+		}
 	}
 }
