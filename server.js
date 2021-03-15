@@ -121,7 +121,7 @@ app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	res.status(200).json(stats);
 })
 
-//get messages from server
+// get messages from server
 app.get('/api/game/messages/:gameId', (req, res) => {
 	const gameId = req.params.gameId;
 	res.status(getMessages(gameId).status).json(getMessages(gameId));
