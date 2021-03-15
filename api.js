@@ -96,6 +96,8 @@ exports.drawOpenCard = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.openDraw();
+	// set action to 'deposit'
+	game.toggleAction();
 	return {
 		drawnCard: card,
 		hand: player.hand(),
@@ -107,6 +109,8 @@ exports.drawClosedCard = function (playerId) {
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.closedDraw();
+	// set action to 'deposit'
+	game.toggleAction();
 	return {
 		drawnCard: card,
 		hand: player.hand(),
@@ -121,6 +125,10 @@ exports.depositCard = function (playerId, cardNo) {
 	if (card.length !== 1) {
 		return {status: 405, text: 'Depositing this card is not allowed.'}
 	} else {
+		// set action to 'draw'
+		game.toggleAction();
+		// skip to next turn;
+		game.nextTurn();
 		return {status: 200, hand: player.depositCard(card[0]), text: 'Deposited card'}
 	}
 }
