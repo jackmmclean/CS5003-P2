@@ -355,8 +355,6 @@ const sharedGameInfo = Vue.observable({
 	generalInfo: {
 		GameID: "1234",
 		Username: "",
-		Turn: "who's turn",
-		Action: "possible action",
 		Time: "some time",
 		Players: 0,
 	}

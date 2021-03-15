@@ -65,6 +65,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
+			// todo save the scores of registered users
 		};
 		this.addPlayer = (username, owner = false) => {
 			let player = makePlayer(username);
