@@ -93,7 +93,6 @@ const makeRegisterVue = function () {
 			}
 		}
 	})
-
 }
 
 const makeGuestVue = function () {
@@ -123,6 +122,27 @@ const makeGuestVue = function () {
 	})
 }
 
+const makeLogoutVue = function() {
+	const logoutVue = new Vue({
+		el: "#logout",
+		computed: {
+			state() {
+				return game.state;
+			},
+		},
+		methods: {
+			logout: function() {
+				// reset game observable
+				game.userKey = "";
+				game.playerId = "";
+				game.gameId = "";
+				game.messages = [];
+				setState("login");
+			},
+		}
+	})
+}
+
 const registrationCard = Vue.observable({
 	show: false,
 })
@@ -131,6 +151,7 @@ export const makeEntry = function () {
 	makeLoginVue();
 	makeRegisterVue();
 	makeGuestVue();
+	makeLogoutVue();
 
 	// todo take this out: this is only for development to navigate between states
 	const navVue = new Vue({

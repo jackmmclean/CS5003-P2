@@ -88,7 +88,7 @@ const makePlayerHandVue = function () {
 					} else if (json.status === 200) {
 						setHand(json.hand);
 					} else {
-						throw new Error(`Http error: ${json.status}`)
+						throw Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -129,7 +129,7 @@ const makeClosedDeckVue = function () {
 					} else if (json.status === 200) {
 						setHand(json.hand);
 					} else {
-						throw new Error(`Http error: ${json.status}`)
+						throw Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -162,7 +162,7 @@ const makeOpenDeckVue = function () {
 					} else if (json.status === 200) {
 						setHand(json.hand);
 					} else {
-						throw new Error(`Http error: ${json.status}`)
+						throw Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -173,9 +173,6 @@ const makeOpenDeckVue = function () {
 const makeUserActionsVue = function () {
 	const userActionsVue = new Vue({
 		el: "#user-actions",
-		data: {
-			showStartButton: true
-		},
 		computed: {
 			state() {
 				return game.state;
@@ -185,6 +182,9 @@ const makeUserActionsVue = function () {
 			},
 			isKnockingAllowed() {
 				return sharedGameInfo.knockingAllowed;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
 			}
 		},
 		methods: {
@@ -203,9 +203,8 @@ const makeUserActionsVue = function () {
 						setOpenDeck(json.openDeck);
 						setClosedDeck(json.deck)
 						showBackOfCard();
-						this.showStartButton = false;
 					} else {
-						throw new Error(`Http error: ${json.status}`)
+						throw Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -219,6 +218,7 @@ const makeUserActionsVue = function () {
 					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 405) {
+							console.log('sth')
 							showUserMessage(json.text);
 						} else if (json.status === 200) {
 							if (json.winners == null) {
@@ -230,7 +230,7 @@ const makeUserActionsVue = function () {
 							}
 
 						} else {
-							throw new Error(`Http error: ${json.status}`)
+							throw Error(`Http error: ${json.status}`)
 						}
 					}).catch(err => console.log(err))
 			},
@@ -248,7 +248,7 @@ const makeUserActionsVue = function () {
 							console.log(json.text)
 							console.log('Winner is', json.winners)
 						} else {
-							throw new Error(`Http error: ${json.status}`)
+							throw Error(`Http error: ${json.status}`)
 						}
 					}).catch(err => console.log(err))
 			},
@@ -313,7 +313,7 @@ const makeMessagesVue = function () {
 					})
 					.then((res) => {
 						if (!res.ok) {
-							throw new Error(`HTTP ${res.status}`)
+							throw Error(`HTTP ${res.status}`)
 						} else {
 							return res.json();
 						}
@@ -433,7 +433,7 @@ const startInterval = () => {
 			}
 		}).then((res) => {
 			if (!res.ok) {
-				throw new Error(`HTTP ${res.status}`)
+				throw Error(`HTTP ${res.status}`)
 			} else {
 				return res.json();
 			}

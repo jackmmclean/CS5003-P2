@@ -138,6 +138,8 @@ body, html {
     box-shadow: 0 5px 15px rgb(128, 203, 115);
 }
 
+/* Messaging */
+
 #messagesData {
 	grid-area: d;
 	height: 300px;
