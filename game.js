@@ -207,6 +207,7 @@ function makeCards(game) {
 		return player.hand();
 	}
 
+	game.cardHistory.push(new CardsInstance());
 	return cards
 }
 
