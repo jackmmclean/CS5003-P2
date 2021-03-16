@@ -4,7 +4,8 @@ import {
 	getStats,
 	setState,
 	messageArraysEqual,
-	transformCards
+	transformCards,
+	newRound
 } from "./clientUtils.js";
 
 const makeGameInfoVue = function () {
@@ -220,9 +221,14 @@ const makeUserActionsVue = function () {
 							console.log('sth')
 							showUserMessage(json.text);
 						} else if (json.status === 200) {
-							showUserMessage(json.text);
-							setState('end');
-							console.log('Winner is', json.winners)
+							if (json.winners == null) {
+								newRound();
+							} else {
+								showUserMessage(json.text);
+								setState('end');
+								console.log('Winner is', json.winners)
+							}
+
 						} else {
 							throw Error(`Http error: ${json.status}`)
 						}

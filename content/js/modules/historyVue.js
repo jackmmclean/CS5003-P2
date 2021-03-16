@@ -9,7 +9,8 @@ const makeHistoryVue = function () {
 		data: {
 			cardHistoryInstance: [1, 2, 3, 4],
 			cardHistory: [],
-			index: 0
+			index: 0,
+			round: 0
 		},
 		methods: {
 			getCardHistory: function () {
@@ -28,6 +29,7 @@ const makeHistoryVue = function () {
 					})
 					.then((json) => {
 						this.cardHistory = json.cardHistory;
+						this.round = json.round;
 						this.index = this.cardHistory.length - 1;
 						this.cardHistoryInstance = this.cardHistory[this.index];
 					})

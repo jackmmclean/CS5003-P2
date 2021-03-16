@@ -191,7 +191,7 @@ exports.declareGin = function (playerId) {
 		text = validGin ? "Game is over." : "You incorrectly declared Gin.\nYou score zero!"
 		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	} else {
-		game.getNewCards();
+		game.newRound();
 		winners = null;
 		text = validGin ? "Round is over." : "You incorrectly declared Gin.\nYou score zero for this round!"
 	}
@@ -200,7 +200,7 @@ exports.declareGin = function (playerId) {
 	return {
 		status: 200,
 		text: text,
-		winners: winners,
+		winners: winners
 	};
 }
 
@@ -408,4 +408,22 @@ exports.validateAction = function (playerId, requestedAction) {
 			status: 200
 		}
 	}
+}
+
+exports.newRound = function (playerId) {
+
+	if (getGameByPlayerId(playerId) == undefined) {
+		return {
+			status: 409,
+			text: `Cannot find game containing player with player ID "${playerId}".`
+		}
+	} else {
+		const game = getGameByPlayerId(playerId);
+		game.newRound();
+		return {
+			status: 200,
+			text: `New cards for game ID "${getGameByPlayerId(playerId).id}"`
+		}
+	}
+
 }

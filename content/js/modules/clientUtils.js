@@ -128,3 +128,18 @@ export const compareScore = function (a, b) {
 	}
 	return 0;
 }
+
+export const newRound = function () {
+	return fetch(`/api/game/new-round/${game.playerId}`, {
+		method: "POST",
+		headers: {
+			"Authorization": "Basic " + game.userKey
+		},
+	}).then((res) => {
+		if (!res.ok) {
+			throw new Error(`HTTP Error ${res.status}`)
+		} else {
+			return res.json();
+		}
+	})
+}
