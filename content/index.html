@@ -188,12 +188,6 @@
 			<div class="card" id="open-games" v-show="state === 'lobby'">
 				<header class="card-header">
 					<p class="card-header-title">Open games.</p>
-					<!-- Refresh button -->
-					<!-- <button v-on:click="getGames" class="button is-white">
-						<span class="icon">
-							<i class="fas fa-sync"></i>
-						</span>
-					</button> -->
 				</header>
 				<div class="card-content">
 					<div class="content">
@@ -276,14 +270,22 @@
 			</div>
 
 			<div id="end" v-show="state === 'end'">
-				<div v-for="pair in scores">{{pair.niceUsername}} : {{pair.score}}</div>
+				<button v-on:click="getScores">init (dev only)</button>
+				<h1 v-if="youWin" class="title is-1">You win! Congratulations</h1>
+				<h1 v-else class="title is-1">You lose! Better luck next time</h1>
+				<h3 class="subtitle is-3" v-for="pair in scores">
+					{{pair.niceUsername}} : {{pair.score}}
+				</h3>
+				<button v-on:click="showState"></button>
+				<button v-on:click="setHistory">Review Game</button>
+				<button>Play again</button>
 
-				<button v-on:click="getScores">sdsds</button>
+
 			</div>
 
 			<div id="history" v-show="state === 'history'">
 				<!--todo: call getCardHistory when game replay page is opened. not with this button! -->
-				<button v-on:click="getCardHistory">initialise</button><br>
+				<button v-on:click="getCardHistory">initialise (dev only)</button><br>
 
 				<div>Instance: {{index}}</div>
 

@@ -11,11 +11,6 @@ const makeHistoryVue = function () {
 			cardHistory: [],
 			index: 0
 		},
-		computed: {
-			state() {
-				return game.state;
-			}
-		},
 		methods: {
 			getCardHistory: function () {
 				fetch(`/api/game/game-stats/${game.playerId}`, {
@@ -57,6 +52,11 @@ const makeHistoryVue = function () {
 				this.cardHistoryInstance = this.cardHistory[this.index];
 			}
 
+		},
+		computed: {
+			state() {
+				return game.state;
+			}
 		}
 	})
 }

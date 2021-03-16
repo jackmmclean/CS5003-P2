@@ -104,3 +104,13 @@ export const transformCards = function (numericCards) {
 	return cards;
 }
 
+
+export const compareScore = function (a, b) {
+	if (a.score > b.score) {
+		return -1;
+	}
+	if (a.score < b.score) {
+		return 1;
+	}
+	return 0;
+}
