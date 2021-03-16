@@ -39,6 +39,37 @@ body, html {
     overflow-scrolling: auto;
 }
 
+/* Modal: attribution https://stackoverflow.com/a/53594839/12168211 */
+.modal {
+    background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+    color: black;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal .container {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 200px;
+}
+
+.modal .body {
+    box-shadow: 5px 10px #888888;
+    display: inline-block;
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px;
+}
+
 /* Game info */
 #user-warning {
     font-size: 100%;
