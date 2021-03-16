@@ -119,6 +119,10 @@
 			</div>
 		</div>
 
+		<div id="logout" v-show="state !== 'login'">
+			<button class="button is-small" v-on:click="logout">Logout</button>
+		</div>
+
 	</nav>
 
 	<section id="main">
