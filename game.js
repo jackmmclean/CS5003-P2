@@ -32,7 +32,7 @@ makePlayer = function (username) {
 	return new Player(username)
 }
 
-exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameId = '') {
+exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, roundMode, gameId = '') {
 	function Game() {
 		this.id = (gameId !== '') ? gameId : uuidv4();
 		this.timeStarted = null;
@@ -51,6 +51,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, gameI
 		this.cards = null;
 		this.knockingAllowed = knockingAllowed;
 		this.highOrLowAces = lowHighAceAllowed;
+		this.roundMode = roundMode;
 		// owner of the game (the player who created it)
 		this.owner = null;
 

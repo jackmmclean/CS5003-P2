@@ -22,7 +22,7 @@ const {
 } = require('./utils')
 
 
-exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gameId = '') {
+exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, roundMode, gameId = '') {
 
 	gameId = gameId.trim();
 
@@ -35,16 +35,17 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, gam
 		}
 	}
 
-	let game = makeGame(username, knockingAllowed, lowHighAceAllowed, gameId);
+	let game = makeGame(username, knockingAllowed, lowHighAceAllowed, roundMode, gameId);
 	games[game.id] = game;
 	const knockAllowTxt = knockingAllowed ? 'Knocking allowed.' : '';
 	const aceAllowTxt = lowHighAceAllowed ? 'Low or high aces allowed.' : '';
+	const roundModeTxt = roundMode ? 'Round mode on.' : '';
 
 	return {
 		status: 200,
 		gameId: game.id,
 		playerId: game.owner.id,
-		text: `Game with id "${game.id}" successfully created. ${knockAllowTxt} ${aceAllowTxt}`
+		text: `Game with id "${game.id}" successfully created. ${knockAllowTxt} ${aceAllowTxt} ${roundModeTxt}`
 	}
 }
 

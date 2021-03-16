@@ -55,7 +55,8 @@ const makeNewGameVue = function () {
 			message: "",
 			gameId: "",
 			knockingAllowed: false,
-			lowHighAceAllowed: false
+			lowHighAceAllowed: false,
+			roundMode: false
 		},
 		computed: {
 			state() {
@@ -76,6 +77,7 @@ const makeNewGameVue = function () {
 						gameId: this.gameId,
 						knockingAllowed: this.knockingAllowed,
 						lowHighAceAllowed: this.lowHighAceAllowed,
+						roundMode: this.roundMode
 					})
 				}).then((res) => {
 					// Make sure we got a 200 response

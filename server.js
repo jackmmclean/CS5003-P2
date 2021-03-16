@@ -23,8 +23,12 @@ const {
 	users
 } = require('./data/data')
 const basicAuth = require('basic-auth');
-const {validateAction} = require("./api");
-const {knock} = require("./api");
+const {
+	validateAction
+} = require("./api");
+const {
+	knock
+} = require("./api");
 
 app.use(bodyParser.json());
 app.use(express.static("content"))
@@ -66,9 +70,10 @@ app.post('/api/game/join', authenticate, (req, res) => {
 app.post('/api/game/create/', authenticate, (req, res) => {
 	let knockingAllowed = req.body.knockingAllowed;
 	let lowHighAceAllowed = req.body.lowHighAceAllowed;
+	let roundMode = req.body.roundMode;
 	let gameId = req.body.gameId;
 
-	let game = createGame(req.username, knockingAllowed, lowHighAceAllowed, gameId);
+	let game = createGame(req.username, knockingAllowed, lowHighAceAllowed, roundMode, gameId);
 
 	res.status(game.status).json(game);
 
