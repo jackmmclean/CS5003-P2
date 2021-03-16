@@ -111,10 +111,10 @@
 		<div class="card" id="user-actions" v-show="state === 'play'">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame" v-show="isOwner && showStartButton">Start
+					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted">Start
 						Game</button>
-					<button class="button is-small" v-on:click="declareGin">Declare Gin</button>
-					<button class="button is-small" v-on:click="knock" v-show="isKnockingAllowed">Knock</button>
+					<button class="button is-small" v-on:click="declareGin" v-show="gameHasStarted">Declare Gin</button>
+					<button class="button is-small" v-on:click="knock" v-show="gameHasStarted && isKnockingAllowed">Knock</button>
 				</div>
 			</div>
 		</div>
