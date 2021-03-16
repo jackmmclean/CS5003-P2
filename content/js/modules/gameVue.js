@@ -208,6 +208,7 @@ const makeUserActionsVue = function () {
 					}
 				}).catch(err => console.log(err))
 			},
+			//todo whose turn should it be for a new round?
 			declareGin: function () {
 				fetch(`/api/game/declare-gin/${game.playerId}`, {
 						method: "POST",
@@ -244,9 +245,14 @@ const makeUserActionsVue = function () {
 					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 200) {
-							showUserMessage(json.text);
-							console.log(json.text)
-							console.log('Winner is', json.winners)
+							if (json.winners == null) {
+								newRound();
+							} else {
+								showUserMessage(json.text);
+								setState('end');
+								console.log('Winner is', json.winners)
+								console.log(json.text)
+							}
 						} else {
 							throw Error(`Http error: ${json.status}`)
 						}

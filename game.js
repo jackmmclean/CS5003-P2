@@ -1,5 +1,6 @@
 const {
-	getHighestScoringPlayers
+	getHighestScoringPlayers,
+	getHighestScoringRoundPlayers
 } = require("./utils");
 const {
 	shuffle,
@@ -28,6 +29,7 @@ makePlayer = function (username) {
 		this.id = uuidv4();
 		this.melds = null;
 		this.score = 0;
+		this.roundScore = 0;
 	}
 	return new Player(username)
 }
@@ -264,14 +266,24 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 
 	calculatePlayerScores(game);
 
-	const winners = getHighestScoringPlayers(Object.entries(game.players).map(el => el[1]));
+	const winners = getHighestScoringRoundPlayers(Object.entries(game.players).map(el => el[1]));
+
+	//if the winner AND some other player(s) have the same knock score then give defenders an extra ??10?? points
+	if (winners.includes(declaringPlayer) && winners.length > 1) {
+		for (let winner of winners.filter(el => el != declaringPlayer)) {
+			winner.score += 10;
+		}
+		return `Your score tied. To the other winner${winners.length > 2 ? 's' : ''} - an extra 10 points!`
+	}
 
 	//if the knocking player does not have the highest score, winner(s) get a bonus 25 points
-	if (!winners.includes(declaringPlayer)) {
+	else if (!winners.includes(declaringPlayer)) {
 		for (let winner of winners) {
 			winner.score += 25;
 		}
+		return `Your knocking score was beaten. To the other winner${winners.length > 2 ? 's' : ''} - an extra 25 points!`
 	}
+
 
 }
 

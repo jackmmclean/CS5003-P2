@@ -430,6 +430,14 @@ exports.getHighestScoringPlayers = function (playerArray) {
 	return highScorers
 }
 
+exports.getHighestScoringRoundPlayers = function (playerArray) {
+	let highScorers = [...playerArray];
+	for (let player of highScorers) {
+		highScorers = highScorers.filter(el => el.roundScore >= player.roundScore)
+	}
+	return highScorers
+}
+
 /**
  * Give guest players a nicer name, i.e. name them Guest 1, Guest 2, ...
  * @param playerId {string} The guest player whose name needs to be nicer
@@ -465,7 +473,13 @@ exports.transformCards = function (cardsArr) {
 }
 
 exports.calculatePlayerScores = function (game) {
+
 	let players = game.players;
+
+	//reset roundscores
+	for (let id in players) {
+		players[id].roundScore = 0;
+	}
 	// assuming that player.melds is an array as above but that all unmatched
 	// cards are loose in the array eg for cards 7-9 unmatched
 	// player.melds = [[card1,card2,card3],[card4,card5,card,card6], card7, card8, card9]
@@ -480,6 +494,8 @@ exports.calculatePlayerScores = function (game) {
 
 	//define each players score as the sum of values of all opponents deadwood cards
 	for (let [, player] of Object.entries(players)) {
-		player.score += sumOfAllScores - playerCardScores[player.id];
+		player.roundScore += sumOfAllScores - playerCardScores[player.id];
+		player.score += player.roundScore;
 	}
+
 }
