@@ -148,6 +148,21 @@ const makeUserNavVue = function() {
 	})
 }
 
+const makeColorPickerVue = function() {
+	const colorPickerVue = new Vue({
+		el: "#color-picker",
+		data: { color: '#477148' },
+		watch: {
+			color: (c) => setBodyColor(c)
+		}
+	})
+}
+
+const setBodyColor = (color) => {
+	console.log(color)
+	document.body.style.backgroundColor = color
+}
+
 const registrationCard = Vue.observable({
 	show: false,
 })
@@ -157,6 +172,7 @@ export const makeEntry = function () {
 	makeRegisterVue();
 	makeGuestVue();
 	makeUserNavVue();
+	makeColorPickerVue();
 
 	// todo take this out: this is only for development to navigate between states
 	const navVue = new Vue({

@@ -19,6 +19,12 @@ body, html {
     margin-bottom: 0.5rem;
 }
 
+#color-picker {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
 #sidebar {
     position: sticky;
     padding: 30px;
