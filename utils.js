@@ -476,7 +476,7 @@ exports.calculatePlayerScores = function (game) {
 		sumOfAllScores += playerCardScores[player.id];
 	}
 
-	//define each players score as the sum of values of all opponents deadwood
+	//define each players score as the sum of values of all opponents deadwood cards
 	for (let [, player] of Object.entries(players)) {
 		player.score = sumOfAllScores - playCardScores[player.id];
 	}
