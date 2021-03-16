@@ -54,8 +54,13 @@ const makeHistoryVue = function () {
 		},
 		computed: {
 			state() {
+				if (game.state === 'history') {
+					// get the game stats if we're playing
+					this.getCardHistory();
+				}
 				return game.state;
 			}
+
 		}
 	})
 }
