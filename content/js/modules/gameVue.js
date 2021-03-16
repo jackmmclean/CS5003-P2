@@ -319,13 +319,7 @@ const makeMessagesVue = function () {
 				this.polling = setInterval(() => {
 					if (game.state === 'play') {
 						fetch(`/api/game/messages/${game.gameId}`)
-							.then(res => {
-								if (!res.ok) {
-									throw new Error(`Http error ${res.status}`)
-								} else {
-									res.json()
-								}
-							})
+							.then(res => res.json())
 							.then(res => {
 								if (!messageArraysEqual(this.pastMessages, res.messages)) {
 									this.pastMessages = res.messages;
