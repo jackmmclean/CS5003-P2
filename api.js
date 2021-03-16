@@ -259,7 +259,6 @@ exports.gameStats = function (playerId) {
 		niceUsername: niceUsername(playerId),
 		numPlayers: numPlayers,
 		scores: scores,
-		round: game.round,
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
 		messageCount: game.messages.length,
 		cardHistory: game.cardHistory,

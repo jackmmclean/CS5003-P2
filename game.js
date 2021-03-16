@@ -191,28 +191,28 @@ function makeCards(game, round) {
 
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
-		game.cardHistory.push(new CardsInstance());
+		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.deck.splice(cards.deck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
-		game.cardHistory.push(new CardsInstance());
+		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.openDeck.splice(cards.openDeck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
 	//define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, card) {
-		game.cardHistory.push(new CardsInstance());
+		game.cardHistory.push(new CardsInstance(this.round));
 		cards['openDeck'].push(
 			cards[player.id].splice(cards[player.id].indexOf(card), 1)[0]
 		);
 		return player.hand();
 	}
 
-	game.cardHistory.push(new CardsInstance(round));
+	game.cardHistory.push(new CardsInstance(this.round));
 	return cards
 }
 

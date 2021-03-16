@@ -29,28 +29,30 @@ const makeHistoryVue = function () {
 					})
 					.then((json) => {
 						this.cardHistory = json.cardHistory;
-						this.round = json.round;
 						this.index = this.cardHistory.length - 1;
 						this.cardHistoryInstance = this.cardHistory[this.index];
+						this.round = this.cardHistoryInstance.round;
 					})
 					.catch(err => console.log(err))
 			},
 
 			getInstanceForward: function () {
 				if (this.index === this.cardHistory.length - 1) {
-					console.log('Cannot access earlier instance - this is the earliest instance.');
+					console.log('Cannot access later instance - this is the latest instance.');
 					return
 				}
 				this.index++
 				this.cardHistoryInstance = this.cardHistory[this.index];
+				this.round = this.cardHistoryInstance.round;
 			},
 			getInstanceBack: function () {
 				if (this.index === 0) {
-					console.log('Cannot access later instance - this is the latest instance.');
+					console.log('Cannot access earlier instance - this is the earliest instance.');
 					return
 				}
 				this.index--
 				this.cardHistoryInstance = this.cardHistory[this.index];
+				this.round = this.cardHistoryInstance.round;
 			}
 
 		},
