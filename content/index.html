@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="css/style.css">
 	<title>Gin Rummy</title>
 </head>
+
 <body>
 
 	<div id="color-picker"><input type="color" name="body" value="#477148" v-model="color"></div>
@@ -116,14 +117,16 @@
 					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted">Start
 						Game</button>
 					<button class="button is-small" v-on:click="declareGin" v-show="gameHasStarted">Declare Gin</button>
-					<button class="button is-small" v-on:click="knock" v-show="gameHasStarted && isKnockingAllowed">Knock</button>
+					<button class="button is-small" v-on:click="knock"
+						v-show="gameHasStarted && isKnockingAllowed">Knock</button>
 				</div>
 			</div>
 		</div>
 
 		<div id="user-nav">
 			<button class="button is-small" v-on:click="logout" v-show="state !== 'login'">{{ logoutBtnText }}</button>
-			<button class="button is-small" v-on:click="backToLobby" v-show="(state !== 'login') && (state !== 'lobby') ">{{ backToLobbyBtnText }}</button>
+			<button class="button is-small" v-on:click="backToLobby"
+				v-show="(state !== 'login') && (state !== 'lobby') ">{{ backToLobbyBtnText }}</button>
 		</div>
 
 	</nav>
@@ -298,8 +301,9 @@
 
 			<div id="history" v-show="state === 'history'">
 
-				<div>Instance: {{index}}</div>
-				<div>Round : {{round}}</div>
+				<h1 class="title is-1">Round: {{round}}</h1>
+				<h3 class="subtitle is-3">Instance: {{index}}</h3>
+
 
 				<article class="message">
 					<div class="message-header">
@@ -315,7 +319,7 @@
 				</article>
 
 				<article v-for="(cards, key) in cardHistoryInstance"
-					v-if="!(['openDeck', 'deck', 'time'].includes(key))" class="message">
+					v-if="!(['openDeck', 'deck', 'time', 'round'].includes(key))" class="message">
 					<div class="message-header">
 						<p>{{key}}:</p>
 					</div>
