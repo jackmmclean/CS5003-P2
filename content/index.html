@@ -119,8 +119,9 @@
 			</div>
 		</div>
 
-		<div id="logout" v-show="state !== 'login'">
-			<button class="button is-small" v-on:click="logout">Logout</button>
+		<div id="user-nav">
+			<button class="button is-small" v-on:click="logout" v-show="state !== 'login'">{{ logoutBtnText }}</button>
+			<button class="button is-small" v-on:click="backToLobby" v-show="(state !== 'login') && (state !== 'lobby') ">{{ backToLobbyBtnText }}</button>
 		</div>
 
 	</nav>

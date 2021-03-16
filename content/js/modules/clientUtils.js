@@ -8,6 +8,10 @@ export const game = Vue.observable({
 	messages: []
 });
 
+export const isGuest = function() {
+	return game.userKey === btoa('guest' + ':' + '');
+}
+
 // all allowed states
 const ALLOWED_STATES = ['login', 'lobby', 'play', 'end', 'history']
 
@@ -28,7 +32,17 @@ export const setState = function (state) {
 	} else {
 		console.log(`Tried to set invalid state ${state}. Must be one of ${ALLOWED_STATES}.`)
 	}
-
+	// reset values appropriately
+	if (state === "login") {
+		game.userKey = "";
+		game.playerId = "";
+		game.gameId = "";
+		game.messages = [];
+	} else if (state === "lobby") {
+		game.playerId = "";
+		game.gameId = "";
+		game.messages = [];
+	}
 }
 
 /**

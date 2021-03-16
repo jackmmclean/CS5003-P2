@@ -2,7 +2,7 @@ import {
 	game,
 	setGuestUser,
 	setState,
-	login
+	login, isGuest
 } from "./clientUtils.js";
 
 const makeLoginVue = function () {
@@ -122,23 +122,28 @@ const makeGuestVue = function () {
 	})
 }
 
-const makeLogoutVue = function() {
-	const logoutVue = new Vue({
-		el: "#logout",
+const makeUserNavVue = function() {
+	const userNavVue = new Vue({
+		el: "#user-nav",
+		data: {
+			backToLobbyBtnText: "Back to Lobby"
+		},
 		computed: {
 			state() {
 				return game.state;
 			},
+			logoutBtnText() {
+				return isGuest() ? "Back to Login" : "Logout";
+			},
+
 		},
 		methods: {
 			logout: function() {
-				// reset game observable
-				game.userKey = "";
-				game.playerId = "";
-				game.gameId = "";
-				game.messages = [];
 				setState("login");
 			},
+			backToLobby: function() {
+				setState("lobby");
+			}
 		}
 	})
 }
@@ -151,7 +156,7 @@ export const makeEntry = function () {
 	makeLoginVue();
 	makeRegisterVue();
 	makeGuestVue();
-	makeLogoutVue();
+	makeUserNavVue();
 
 	// todo take this out: this is only for development to navigate between states
 	const navVue = new Vue({
