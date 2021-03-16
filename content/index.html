@@ -270,7 +270,6 @@
 			</div>
 
 			<div id="end" v-show="state === 'end'">
-				<button v-on:click="getScores">init (dev only)</button>
 				<h1 v-if="youWin" class="title is-1">You win! Congratulations</h1>
 				<h1 v-else class="title is-1">You lose! Better luck next time</h1>
 				<h3 class="subtitle is-3" v-for="pair in scores">

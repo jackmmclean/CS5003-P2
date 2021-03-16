@@ -14,6 +14,10 @@ const makeEndVue = function () {
 		},
 		computed: {
 			state() {
+				if (game.state === 'end') {
+					// get the game stats if we're playing
+					this.getScores();
+				}
 				return game.state;
 			}
 		},
