@@ -33,6 +33,12 @@ body, html {
     overflow-scrolling: auto;
 }
 
+/* Game info */
+#user-warning {
+    font-size: 100%;
+    color: crimson;
+}
+
 /* Game board */
 .board {
     display: grid;
@@ -57,6 +63,7 @@ body, html {
     display: inline-flex;
 }
 
+/* Turn indicator */
 #turn-indicator {
     color: white;
 }
@@ -70,6 +77,7 @@ body, html {
     color: crimson;
 }
 
+/* Decks */
 #closed-deck {
     grid-area: b;
     margin-right: 0.25rem;

@@ -22,6 +22,12 @@ const makeGameInfoVue = function () {
 			},
 			generalInfo() {
 				return sharedGameInfo.generalInfo;
+			},
+			warningMessageVisible() {
+				return sharedGameInfo.warningMessageVisible;
+			},
+			warningMessage() {
+				return sharedGameInfo.warningMessage;
 			}
 		},
 		methods: {
@@ -31,7 +37,7 @@ const makeGameInfoVue = function () {
 					sharedGameInfo.generalInfo.Username = json.niceUsername;
 					sharedGameInfo.generalInfo.Players = json.numPlayers;
 				}).catch(err => console.log('Could not get stats.', err))
-			}
+			},
 		},
 	})
 }
@@ -75,14 +81,14 @@ const makePlayerHandVue = function () {
 					body: JSON.stringify({
 						cardNo: cardNo,
 					})
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
+					} else if (json.status === 200) {
+						setHand(json.hand);
 					} else {
-						return res.json();
+						throw new Error(`Http error: ${json.status}`)
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		},
@@ -116,14 +122,14 @@ const makeClosedDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
+					} else if (json.status === 200) {
+						setHand(json.hand);
 					} else {
-						return res.json();
+						throw new Error(`Http error: ${json.status}`)
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		}
@@ -149,14 +155,14 @@ const makeOpenDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey,
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
+					} else if (json.status === 200) {
+						setHand(json.hand);
 					} else {
-						return res.json();
+						throw new Error(`Http error: ${json.status}`)
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		},
@@ -188,62 +194,57 @@ const makeUserActionsVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text)
+					} else if (json.status === 200) {
+						setHand(json.hand);
+						setOpenDeck(json.openDeck);
+						setClosedDeck(json.deck)
+						showBackOfCard();
+						this.showStartButton = false;
 					} else {
-						return res.json();
+						throw new Error(`Http error: ${json.status}`)
 					}
-				}).then((json) => {
-					setHand(json.hand);
-					setOpenDeck(json.openDeck);
-					setClosedDeck(json.deck)
-					showBackOfCard();
-					this.showStartButton = false;
-
 				}).catch(err => console.log(err))
 			},
 			declareGin: function () {
 				fetch(`/api/game/declare-gin/${game.playerId}`, {
-					method: "POST",
-					headers: {
-						"Authorization": "Basic " + game.userKey,
-						"Content-Type": "application/json",
-					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP Error ${res.status}`)
-					} else {
-						return res.json();
-					}
-				}).then((json) => {
-					alert(json.text);
-					if (json.winners == null) {
-						console.log(sharedGameInfo.openDeckCards)
-					} else {
-						setState('end');
-						console.log('Winner is', json.winners)
-					}
-				})
+						method: "POST",
+						headers: {
+							"Authorization": "Basic " + game.userKey,
+							"Content-Type": "application/json",
+						}
+					}).then((res) => res.json())
+					.then((json) => {
+						if (json.status === 405) {
+							showUserMessage(json.text);
+						} else if (json.status === 200) {
+							showUserMessage(json.text);
+							setState('end');
+							console.log('Winner is', json.winners)
+						} else {
+							throw new Error(`Http error: ${json.status}`)
+						}
+					}).catch(err => console.log(err))
 			},
 			knock: function () {
 				fetch(`/api/game/knock/${game.playerId}`, {
-					method: "POST",
-					headers: {
-						"Authorization": "Basic " + game.userKey,
-						"Content-Type": "application/json",
-					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP Error ${res.status}`)
-					} else {
-						return res.json();
-					}
-				}).then((json) => {
-					console.log(json.text);
-					setState('end');
-					console.log('Winner is', json.winners)
-				})
+						method: "POST",
+						headers: {
+							"Authorization": "Basic " + game.userKey,
+							"Content-Type": "application/json",
+						}
+					}).then((res) => res.json())
+					.then((json) => {
+						if (json.status === 200) {
+							showUserMessage(json.text);
+							console.log(json.text)
+							console.log('Winner is', json.winners)
+						} else {
+							throw new Error(`Http error: ${json.status}`)
+						}
+					}).catch(err => console.log(err))
 			},
 			setHand: function (newHand) {
 				sharedGameInfo.hand = newHand;
@@ -368,13 +369,24 @@ const sharedGameInfo = Vue.observable({
 	playerNames: [],
 	scores: [],
 	turnPlayerIndex: null,
+	warningMessage: "",
+	warningMessageVisible: false,
 	generalInfo: {
-		GameID: "1234",
+		GameID: "",
 		Username: "",
 		Time: "some time",
 		Players: 0,
 	}
 });
+
+let warningTimer = null;
+
+const showUserMessage = (msg) => {
+	clearTimeout(warningTimer);
+	sharedGameInfo.warningMessageVisible = true;
+	sharedGameInfo.warningMessage = msg;
+	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 1500)
+}
 
 const setHand = (newHand) => {
 	sharedGameInfo.hand = transformCards(newHand.map(el => el.char));
