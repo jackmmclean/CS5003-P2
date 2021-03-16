@@ -352,6 +352,7 @@ overlappingCards = function (distinctRunsArray, setArray) {
  * @returns {Array.<Array>} array of arrays with all melds
  * */
 exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
+
 	//we choose the first element in each suit property of the distinct
 	//runs object because it is the largest
 	let distRunChoice = 0;
@@ -366,6 +367,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 				for (let overlappingCard of overlappingCardsArray) {
 					//for each of those cards, loop through each of the runs and determine whether we should remove the 
 					//duplicate/overlapping card from the suit or the run
+					console.log('xyz', distinctRuns[suit][distRunChoice])
 					for (let run of distinctRuns[suit][distRunChoice]) {
 						//if the run contains the overlapping card and will still be a run without it then remove 
 						//it from the run
@@ -478,6 +480,6 @@ exports.calculatePlayerScores = function (game) {
 
 	//define each players score as the sum of values of all opponents deadwood cards
 	for (let [, player] of Object.entries(players)) {
-		player.score = sumOfAllScores - playerCardScores[player.id];
+		player.score += sumOfAllScores - playerCardScores[player.id];
 	}
 }

@@ -178,18 +178,24 @@ exports.depositCard = function (playerId, cardNo) {
  * @returns {Object} information sent back to the user
  * */
 exports.declareGin = function (playerId) {
-	let status, text;
+	let status, text, winners;
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	// todo need some more logic here to deal with winning and losing etc
 	const validGin = processGinDeclared(player, game)
 
 	getRoundGinScores(game, player);
-	game.endGame();
+	//if not round mode or a player has a score of 100+
+	if (!game.roundMode || (Object.entries(game.players).filter(el => el[1].score >= 100)).length > 0) {
+		game.endGame();
+		text = validGin ? "Game is over." : "You incorrectly declared Gin.\nYou score zero!"
+		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+	} else {
+		game.getNewCards();
+		winners = null;
+		text = validGin ? "Round is over." : "You incorrectly declared Gin.\nYou score zero for this round!"
+	}
 
-	text = validGin ? "Game is over." : "You incorrectly declared Gin.\nSorry, that means you lose and get a score of 0."
-
-	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	// todo don't return full player objects -> only return relevant data
 	return {
 		status: 200,
@@ -292,12 +298,15 @@ exports.makePlayerOnLogin = function (username) {
  * */
 exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
+	const scores = Object.entries(game.players).map(el => [el[0], el[1].score]);
 	return {
 		gameHasStarted: game.timeStarted !== null,
+		scores: scores,
 		gameHasFinished: game.timeFinished !== null,
 		isOwner: game.owner.id === playerId,
 		numPlayers: game.players.length,
 		knockingAllowed: game.knockingAllowed,
+		roundMode: game.roundMode,
 		playerNames: game.turnOrder.map(el => niceUsername(el.id)),
 		turnPlayerIndex: game.turnPlayerIndex,
 		winner: game.winner
@@ -394,8 +403,7 @@ exports.validateAction = function (playerId, requestedAction) {
 			status: 405,
 			text: "You can't " + requestedAction + " right now."
 		}
-	}
-	else {
+	} else {
 		return {
 			status: 200
 		}

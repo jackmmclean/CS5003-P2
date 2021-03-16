@@ -81,8 +81,7 @@ const makePlayerHandVue = function () {
 					body: JSON.stringify({
 						cardNo: cardNo,
 					})
-				}).then((res) => res.json()
-				).then((json) => {
+				}).then((res) => res.json()).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
 					} else if (json.status === 200) {
@@ -123,8 +122,7 @@ const makeClosedDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => res.json()
-				).then((json) => {
+				}).then((res) => res.json()).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
 					} else if (json.status === 200) {
@@ -157,8 +155,7 @@ const makeOpenDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey,
 					}
-				}).then((res) => res.json()
-				).then((json) => {
+				}).then((res) => res.json()).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
 					} else if (json.status === 200) {
@@ -197,8 +194,7 @@ const makeUserActionsVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => res.json()
-				).then((json) => {
+				}).then((res) => res.json()).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text)
 					} else if (json.status === 200) {
@@ -213,12 +209,12 @@ const makeUserActionsVue = function () {
 			},
 			declareGin: function () {
 				fetch(`/api/game/declare-gin/${game.playerId}`, {
-					method: "POST",
-					headers: {
-						"Authorization": "Basic " + game.userKey,
-						"Content-Type": "application/json",
-					}
-				}).then((res) => res.json())
+						method: "POST",
+						headers: {
+							"Authorization": "Basic " + game.userKey,
+							"Content-Type": "application/json",
+						}
+					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 405) {
 							console.log('sth')
@@ -230,16 +226,16 @@ const makeUserActionsVue = function () {
 						} else {
 							throw Error(`Http error: ${json.status}`)
 						}
-				}).catch(err => console.log(err))
+					}).catch(err => console.log(err))
 			},
 			knock: function () {
 				fetch(`/api/game/knock/${game.playerId}`, {
-					method: "POST",
-					headers: {
-						"Authorization": "Basic " + game.userKey,
-						"Content-Type": "application/json",
-					}
-				}).then((res) => res.json())
+						method: "POST",
+						headers: {
+							"Authorization": "Basic " + game.userKey,
+							"Content-Type": "application/json",
+						}
+					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 200) {
 							showUserMessage(json.text);
@@ -271,6 +267,12 @@ const makeTurnIndicatorVue = function () {
 			turnPlayerIndex() {
 				return sharedGameInfo.turnPlayerIndex;
 			},
+			scores() {
+				return sharedGameInfo.scores;
+			},
+			roundMode() {
+				return sharedGameInfo.roundMode;
+			}
 		},
 		methods: {
 			isTurnPlayer(idx) {
@@ -363,7 +365,9 @@ const sharedGameInfo = Vue.observable({
 	closedDeckCards: [],
 	showBackOfCard: false,
 	knockingAllowed: false,
+	roundMode: false,
 	playerNames: [],
+	scores: [],
 	turnPlayerIndex: null,
 	warningMessage: "",
 	warningMessageVisible: false,
@@ -431,8 +435,10 @@ const startInterval = () => {
 			// let only owner start the game
 			sharedGameInfo.playerIsOwner = json.isOwner;
 			sharedGameInfo.knockingAllowed = json.knockingAllowed;
+			sharedGameInfo.roundMode = json.roundMode;
 			sharedGameInfo.playerNames = json.playerNames;
 			sharedGameInfo.turnPlayerIndex = json.turnPlayerIndex;
+			sharedGameInfo.scores = json.scores;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {

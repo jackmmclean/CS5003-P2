@@ -91,7 +91,10 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 
 			// remove from players
 			delete this.players[playerId]
-		}
+		};
+		this.getNewCards = () => {
+			makeCards(this);
+		};
 		this.startGame = () => {
 			this.timeStarted = new Date;
 			this.cards = makeCards(this);
@@ -275,12 +278,14 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 
 	calculatePlayerScores(game);
 
+	let initDecPlayerScore = declaringPlayer.score;
+
 	if (processGinDeclared(declaringPlayer, game)) {
 		declaringPlayer.score += 25;
 	}
 	// Player incorrectly declaring Gin doesn't get any points
 	else {
-		declaringPlayer.score = 0;
+		declaringPlayer.score -= initDecPlayerScore;
 	}
 
 }

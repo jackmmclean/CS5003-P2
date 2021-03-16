@@ -226,6 +226,11 @@
 							<!--							{{ (idx === turnPlayerIndex) ? 'x' : '' }}-->
 						</td>
 					</tr>
+					<tr>
+						<td v-show="roundMode" v-for="(score,i) in scores" v-bind:class="[{active: isTurnPlayer(i)}]">
+							Score: {{ score[1] }}
+						</td>
+					</tr>
 				</table>
 
 			</div>
