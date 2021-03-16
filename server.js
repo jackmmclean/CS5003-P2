@@ -15,7 +15,8 @@ const {
 	pollGame,
 	getCards,
 	sendMessage,
-	getMessages
+	getMessages,
+	newRound
 } = require("./api");
 
 const app = express();
@@ -179,6 +180,12 @@ app.get('/api/game/get-cards/:playerId', authenticate, (req, res) => {
 	const playerId = req.params.playerId;
 	const cards = getCards(playerId);
 	res.status(cards.status).json(cards);
+})
+
+app.post('/api/game/new-round/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	const cards = newRound(playerId);
+	res.status(cards.status);
 })
 
 // Register a new user

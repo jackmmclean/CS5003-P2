@@ -92,8 +92,9 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			// remove from players
 			delete this.players[playerId]
 		};
-		this.getNewCards = () => {
-			makeCards(this);
+		this.newRound = () => {
+			this.round++;
+			this.cards = makeCards(this, this.round);
 		};
 		this.startGame = () => {
 			this.timeStarted = new Date;
@@ -128,7 +129,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 }
 
 //define function (use of closure) that will create the distribution of cards
-function makeCards(game) {
+function makeCards(game, round) {
 
 	let players = game.players;
 
@@ -178,8 +179,9 @@ function makeCards(game) {
 
 	//constructor function for instances of cards, used for
 	//storing locations of cards at every point in game
-	function CardsInstance() {
+	function CardsInstance(round) {
 		this.time = new Date;
+		this.round = round;
 		this.openDeck = Object.assign({}, transformCards(cards.openDeck));
 		this.deck = Object.assign({}, transformCards(cards.deck));
 		for (let [k, player] of Object.entries(players)) {
@@ -210,7 +212,7 @@ function makeCards(game) {
 		return player.hand();
 	}
 
-	game.cardHistory.push(new CardsInstance());
+	game.cardHistory.push(new CardsInstance(round));
 	return cards
 }
 
@@ -276,11 +278,12 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 //player argument is player who declared gin (correctly)
 exports.getRoundGinScores = function (game, declaringPlayer) {
 
+	let isGin = processGinDeclared(declaringPlayer, game);
 	calculatePlayerScores(game);
 
 	let initDecPlayerScore = declaringPlayer.score;
 
-	if (processGinDeclared(declaringPlayer, game)) {
+	if (isGin) {
 		declaringPlayer.score += 25;
 	}
 	// Player incorrectly declaring Gin doesn't get any points
