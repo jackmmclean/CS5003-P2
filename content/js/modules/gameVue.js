@@ -217,9 +217,13 @@ const makeUserActionsVue = function () {
 						return res.json();
 					}
 				}).then((json) => {
-					alert(json.text)
-					setState('end');
-					console.log('Winner is', json.winners)
+					alert(json.text);
+					if (json.winners == null) {
+						console.log(sharedGameInfo.openDeckCards)
+					} else {
+						setState('end');
+						console.log('Winner is', json.winners)
+					}
 				})
 			},
 			knock: function () {
@@ -236,7 +240,8 @@ const makeUserActionsVue = function () {
 						return res.json();
 					}
 				}).then((json) => {
-					console.log(json.text)
+					console.log(json.text);
+					setState('end');
 					console.log('Winner is', json.winners)
 				})
 			},
@@ -261,6 +266,12 @@ const makeTurnIndicatorVue = function () {
 			turnPlayerIndex() {
 				return sharedGameInfo.turnPlayerIndex;
 			},
+			scores() {
+				return sharedGameInfo.scores;
+			},
+			roundMode() {
+				return sharedGameInfo.roundMode;
+			}
 		},
 		methods: {
 			isTurnPlayer(idx) {
@@ -353,7 +364,9 @@ const sharedGameInfo = Vue.observable({
 	closedDeckCards: [],
 	showBackOfCard: false,
 	knockingAllowed: false,
+	roundMode: false,
 	playerNames: [],
+	scores: [],
 	turnPlayerIndex: null,
 	generalInfo: {
 		GameID: "1234",
@@ -410,8 +423,10 @@ const startInterval = () => {
 			// let only owner start the game
 			sharedGameInfo.playerIsOwner = json.isOwner;
 			sharedGameInfo.knockingAllowed = json.knockingAllowed;
+			sharedGameInfo.roundMode = json.roundMode;
 			sharedGameInfo.playerNames = json.playerNames;
 			sharedGameInfo.turnPlayerIndex = json.turnPlayerIndex;
+			sharedGameInfo.scores = json.scores;
 
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
