@@ -94,6 +94,9 @@
 				<p class="card-header-title">Game info</p>
 			</header>
 			<div class="card-content">
+				<div class="content" id="user-warning" v-show="warningMessageVisible">
+					{{ warningMessage }}
+				</div>
 				<div class="content">
 					<table>
 						<tr v-for="(v, k) in generalInfo">

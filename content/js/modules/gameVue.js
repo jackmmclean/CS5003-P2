@@ -22,6 +22,12 @@ const makeGameInfoVue = function () {
 			},
 			generalInfo() {
 				return sharedGameInfo.generalInfo;
+			},
+			warningMessageVisible() {
+				return sharedGameInfo.warningMessageVisible;
+			},
+			warningMessage() {
+				return sharedGameInfo.warningMessage;
 			}
 		},
 		methods: {
@@ -31,7 +37,7 @@ const makeGameInfoVue = function () {
 					sharedGameInfo.generalInfo.Username = json.niceUsername;
 					sharedGameInfo.generalInfo.Players = json.numPlayers;
 				}).catch(err => console.log('Could not get stats.', err))
-			}
+			},
 		},
 	})
 }
@@ -75,14 +81,13 @@ const makePlayerHandVue = function () {
 					body: JSON.stringify({
 						cardNo: cardNo,
 					})
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()
+				).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
 					} else {
-						return res.json();
+						setHand(json.hand);
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		},
@@ -116,14 +121,13 @@ const makeClosedDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()
+				).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
 					} else {
-						return res.json();
+						setHand(json.hand);
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		}
@@ -149,14 +153,13 @@ const makeOpenDeckVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey,
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()
+				).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text);
 					} else {
-						return res.json();
+						setHand(json.hand);
 					}
-				}).then((json) => {
-					setHand(json.hand);
 				}).catch(err => console.log(err))
 			},
 		},
@@ -210,16 +213,11 @@ const makeUserActionsVue = function () {
 						"Authorization": "Basic " + game.userKey,
 						"Content-Type": "application/json",
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP Error ${res.status}`)
-					} else {
-						return res.json();
-					}
-				}).then((json) => {
-					alert(json.text)
-					setState('end');
-					console.log('Winner is', json.winners)
+				}).then((res) => res.json())
+					.then((json) => {
+						showUserMessage(json.text);
+						setState('end');
+						console.log('Winner is', json.winners)
 				})
 			},
 			knock: function () {
@@ -229,15 +227,11 @@ const makeUserActionsVue = function () {
 						"Authorization": "Basic " + game.userKey,
 						"Content-Type": "application/json",
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP Error ${res.status}`)
-					} else {
-						return res.json();
-					}
-				}).then((json) => {
-					console.log(json.text)
-					console.log('Winner is', json.winners)
+				}).then((res) => res.json())
+					.then((json) => {
+						showUserMessage(json.text);
+						console.log(json.text)
+						console.log('Winner is', json.winners)
 				})
 			},
 			setHand: function (newHand) {
@@ -355,13 +349,24 @@ const sharedGameInfo = Vue.observable({
 	knockingAllowed: false,
 	playerNames: [],
 	turnPlayerIndex: null,
+	warningMessage: "",
+	warningMessageVisible: false,
 	generalInfo: {
-		GameID: "1234",
+		GameID: "",
 		Username: "",
 		Time: "some time",
 		Players: 0,
 	}
 });
+
+let warningTimer = null;
+
+const showUserMessage = (msg) => {
+	clearTimeout(warningTimer);
+	sharedGameInfo.warningMessageVisible = true;
+	sharedGameInfo.warningMessage = msg;
+	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 1500)
+}
 
 const setHand = (newHand) => {
 	sharedGameInfo.hand = transformCards(newHand.map(el => el.char));
