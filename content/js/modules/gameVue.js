@@ -85,8 +85,10 @@ const makePlayerHandVue = function () {
 				).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
-					} else {
+					} else if (json.status === 200) {
 						setHand(json.hand);
+					} else {
+						throw new Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -125,8 +127,10 @@ const makeClosedDeckVue = function () {
 				).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
-					} else {
+					} else if (json.status === 200) {
 						setHand(json.hand);
+					} else {
+						throw new Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -157,8 +161,10 @@ const makeOpenDeckVue = function () {
 				).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text);
-					} else {
+					} else if (json.status === 200) {
 						setHand(json.hand);
+					} else {
+						throw new Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -195,12 +201,14 @@ const makeUserActionsVue = function () {
 				).then((json) => {
 					if (json.status === 405) {
 						showUserMessage(json.text)
-					} else {
+					} else if (json.status === 200) {
 						setHand(json.hand);
 						setOpenDeck(json.openDeck);
 						setClosedDeck(json.deck)
 						showBackOfCard();
 						this.showStartButton = false;
+					} else {
+						throw new Error(`Http error: ${json.status}`)
 					}
 				}).catch(err => console.log(err))
 			},
@@ -233,10 +241,14 @@ const makeUserActionsVue = function () {
 					}
 				}).then((res) => res.json())
 					.then((json) => {
-						showUserMessage(json.text);
-						console.log(json.text)
-						console.log('Winner is', json.winners)
-				})
+						if (json.status === 200) {
+							showUserMessage(json.text);
+							console.log(json.text)
+							console.log('Winner is', json.winners)
+						} else {
+							throw new Error(`Http error: ${json.status}`)
+						}
+					}).catch(err => console.log(err))
 			},
 			setHand: function (newHand) {
 				sharedGameInfo.hand = newHand;
@@ -307,7 +319,13 @@ const makeMessagesVue = function () {
 				this.polling = setInterval(() => {
 					if (game.state === 'play') {
 						fetch(`/api/game/messages/${game.gameId}`)
-							.then(res => res.json())
+							.then(res => {
+								if (!res.ok) {
+									throw new Error(`Http error ${res.status}`)
+								} else {
+									res.json()
+								}
+							})
 							.then(res => {
 								if (!messageArraysEqual(this.pastMessages, res.messages)) {
 									this.pastMessages = res.messages;
