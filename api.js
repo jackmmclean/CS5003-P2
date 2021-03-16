@@ -91,7 +91,7 @@ exports.startGame = function (playerId) {
 	if (Object.keys(game.players).length < 2) {
 		return {
 			status: 405,
-			text: "You can't start a game with only one player."
+			text: "Please wait for other players to join."
 		};
 	}
 
@@ -377,13 +377,13 @@ exports.validateAction = function (playerId, requestedAction) {
 	if (game.turnOrder[game.turnPlayerIndex].id !== playerId) {
 		return {
 			status: 405,
-			text: "Not the player's turn"
+			text: "Please wait for your turn."
 		}
 	}
 
 	// check if the player can perform the requested action
 	else if (
-		// can't do action if action is neither game.currentAction NOR 'declare' NOR 'declare'
+		// can't do action if action is neither game.currentAction NOR 'declare' NOR 'knock'
 		((game.currentAction !== requestedAction) && (requestedAction !== 'declare') && (requestedAction !== 'knock')) ||
 		// can't declare after drawing
 		((requestedAction === 'declare') && (game.currentAction === 'deposit')) ||
@@ -392,7 +392,7 @@ exports.validateAction = function (playerId, requestedAction) {
 	) {
 		return {
 			status: 405,
-			text: "This action is currently not allowed"
+			text: "You can't " + requestedAction + " right now."
 		}
 	}
 	else {

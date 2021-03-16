@@ -191,19 +191,17 @@ const makeUserActionsVue = function () {
 					headers: {
 						"Authorization": "Basic " + game.userKey
 					}
-				}).then((res) => {
-					if (!res.ok) {
-						throw new Error(`HTTP ${res.status}`)
+				}).then((res) => res.json()
+				).then((json) => {
+					if (json.status === 405) {
+						showUserMessage(json.text)
 					} else {
-						return res.json();
+						setHand(json.hand);
+						setOpenDeck(json.openDeck);
+						setClosedDeck(json.deck)
+						showBackOfCard();
+						this.showStartButton = false;
 					}
-				}).then((json) => {
-					setHand(json.hand);
-					setOpenDeck(json.openDeck);
-					setClosedDeck(json.deck)
-					showBackOfCard();
-					this.showStartButton = false;
-
 				}).catch(err => console.log(err))
 			},
 			declareGin: function () {
@@ -215,10 +213,16 @@ const makeUserActionsVue = function () {
 					}
 				}).then((res) => res.json())
 					.then((json) => {
-						showUserMessage(json.text);
-						setState('end');
-						console.log('Winner is', json.winners)
-				})
+						if (json.status === 405) {
+							showUserMessage(json.text);
+						} else if (json.status === 200) {
+							showUserMessage(json.text);
+							setState('end');
+							console.log('Winner is', json.winners)
+						} else {
+							throw new Error(`Http error: ${json.status}`)
+						}
+				}).catch(err => console.log(err))
 			},
 			knock: function () {
 				fetch(`/api/game/knock/${game.playerId}`, {
