@@ -166,7 +166,9 @@ const makeOpenDeckVue = function () {
 const makeUserActionsVue = function () {
 	const userActionsVue = new Vue({
 		el: "#user-actions",
-		data: {},
+		data: {
+			showStartButton: true
+		},
 		computed: {
 			state() {
 				return game.state;
@@ -197,6 +199,7 @@ const makeUserActionsVue = function () {
 					setOpenDeck(json.openDeck);
 					setClosedDeck(json.deck)
 					showBackOfCard();
+					this.showStartButton = false;
 
 				}).catch(err => console.log(err))
 			},

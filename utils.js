@@ -138,9 +138,11 @@ const cardScore = function (card) {
 	} else return 10;
 }
 
-exports.cardScore = (card) => {return cardScore(card)}
+exports.cardScore = (card) => {
+	return cardScore(card)
+}
 
-const unmatchedCards = function(meldsArray) {
+const unmatchedCards = function (meldsArray) {
 	let unmatchedCards = [];
 	for (let entry of meldsArray) {
 		if (!Array.isArray(entry)) {
@@ -150,7 +152,9 @@ const unmatchedCards = function(meldsArray) {
 	return unmatchedCards;
 }
 
-exports.unmatchedCards = function (meldsArray) {return unmatchedCards(meldsArray)}
+exports.unmatchedCards = function (meldsArray) {
+	return unmatchedCards(meldsArray)
+}
 
 
 /**
@@ -466,13 +470,14 @@ exports.calculatePlayerScores = function (game) {
 
 	//add up the score of all players and store in opponentScores
 	let sumOfAllScores = 0;
+	let playCardScores = {};
 	for (let [, player] of Object.entries(players)) {
-		player.score = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
-		sumOfAllScores += player.score;
+		playerCardScores[player.id] = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
+		sumOfAllScores += playerCardScores[player.id];
 	}
 
-	//define each players score as the sum of opponents scores minus their own
+	//define each players score as the sum of values of all opponents deadwood
 	for (let [, player] of Object.entries(players)) {
-		player.score = sumOfAllScores - 2 * player.score;
+		player.score = sumOfAllScores - playCardScores[player.id];
 	}
 }
