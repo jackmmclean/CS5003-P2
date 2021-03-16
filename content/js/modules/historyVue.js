@@ -28,7 +28,6 @@ const makeHistoryVue = function () {
 					})
 					.then((json) => {
 						this.cardHistory = json.cardHistory;
-						console.log(this.cardHistory)
 						this.index = this.cardHistory.length - 1;
 						this.cardHistoryInstance = this.cardHistory[this.index];
 					})

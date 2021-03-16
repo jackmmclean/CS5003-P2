@@ -45,12 +45,7 @@ const makeEndVue = function () {
 					})
 			},
 			setHistory: () => {
-				console.log(game.state);
 				setState('history');
-				console.log(game.state)
-			},
-			showState: () => {
-				console.log(game.state)
 			}
 
 

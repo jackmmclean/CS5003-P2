@@ -432,22 +432,15 @@ const startInterval = () => {
 				}).catch(err => console.log('Could not get cards.', err))
 			}
 			// process what happens when the game is over
-			if (json.gameHasFinished) {
-				// transfer to end screen
-				// todo implement end Vue
-				setState('end');
-			}
 
+			if (json.gameHasFinished) {
+				setState('end');
+				clearInterval(pollInterval);
+			}
 
 		}).catch(err => console.log(err))
 
 	}, 1000);
-}
-
-
-
-const clearInterval = () => {
-	clearInterval(pollInterval)
 }
 
 export const makeGame = function () {
