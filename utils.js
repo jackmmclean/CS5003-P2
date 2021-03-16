@@ -470,7 +470,7 @@ exports.calculatePlayerScores = function (game) {
 
 	//add up the score of all players and store in opponentScores
 	let sumOfAllScores = 0;
-	let playCardScores = {};
+	let playerCardScores = {};
 	for (let [, player] of Object.entries(players)) {
 		playerCardScores[player.id] = unmatchedCards(player.melds).reduce((a, b) => cardScore(a) + cardScore(b), 0);
 		sumOfAllScores += playerCardScores[player.id];
@@ -478,6 +478,6 @@ exports.calculatePlayerScores = function (game) {
 
 	//define each players score as the sum of values of all opponents deadwood cards
 	for (let [, player] of Object.entries(players)) {
-		player.score = sumOfAllScores - playCardScores[player.id];
+		player.score = sumOfAllScores - playerCardScores[player.id];
 	}
 }
