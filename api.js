@@ -202,6 +202,12 @@ exports.declareGin = function (playerId) {
 	};
 }
 
+/**
+ * Assemble information that's sent back to the user when they knocks and end the game if knocking is
+ * is appropriate/
+ * @param playerId {string} ID of the knocking player
+ * @returns {Object} information sent back to the user
+ * */
 exports.knock = function (playerId) {
 	let status, text, winners;
 	let game = getGameByPlayerId(playerId);
@@ -226,34 +232,6 @@ exports.knock = function (playerId) {
 		status: 200,
 		text: text,
 		winners: winners
-	};
-}
-
-/**
- * Assemble information that's sent back to the user when they knocks and end the game if knocking is
- * is appropriate/
- * @param playerId {string} ID of the knocking player
- * @returns {Object} information sent back to the user
- * */
-exports.knock = function (playerId) {
-	let game = getGameByPlayerId(playerId);
-	// make sure knocking is allowed
-	if (!game.knockingAllowed) return {
-		status: 405,
-		text: "Knocking is not allowed in this game."
-	}
-
-	let player = game.players[playerId];
-
-	// process knock (make melds)
-	processKnock(game);
-	getRoundKnockScores(game, player);
-	game.endGame();
-	let winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
-	return {
-		status: 200,
-		text: 'Game is over',
-		winners: winners,
 	};
 }
 
