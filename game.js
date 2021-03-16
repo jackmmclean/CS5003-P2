@@ -1,8 +1,4 @@
 const {
-	getHighestScoringPlayers,
-	getHighestScoringRoundPlayers
-} = require("./utils");
-const {
 	shuffle,
 	isRun,
 	isSet,
@@ -15,7 +11,9 @@ const {
 	getGameByPlayerId,
 	niceUsername,
 	transformCards,
-	calculatePlayerScores
+	calculatePlayerScores,
+	getHighestScoringPlayers,
+	getHighestScoringRoundPlayers
 } = require("./utils.js");
 
 const {
@@ -266,7 +264,7 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 
 	calculatePlayerScores(game);
 
-	const winners = getHighestScoringRoundPlayers(Object.entries(game.players).map(el => el[1]));
+	let winners = getHighestScoringRoundPlayers(Object.entries(game.players).map(el => el[1]));
 
 	//if the winner AND some other player(s) have the same knock score then give defenders an extra ??10?? points
 	if (winners.includes(declaringPlayer) && winners.length > 1) {

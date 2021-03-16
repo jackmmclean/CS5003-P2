@@ -5,7 +5,7 @@ import {
 	setState,
 	messageArraysEqual,
 	transformCards,
-	newRound
+
 } from "./clientUtils.js";
 
 const makeGameInfoVue = function () {
@@ -223,7 +223,7 @@ const makeUserActionsVue = function () {
 							showUserMessage(json.text);
 						} else if (json.status === 200) {
 							if (json.winners == null) {
-								newRound();
+								showUserMessage(json.text);
 							} else {
 								showUserMessage(json.text);
 								setState('end');
@@ -245,6 +245,7 @@ const makeUserActionsVue = function () {
 					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 200) {
+							console.log(json.winners)
 							if (json.winners == null) {
 								newRound();
 							} else {

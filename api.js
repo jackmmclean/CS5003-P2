@@ -1,7 +1,5 @@
 const {
-	getRoundKnockScores
-} = require("./game");
-const {
+	getRoundKnockScores,
 	processKnock
 } = require("./game");
 const {
