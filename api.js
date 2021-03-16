@@ -382,14 +382,20 @@ exports.validateAction = function (playerId, requestedAction) {
 	}
 
 	// check if the player can perform the requested action
-	else if ((game.currentAction !== requestedAction) &&
-		(requestedAction !== 'declare') &&
-		(requestedAction !== 'knock')) {
+	else if (
+		// can't do action if action is neither game.currentAction NOR 'declare' NOR 'declare'
+		((game.currentAction !== requestedAction) && (requestedAction !== 'declare') && (requestedAction !== 'knock')) ||
+		// can't declare after drawing
+		((requestedAction === 'declare') && (game.currentAction === 'deposit')) ||
+		// can't knock after drawing
+		((requestedAction === 'knock') && (game.currentAction === 'deposit'))
+	) {
 		return {
 			status: 405,
 			text: "This action is currently not allowed"
 		}
-	} else {
+	}
+	else {
 		return {
 			status: 200
 		}
