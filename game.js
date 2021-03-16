@@ -1,4 +1,6 @@
-const {getHighestScoringPlayers} = require("./utils");
+const {
+	getHighestScoringPlayers
+} = require("./utils");
 const {
 	shuffle,
 	isRun,
@@ -161,8 +163,8 @@ function makeCards(game) {
 
 	//define cards object, deck is shuffled deck define before
 	let cards = {
-		openDeck: deck.splice(0, 1),
-		deck: shuffle(deck)
+		deck: shuffle(deck),
+		openDeck: deck.splice(0, 1)
 	}
 
 	//assign object attributes that hold each players cards
@@ -231,7 +233,9 @@ const processGinDeclared = function (declaringPlayer, game) {
 	return true;
 }
 
-exports.processGinDeclared = (declaringPlayer, game) => {return processGinDeclared(declaringPlayer, game)}
+exports.processGinDeclared = (declaringPlayer, game) => {
+	return processGinDeclared(declaringPlayer, game)
+}
 
 /**
  * Process the knock of a player
