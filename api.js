@@ -208,12 +208,12 @@ exports.knock = function (playerId) {
 	let player = game.players[playerId];
 	// todo maybe tell player if they had best knock score
 	processKnock(game);
-
 	let resp = getRoundKnockScores(game, player);
+
 	//if not round mode or a player has a score of 100+
-	if (!game.roundMode || (Object.entries(game.players).filter(el => el[1].score >= 100)).length > 0) {
+	if (!game.roundMode || ((((Object.entries(game.players)).filter(el => el[1].score >= 100)).length) > 0)) {
 		game.endGame();
-		text = "Game is over."
+		text = "Game is over." + resp;
 		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	} else {
 		game.newRound();

@@ -248,11 +248,15 @@ exports.processGinDeclared = (declaringPlayer, game) => {
  * Process the knock of a player
  * @param game {Object} current game
  * */
-exports.processKnock = function (game) {
+processKnock = function (game) {
 	// make the melds for all players
 	for (let [k, player] of Object.entries(game.players)) {
 		player.melds = makeMelds(player.hand());
 	}
+}
+
+exports.processKnock = function (game) {
+	return processKnock(game)
 }
 
 /**
@@ -262,6 +266,7 @@ exports.processKnock = function (game) {
  * */
 exports.getRoundKnockScores = function (game, declaringPlayer) {
 
+	processKnock(game);
 	calculatePlayerScores(game);
 
 	let winners = getHighestScoringRoundPlayers(Object.entries(game.players).map(el => el[1]));
@@ -281,6 +286,8 @@ exports.getRoundKnockScores = function (game, declaringPlayer) {
 		}
 		return `Your knocking score was beaten. To the other winner${winners.length > 2 ? 's' : ''} - an extra 25 points!`
 	}
+
+	return 'You had the best knocking score.'
 
 
 }

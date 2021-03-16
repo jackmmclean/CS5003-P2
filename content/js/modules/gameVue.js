@@ -228,6 +228,8 @@ const makeUserActionsVue = function () {
 								showUserMessage(json.text);
 								setState('end');
 								console.log('Winner is', json.winners)
+								console.log(json.text)
+
 							}
 
 						} else {
@@ -245,9 +247,8 @@ const makeUserActionsVue = function () {
 					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 200) {
-							console.log(json.winners)
 							if (json.winners == null) {
-								newRound();
+								showUserMessage(json.text);
 							} else {
 								showUserMessage(json.text);
 								setState('end');
