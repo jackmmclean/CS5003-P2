@@ -1,6 +1,6 @@
 import {
 	game,
-	setState
+	setState, sharedGameInfo
 } from "./clientUtils.js";
 
 const makeJoinGameByIdVue = function () {
@@ -174,8 +174,35 @@ const makeOpenGamesVue = function () {
 	})
 }
 
+/**
+ * Show logged in user's info
+ * */
+const makeUserInfoVue = function() {
+	const userInfoVue = new Vue({
+		el: "#user-info",
+		computed: {
+			state() {
+				return game.state;
+			},
+			username() {
+				return sharedGameInfo.generalInfo.Username;
+			},
+			isRegistered() {
+				return (this.username !== 'guest') && (this.username !== "");
+			},
+			allTimeScore() {
+				return sharedGameInfo.userInfo.allTimeScore;
+			},
+			gamesPlayed() {
+				return sharedGameInfo.userInfo.playedGames;
+			}
+		},
+	})
+}
+
 export const makeLobby = function () {
 	makeJoinGameByIdVue();
 	makeNewGameVue();
 	makeOpenGamesVue();
+	makeUserInfoVue();
 }

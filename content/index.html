@@ -58,6 +58,26 @@
 			</div>
 		</div>
 
+		<div class="card" id="user-info" v-show="isRegistered">
+			<header class="card-header">
+				<p class="card-header-title">You're logged in as: {{ username }}</p>
+			</header>
+			<div class="card-content">
+				<div class="content">
+					<table>
+						<tr>
+							<td>Games played</td>
+							<td>{{ gamesPlayed }}</td>
+						</tr>
+						<tr>
+							<td>All-time score</td>
+							<td>{{ allTimeScore }}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<!--	Lobby Page Sidebar		-->
 
 		<div class="card" id="join-game-by-id" v-show="state === 'lobby'">

@@ -36,6 +36,10 @@ export const sharedGameInfo = Vue.observable({
 	turnPlayerIndex: null,
 	warningMessage: "",
 	warningMessageVisible: false,
+	userInfo: {
+		playedGames: 0,
+		allTimeScore: 0,
+	},
 	generalInfo: {
 		GameID: "",
 		Username: "",
@@ -75,6 +79,10 @@ export const setState = function (state) {
 		sharedGameInfo.turnPlayerIndex = null,
 		sharedGameInfo.warningMessage = "",
 		sharedGameInfo.warningMessageVisible = false,
+		sharedGameInfo.userInfo= {
+				playedGames: 0,
+				allTimeScore: 0,
+		},
 		sharedGameInfo.generalInfo = {
 				GameID: "",
 				Username: "",
@@ -99,7 +107,11 @@ export const login = function () {
 			"Authorization": "Basic " + game.userKey
 		}
 	}).then((res) => {
-		return res.status;
+		if (!res.ok) {
+			return {};
+		} else {
+			return res.json();
+		}
 	})
 }
 

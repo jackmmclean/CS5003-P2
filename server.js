@@ -22,9 +22,7 @@ const {
 } = require("./api");
 
 const app = express();
-const {
-	users
-} = require('./data/data')
+const {users} = require('./data/data')
 const basicAuth = require('basic-auth');
 
 
@@ -40,6 +38,7 @@ let authenticate = function (req, res, next) {
 		return res.sendStatus(401);
 	}
 	req.username = user.name;
+	req.user = users[user.name];
 	next();
 };
 
@@ -193,7 +192,9 @@ app.post('/api/users/register-user', (req, res) => {
 
 // Login to an existing user
 app.post('/api/users/login', authenticate, (req, res) => {
-	res.sendStatus(200);
+	const user = Object.assign({}, req.user)
+	delete user['password'];
+	res.status(200).json(user);
 })
 
 // Get the all time scores for a user

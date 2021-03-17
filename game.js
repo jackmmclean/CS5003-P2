@@ -78,6 +78,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			// save the scores of registered users to the overall score
 			for (let [, player] of Object.entries(this.players).filter(arr => arr[1].username !== 'guest')) {
 				users[player.username].score += player.score;
+				users[player.username].playedGames ++;
 			}
 
 		};

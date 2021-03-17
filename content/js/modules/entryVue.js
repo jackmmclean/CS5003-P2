@@ -2,7 +2,7 @@ import {
 	game,
 	setGuestUser,
 	setState,
-	login, isGuest
+	login, isGuest, sharedGameInfo
 } from "./clientUtils.js";
 
 const makeLoginVue = function () {
@@ -28,10 +28,13 @@ const makeLoginVue = function () {
 				// get login response and process it
 				let loginResponse = await login();
 
-				if (loginResponse === 200) {
+				if (loginResponse.hasOwnProperty('role')) {
 					console.log('Authentication successful')
 					setState("lobby");
 					this.hideRegistrationCard();
+					sharedGameInfo.generalInfo.Username = this.username;
+					sharedGameInfo.userInfo.playedGames = loginResponse.playedGames;
+					sharedGameInfo.userInfo.allTimeScore = loginResponse.allTimeScore;
 				} else {
 					console.log('Authentication failed.')
 					this.message = "Wrong password or username.";

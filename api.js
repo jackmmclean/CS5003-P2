@@ -287,7 +287,9 @@ exports.registerUser = function (username, password) {
 	} else {
 		users[username] = {
 			password: password,
-			score: 0
+			score: 0,
+			role: 'user',
+			playedGames: 0,
 		};
 		return {
 			status: 200,
