@@ -259,20 +259,24 @@
 			</div>
 
 			<div class="board">
-				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
+				<div class="board-element hand" id="player-hand" v-show="state === 'play'" v-bind:class="{waiting : !gameHasStarted}">
+
 					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"
 						v-on:click="depositCard(card.cardNo)" v-if="gameHasStarted"></div>
-					<div v-if="!gameHasStarted" style="color: black">
-						Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}
+
+					<div v-if="!gameHasStarted">
+						<progress class="progress is-large is-dark" max="100"></progress>
+						<p class="subtitle is-2">Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}</p>
 					</div>
+
 				</div>
 
-				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
+				<div class="board-element deck" id="closed-deck" v-show="(state === 'play') && gameHasStarted">
 					<div class="playing-card" v-for="card in closedDeckCards" v-html="card.card"
 						v-bind:style="{color: card.color}" v-on:click="drawFromClosedDeck"></div>
 				</div>
 
-				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
+				<div class="board-element deck" id="open-deck" v-show="(state === 'play') && gameHasStarted">
 					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card"
 						v-bind:style="{color: card.color}" v-on:click="drawFromOpenDeck"></div>
 				</div>

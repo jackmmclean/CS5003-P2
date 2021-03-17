@@ -117,6 +117,9 @@ const makeClosedDeckVue = function () {
 			},
 			closedDeckCards() {
 				return sharedGameInfo.closedDeckCards;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
 			}
 		},
 		methods: {
@@ -150,6 +153,9 @@ const makeOpenDeckVue = function () {
 			},
 			openDeckCards() {
 				return sharedGameInfo.openDeckCards;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
 			}
 		},
 		methods: {
@@ -371,8 +377,6 @@ const makeMessagesVue = function () {
 		}
 	})
 }
-
-
 
 const sharedGameInfo = Vue.observable({
 	gameHasStarted: false,
