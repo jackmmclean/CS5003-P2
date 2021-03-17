@@ -24,6 +24,9 @@ const makeGameInfoVue = function () {
 			generalInfo() {
 				return sharedGameInfo.generalInfo;
 			},
+			roundMode() {
+				return sharedGameInfo.roundMode;
+			},
 			warningMessageVisible() {
 				return sharedGameInfo.warningMessageVisible;
 			},

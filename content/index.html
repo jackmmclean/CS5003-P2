@@ -29,10 +29,10 @@
 			<div class="body">
 				<p>The goal of the game is to have a hand that only contains melds (sets or runs).</p>
 				<p>Each player receives 10 (or 7) cards.<p>
-				<p>Taking turns, the players draw either from the open or from the closed deck.</p>
-				<p>Then, they deposit one card from their hand to the open deck.</p>
-				<p>Once a player has only melds on their hand, they can declare Gin.</p>
-				<p>...</p>
+						<p>Taking turns, the players draw either from the open or from the closed deck.</p>
+						<p>Then, they deposit one card from their hand to the open deck.</p>
+						<p>Once a player has only melds on their hand, they can declare Gin.</p>
+						<p>...</p>
 			</div>
 		</div>
 	</div>
@@ -119,7 +119,7 @@
 				</div>
 				<div class="content">
 					<table>
-						<tr v-for="(v, k) in generalInfo">
+						<tr v-show="k!='Round' || roundMode" v-for="(v, k) in generalInfo">
 							<td>{{ k }}</td>
 							<td>{{ v }}</td>
 						</tr>
