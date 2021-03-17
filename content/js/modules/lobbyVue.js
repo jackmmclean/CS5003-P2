@@ -187,8 +187,11 @@ const makeUserInfoVue = function() {
 			username() {
 				return sharedGameInfo.generalInfo.Username;
 			},
+			role() {
+				return sharedGameInfo.userInfo.role;
+			},
 			isRegistered() {
-				return (this.username !== 'guest') && (this.username !== "");
+				return (this.role !== 'guest');
 			},
 			allTimeScore() {
 				return sharedGameInfo.userInfo.allTimeScore;

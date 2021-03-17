@@ -165,6 +165,7 @@ exports.depositCard = function (playerId, cardNo) {
 		game.nextTurn();
 		return {
 			status: 200,
+			status: 200,
 			hand: player.depositCard(card[0]),
 			text: 'Deposited card'
 		}
@@ -259,10 +260,14 @@ exports.gameStats = function (playerId) {
 		niceUsernames[id] = niceUsername(id);
 	}
 
+	const player = game.players[playerId];
+
 	return {
 		status: 200,
 		gameId: game.id,
 		niceUsername: niceUsername(playerId),
+		playedGames: player.username === 'guest' ? 0 : users[player.username].playedGames,
+		allTimeScore: player.username === 'guest' ? 0 : users[player.username].allTimeScore,
 		numPlayers: numPlayers,
 		scores: scores,
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
@@ -272,7 +277,6 @@ exports.gameStats = function (playerId) {
 		turnTimeLeft: game.turnTimer.timeLeft,
 		niceUsernames: niceUsernames,
 		removed: false
-		// todo what else should we return here?
 	};
 }
 

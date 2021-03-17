@@ -39,6 +39,7 @@ export const sharedGameInfo = Vue.observable({
 	userInfo: {
 		playedGames: 0,
 		allTimeScore: 0,
+		role: 'user',
 	},
 	generalInfo: {
 		GameID: "",
@@ -78,21 +79,22 @@ export const setState = function (state) {
 		sharedGameInfo.scores = [],
 		sharedGameInfo.turnPlayerIndex = null,
 		sharedGameInfo.warningMessage = "",
-		sharedGameInfo.warningMessageVisible = false,
-		sharedGameInfo.userInfo= {
-				playedGames: 0,
-				allTimeScore: 0,
-		},
-		sharedGameInfo.generalInfo = {
-				GameID: "",
-				Username: "",
-				Players: 0,
-				Round: 1,
-				Time: 60
-		}
+		sharedGameInfo.warningMessageVisible = false
 
 	} if (state === "login") {
 		game.userKey = "";
+		sharedGameInfo.userInfo = {
+			playedGames: 0,
+			allTimeScore: 0,
+			role: 'user',
+		};
+		sharedGameInfo.generalInfo = {
+			GameID: "",
+			Username: "",
+			Players: 0,
+			Round: 1,
+			Time: 60
+		}
 	}
 }
 

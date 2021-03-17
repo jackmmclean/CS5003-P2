@@ -35,6 +35,7 @@ const makeLoginVue = function () {
 					sharedGameInfo.generalInfo.Username = this.username;
 					sharedGameInfo.userInfo.playedGames = loginResponse.playedGames;
 					sharedGameInfo.userInfo.allTimeScore = loginResponse.allTimeScore;
+					sharedGameInfo.userInfo.role = loginResponse.role;
 				} else {
 					console.log('Authentication failed.')
 					this.message = "Wrong password or username.";
@@ -114,7 +115,8 @@ const makeGuestVue = function () {
 				// get the login response and process it
 				let loginResponse = await login();
 
-				if (loginResponse === 200) {
+				if (loginResponse.hasOwnProperty('role')) {
+					sharedGameInfo.userInfo.role = loginResponse.role;
 					console.log('Authentication successful')
 					setState("lobby");
 				} else {
@@ -204,16 +206,4 @@ export const makeEntry = function () {
 	makeUserNavVue();
 	makeColorPickerVue();
 	makeRulesVue();
-
-	// todo take this out: this is only for development to navigate between states
-	const navVue = new Vue({
-		el: "#nav-state",
-		methods: {
-			setLogin: () => setState("login"),
-			setLobby: () => setState("lobby"),
-			setPlay: () => setState("play"),
-			setHistory: () => setState("history"),
-			setEnd: () => setState("end")
-		}
-	})
 }
