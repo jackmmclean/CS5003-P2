@@ -336,10 +336,9 @@
 					</div>
 				</article>
 
-				<article v-for="(cards, key) in cardHistoryInstance"
-					v-if="!(['openDeck', 'deck', 'time', 'round'].includes(key))" class="message">
+				<article v-for="(cards, key) in cardHistoryInstance" v-if="!(['openDeck', 'deck', 'time', 'round', 'scores'].includes(key))" class="message">
 					<div class="message-header">
-						<p>{{key}}:</p>
+						<p>{{key}}<span style="font-weight: lighter">{{ scores[key] === undefined ? "" : " - Score: " + scores[key]}}</span></p>
 					</div>
 					<div class="message-body">
 						<div class="board-element">

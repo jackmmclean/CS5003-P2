@@ -9,7 +9,7 @@ const makeHistoryVue = function () {
 		data: {
 			cardHistoryInstance: [1, 2, 3, 4],
 			cardHistory: [],
-			scores: [],
+			scores: {},
 			index: 0,
 			round: 0
 		},
@@ -33,6 +33,7 @@ const makeHistoryVue = function () {
 						this.index = this.cardHistory.length - 1;
 						this.cardHistoryInstance = this.cardHistory[this.index];
 						this.round = this.cardHistoryInstance.round;
+						this.scores = this.cardHistoryInstance.scores;
 					})
 					.catch(err => console.log(err))
 			},
@@ -45,6 +46,7 @@ const makeHistoryVue = function () {
 				this.index++
 				this.cardHistoryInstance = this.cardHistory[this.index];
 				this.round = this.cardHistoryInstance.round;
+				this.scores = this.cardHistoryInstance.scores;
 			},
 			getInstanceBack: function () {
 				if (this.index === 0) {
@@ -54,6 +56,7 @@ const makeHistoryVue = function () {
 				this.index--
 				this.cardHistoryInstance = this.cardHistory[this.index];
 				this.round = this.cardHistoryInstance.round;
+				this.scores = this.cardHistoryInstance.scores;
 			}
 
 		},
