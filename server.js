@@ -147,9 +147,11 @@ app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	const playerId = req.params.playerId;
 	let stats = gameStats(playerId);
 	stats.username = req.username;
-
-	res.status(200).json(stats);
-
+	if (stats.removed === true) {
+		res.status(409).json(stats)
+	} else {
+		res.status(200).json(stats);
+	}
 })
 
 // get messages from server

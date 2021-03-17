@@ -245,6 +245,18 @@ exports.knock = function (playerId) {
 exports.gameStats = function (playerId) {
 
 	const game = getGameByPlayerId(playerId);
+
+	//if no game is found (player has been removed/timed out)
+	if (game === null) {
+		//but player is in a card instance - ie was previously in the game
+		if (getGameByPlayerIdInCardInstance(playerId) != null) {
+			return {
+				removed: true,
+				text: 'You were removed for inactivity.'
+			}
+		}
+	}
+
 	const numPlayers = Object.keys(game.players).length;
 	const scores = {};
 	const gameDuration = (game.gameOver ? game.timeStarted - game.timeFinished : game.timeStarted - new Date);
