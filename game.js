@@ -45,7 +45,8 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		this.turnOrder = [];
 		// turnPlayer is index of current turn's player in the turnOrder array
 		this.turnPlayerIndex = null;
-		this.turnTimer = null;
+		// set initially to dummy variable
+		this.turnTimer = {turnTimer: 60};
 		// action: which action can currently be performed: can be 'draw', 'deposit'
 		this.currentAction = 'draw';
 		this.cardHistory = [];
