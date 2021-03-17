@@ -318,14 +318,12 @@ exports.getRoundGinScores = function (game, declaringPlayer) {
 	let isGin = processGinDeclared(declaringPlayer, game);
 	calculatePlayerScores(game);
 
-	let initDecPlayerScore = declaringPlayer.score;
-
 	if (isGin) {
 		declaringPlayer.score += 25;
 	}
 	// Player incorrectly declaring Gin doesn't get any points
 	else {
-		declaringPlayer.score -= initDecPlayerScore;
+		declaringPlayer.score -= declaringPlayer.roundScore;
 	}
 
 }
