@@ -213,6 +213,13 @@ function makeCards(game, round) {
 	cards.closedDraw = function (player) {
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.deck.splice(cards.deck.length - 1, 1)[0]);
+
+		// handle closed deck fully depleted
+		if (cards.deck.length === 0) {
+			// Shuffle all but the upcard from the open deck and put them back into the deck
+			cards.deck.push(...shuffle(cards.openDeck.splice(0, cards.openDeck.length-1)))
+		}
+
 		return cards[player.id][cards[player.id].length - 1];
 	}
 

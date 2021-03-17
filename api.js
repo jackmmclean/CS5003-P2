@@ -51,8 +51,6 @@ exports.createGame = function (username, knockingAllowed, lowHighAceAllowed, rou
 //for the next two functions, even though they take gameId as an argument they return it
 //from the games array (just to make sure everything is lining up)
 exports.joinGame = function (username, gameId) {
-	const player = games[gameId].addPlayer(username);
-
 	// process game that's already started
 	if (games[gameId].timeStarted !== null) {
 		return {
@@ -69,6 +67,7 @@ exports.joinGame = function (username, gameId) {
 	}
 	// everything ok
 	else {
+		const player = games[gameId].addPlayer(username);
 		return {
 			status: 200,
 			gameId: gameId,
