@@ -45,6 +45,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		this.turnOrder = [];
 		// turnPlayer is index of current turn's player in the turnOrder array
 		this.turnPlayerIndex = null;
+		this.turnTimer = null;
 		// action: which action can currently be performed: can be 'draw', 'deposit'
 		this.currentAction = 'draw';
 		this.cardHistory = [];
@@ -57,7 +58,8 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 
 		// skip to the next turn
 		this.nextTurn = () => {
-			this.turnPlayerIndex = (this.turnPlayerIndex + 1) < this.turnOrder.length ? this.turnPlayerIndex + 1 : 0
+			this.turnPlayerIndex = (this.turnPlayerIndex + 1) < this.turnOrder.length ? this.turnPlayerIndex + 1 : 0;
+			this.turnTimer.resetTimer(this.turnOrder[this.turnPlayerIndex].id);
 		}
 
 		// toggle next action
@@ -97,6 +99,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			this.cards = makeCards(this, this.round);
 		};
 		this.startGame = () => {
+			this.turnTimer = makeTurnTimer(this.owner.id);
 			this.timeStarted = new Date;
 			this.cards = makeCards(this);
 			//allow these functions to be accessed from the player objects
@@ -364,31 +367,34 @@ exports.createMessage = function (playerId, text) {
 	return message
 }
 
-let cardTest = [{
-	rank: 'Q',
-	suit: 'Clubs'
-}, {
-	rank: 10,
-	suit: 'Hearts'
-}, {
-	rank: 9,
-	suit: 'Clubs'
-}, {
-	rank: 'J',
-	suit: 'Clubs'
-}, {
-	rank: 10,
-	suit: 'Clubs'
-}, {
-	rank: 7,
-	suit: 'Clubs'
-}, {
-	rank: 8,
-	suit: 'Clubs'
-}, {
-	rank: 10,
-	suit: 'Diamonds'
-}, {
-	rank: 10,
-	suit: 'Spades'
-}]
+makeTurnTimer = function (playerId) {
+
+	const game = getGameByPlayerId(playerId);
+
+	let timer = {
+		timeLeft: 60,
+		timerFunction: setInterval(() => {
+			if (timer.timeLeft === 0) {
+				clearInterval(timer.timerFunction);
+				game.removePlayer(playerId);
+			} else {
+				timer.timeLeft--;
+			}
+		}, 1000),
+		resetTimer: function (newPlayerId) {
+			clearInterval(timer.timerFunction);
+			timer.timeLeft = 60;
+			timer.timerFunction = setInterval(() => {
+				if (timer.timeLeft === 0) {
+					clearInterval(timer.timerFunction);
+					game.removePlayer(newPlayerId);
+				} else {
+					timer.timeLeft--;
+				}
+			}, 1000)
+		}
+	}
+
+	return timer
+
+}
