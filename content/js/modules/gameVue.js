@@ -456,7 +456,7 @@ const startInterval = () => {
 			}
 		}).then((res) => {
 			if (!res.ok) {
-				throw Error(`HTTP ${res.status}`)
+				throw Error(`HTTP ${res.status}`);
 			} else {
 				return res.json();
 			}

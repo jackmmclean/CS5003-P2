@@ -499,3 +499,13 @@ exports.calculatePlayerScores = function (game) {
 	}
 
 }
+
+exports.getGameByPlayerIdInCardInstance = function (playerId) {
+	for (let gameId in games) {
+		for (let instance of games[gameId].cardHistory) {
+			if (instance.hasOwnProperty(playerId)) {
+				return games[gameId]
+			}
+		}
+	}
+}

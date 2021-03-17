@@ -16,7 +16,8 @@ const {
 const {
 	getGameByPlayerId,
 	getHighestScoringPlayers,
-	niceUsername
+	niceUsername,
+	getGameByPlayerIdInCardInstance
 } = require('./utils')
 
 
@@ -242,6 +243,7 @@ exports.knock = function (playerId) {
  * @returns {Object} Game stats
  * */
 exports.gameStats = function (playerId) {
+
 	const game = getGameByPlayerId(playerId);
 	const numPlayers = Object.keys(game.players).length;
 	const scores = {};
@@ -264,7 +266,8 @@ exports.gameStats = function (playerId) {
 		cardHistory: game.cardHistory,
 		round: game.round,
 		turnTimeLeft: game.turnTimer.timeLeft,
-		niceUsernames: niceUsernames
+		niceUsernames: niceUsernames,
+		removed: false
 		// todo what else should we return here?
 	};
 }
