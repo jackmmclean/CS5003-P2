@@ -185,6 +185,7 @@ const makeRulesVue = function() {
  * Set the background color of the body.
  * */
 const setBodyColor = (color) => {
+	document.querySelector("HTML").style.backgroundColor = color;
 	document.body.style.backgroundColor = color;
 }
 
