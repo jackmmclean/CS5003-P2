@@ -148,19 +148,22 @@ const makeUserNavVue = function() {
 	})
 }
 
+/**
+ * Mini vue that controls the color picker.
+ * */
 const makeColorPickerVue = function() {
 	const colorPickerVue = new Vue({
 		el: "#color-picker",
 		data: { color: '#477148' },
-		watch: {
-			color: (c) => setBodyColor(c)
-		}
+		watch: { color: (c) => setBodyColor(c) }
 	})
 }
 
+/**
+ * Set the background color of the body.
+ * */
 const setBodyColor = (color) => {
-	console.log(color)
-	document.body.style.backgroundColor = color
+	document.body.style.backgroundColor = color;
 }
 
 const registrationCard = Vue.observable({
@@ -168,6 +171,19 @@ const registrationCard = Vue.observable({
 })
 
 export const makeEntry = function () {
+
+
+	 // modal attribution https://stackoverflow.com/a/53594839/12168211
+	let modal = document.getElementById("my-modal");
+
+	document.getElementById("modal-button").onclick = () => {
+		modal.classList.remove("hidden")
+	};
+
+	document.getElementById("my-modal").onclick = () => {
+		modal.classList.add("hidden");
+	};
+
 	makeLoginVue();
 	makeRegisterVue();
 	makeGuestVue();
