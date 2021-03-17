@@ -416,7 +416,7 @@ const showUserMessage = (msg) => {
 	clearTimeout(warningTimer);
 	sharedGameInfo.warningMessageVisible = true;
 	sharedGameInfo.warningMessage = msg;
-	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 1500)
+	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 2000)
 }
 
 const setHand = (newHand) => {

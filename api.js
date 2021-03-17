@@ -263,7 +263,7 @@ exports.gameStats = function (playerId) {
 		messageCount: game.messages.length,
 		cardHistory: game.cardHistory,
 		round: game.round,
-		turnTimeLeft: game.turnTimer.timeLeft,
+		// turnTimeLeft: game.turnTimer.timeLeft,
 		niceUsernames: niceUsernames
 		// todo what else should we return here?
 	};
