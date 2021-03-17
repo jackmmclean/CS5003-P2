@@ -301,7 +301,10 @@ const makeTurnIndicatorVue = function () {
 			},
 			roundMode() {
 				return sharedGameInfo.roundMode;
-			}
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
+			},
 		},
 		methods: {
 			isTurnPlayer(idx) {
@@ -401,7 +404,6 @@ const sharedGameInfo = Vue.observable({
 	generalInfo: {
 		GameID: "",
 		Username: "",
-		Time: "some time",
 		Players: 0,
 		Round: 1,
 		Time: 60

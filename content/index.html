@@ -236,7 +236,7 @@
 
 			<!--	Game Page		-->
 
-			<div id="turn-indicator" v-show="state === 'play'">
+			<div id="turn-indicator" v-show="(state === 'play') && (gameHasStarted)">
 
 				<table>
 					<tr>
