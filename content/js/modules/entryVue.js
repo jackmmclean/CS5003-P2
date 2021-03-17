@@ -159,6 +159,18 @@ const makeColorPickerVue = function() {
 	})
 }
 
+const makeRulesVue = function() {
+	const rulesVue = new Vue({
+		el: "#rules",
+		data: { isHidden: true },
+		computed: { state() {return game.state;} },
+		methods: {
+			show() { this.isHidden = false; },
+			hide() { this.isHidden = true; }
+		}
+	})
+}
+
 /**
  * Set the background color of the body.
  * */
@@ -172,23 +184,12 @@ const registrationCard = Vue.observable({
 
 export const makeEntry = function () {
 
-
-	 // modal attribution https://stackoverflow.com/a/53594839/12168211
-	let modal = document.getElementById("my-modal");
-
-	document.getElementById("modal-button").onclick = () => {
-		modal.classList.remove("hidden")
-	};
-
-	document.getElementById("my-modal").onclick = () => {
-		modal.classList.add("hidden");
-	};
-
 	makeLoginVue();
 	makeRegisterVue();
 	makeGuestVue();
 	makeUserNavVue();
 	makeColorPickerVue();
+	makeRulesVue();
 
 	// todo take this out: this is only for development to navigate between states
 	const navVue = new Vue({
