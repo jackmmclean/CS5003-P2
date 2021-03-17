@@ -181,7 +181,6 @@ exports.declareGin = function (playerId) {
 	let status, text, winners;
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	// todo need some more logic here to deal with winning and losing etc
 	const validGin = processGinDeclared(player, game)
 
 	getRoundGinScores(game, player);
@@ -192,6 +191,7 @@ exports.declareGin = function (playerId) {
 		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	} else {
 		game.newRound();
+		game.turnTimer.resetTimer(playerId);
 		winners = null;
 		text = validGin ? "Round is over." : "You incorrectly declared Gin.\nYou score zero for this round!"
 	}
@@ -225,6 +225,7 @@ exports.knock = function (playerId) {
 		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	} else {
 		game.newRound();
+		game.turnTimer.resetTimer(playerId);
 		winners = null;
 		text = resp;
 	}
