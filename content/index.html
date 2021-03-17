@@ -125,10 +125,10 @@
 			</div>
 		</div>
 
-		<div class="card" id="user-actions" v-show="state === 'play'">
+		<div class="card" id="user-actions" v-show="(state === 'play') && (numPlayers > 1)">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted">Start
+					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted && (numPlayers > 1)">Start
 						Game</button>
 					<button class="button is-small" v-on:click="declareGin" v-show="gameHasStarted">Declare Gin</button>
 					<button class="button is-small" v-on:click="knock"
@@ -266,7 +266,8 @@
 
 					<div v-if="!gameHasStarted">
 						<progress class="progress is-large is-dark" max="100"></progress>
-						<p class="subtitle is-2">Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}</p>
+						<p class="subtitle is-2" v-show="numPlayers > 1">Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}</p>
+						<p class="subtitle is-2" v-show="numPlayers <= 1">Waiting for more players to join.</p>
 					</div>
 
 				</div>

@@ -66,6 +66,9 @@ const makePlayerHandVue = function () {
 			},
 			isOwner() {
 				return sharedGameInfo.playerIsOwner;
+			},
+			numPlayers() {
+				return sharedGameInfo.generalInfo.Players;
 			}
 		},
 		methods: {
@@ -194,6 +197,9 @@ const makeUserActionsVue = function () {
 			},
 			gameHasStarted() {
 				return sharedGameInfo.gameHasStarted;
+			},
+			numPlayers() {
+				return sharedGameInfo.generalInfo.Players;
 			}
 		},
 		methods: {
