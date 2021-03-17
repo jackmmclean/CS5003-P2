@@ -1,3 +1,4 @@
+const {users} = require("./data/data");
 const {
 	shuffle,
 	isRun,
@@ -73,7 +74,12 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		this.endGame = () => {
 			this.gameOver = true;
 			this.timeFinished = new Date;
-			// todo save the scores of registered users
+
+			// save the scores of registered users to the overall score
+			for (let [, player] of Object.entries(this.players).filter(arr => arr[1].username !== 'guest')) {
+				users[player.username].score += player.score;
+			}
+
 		};
 		this.addPlayer = (username, owner = false) => {
 			let player = makePlayer(username);
@@ -142,15 +148,15 @@ function makeCards(game, round) {
 
 	let players = game.players;
 
-	//initialise variables
+	// initialise variables
 	var deck = [];
 	const ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
-	//value of ace is 1 by default but we change this when checking (if high or low aces is toggled)
+	// value of ace is 1 by default but we change this when checking (if high or low aces is toggled)
 
 	const suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
-	//define invalid cards, for example the 'knights' cards
+	// define invalid cards, for example the 'knights' cards
 	const invalidCharCodes = [127148, 127151, 127152, 127164, 127167, 127168, 127180, 127183, 127184, 127196];
-	//define charCodes for regular deck of cards as unicode chars from 127137 to 127198 minus invalidCharCodes
+	// define charCodes for regular deck of cards as unicode chars from 127137 to 127198 minus invalidCharCodes
 	const charCodes = Array.from(Array(62).keys()).map(el => el + 127137).filter(el => !invalidCharCodes.includes(el));
 
 	//constructor function for cards
@@ -182,7 +188,7 @@ function makeCards(game, round) {
 	}
 
 	//assign object attributes that hold each players cards
-	for (let [k, v] of Object.entries(players)) {
+	for (let [k,] of Object.entries(players)) {
 		cards[k] = cards.deck.splice(0, cardsPerPlayer);
 	}
 
@@ -191,10 +197,14 @@ function makeCards(game, round) {
 	function CardsInstance(round) {
 		this.time = new Date;
 		this.round = round;
+		this.scores = {};
 		this.openDeck = Object.assign({}, transformCards(cards.openDeck));
 		this.deck = Object.assign({}, transformCards(cards.deck));
 		for (let [k, player] of Object.entries(players)) {
-			this[niceUsername(player.id)] = Object.assign({}, transformCards(cards[player.id]));
+			let usrNm = niceUsername(player.id);
+			this[usrNm] = Object.assign({}, transformCards(cards[player.id]));
+			// save scores of players at the current state
+			this.scores[usrNm] = player.score;
 		}
 	}
 
@@ -205,14 +215,14 @@ function makeCards(game, round) {
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
-	//define a method for a player to draw from open deck
+	// define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.openDeck.splice(cards.openDeck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
-	//define a method for a player to deposit one of their cards onto the open deck
+	// define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, card) {
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards['openDeck'].push(
@@ -375,21 +385,28 @@ exports.createMessage = function (playerId, text) {
 
 makeTurnTimer = function (playerId) {
 
+	const SECONDS_PER_ROUND = 10;
+
 	const game = getGameByPlayerId(playerId);
 
 	let timer = {
-		timeLeft: 10,
+		timeLeft: SECONDS_PER_ROUND,
 		timerFunction: setInterval(() => {
 			if (timer.timeLeft === 0) {
 				clearInterval(timer.timerFunction);
 				game.removePlayer(playerId);
+				// if only one player left, end the game
+				// todo @leo check this again
+				if (Object.keys(game.players).length < 2) {
+					game.endGame();
+				}
 			} else {
 				timer.timeLeft--;
 			}
 		}, 1000),
 		resetTimer: function (newPlayerId) {
 			clearInterval(timer.timerFunction);
-			timer.timeLeft = 10;
+			timer.timeLeft = SECONDS_PER_ROUND;
 			timer.timerFunction = setInterval(() => {
 				if (timer.timeLeft === 0) {
 					clearInterval(timer.timerFunction);

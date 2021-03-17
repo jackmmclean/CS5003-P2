@@ -4,7 +4,7 @@ import {
 	getStats,
 	setState,
 	arraysEqual,
-	transformCards,
+	transformCards, sharedGameInfo,
 
 } from "./clientUtils.js";
 
@@ -387,28 +387,6 @@ const makeMessagesVue = function () {
 	})
 }
 
-const sharedGameInfo = Vue.observable({
-	gameHasStarted: false,
-	playerIsOwner: false,
-	openDeckCards: [],
-	hand: [],
-	closedDeckCards: [],
-	showBackOfCard: false,
-	knockingAllowed: false,
-	roundMode: false,
-	playerNames: [],
-	scores: [],
-	turnPlayerIndex: null,
-	warningMessage: "",
-	warningMessageVisible: false,
-	generalInfo: {
-		GameID: "",
-		Username: "",
-		Players: 0,
-		Round: 1,
-		Time: 60
-	}
-});
 
 let warningTimer = null;
 
@@ -463,6 +441,8 @@ const startInterval = () => {
 				if (res.status === 408) {
 					alert('You timed out.');
 					clearInterval(pollInterval);
+					// need to reset usernames for next game
+					niceUsernames = []
 					setState('login');
 				}
 				throw Error(`HTTP ${res.status}`);

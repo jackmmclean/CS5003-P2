@@ -144,6 +144,7 @@ exports.drawClosedCard = function (playerId) {
 	return {
 		drawnCard: card,
 		hand: player.hand(),
+		status: 200,
 	};
 }
 
@@ -258,6 +259,7 @@ exports.gameStats = function (playerId) {
 	}
 
 	return {
+		status: 200,
 		gameId: game.id,
 		niceUsername: niceUsername(playerId),
 		numPlayers: numPlayers,
@@ -296,6 +298,7 @@ exports.registerUser = function (username, password) {
 exports.makePlayerOnLogin = function (username) {
 	const player = makePlayer(username)
 	return {
+		status: 200,
 		playerId: player.id
 	};
 }
@@ -307,9 +310,10 @@ exports.makePlayerOnLogin = function (username) {
 exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 
-	//if no game is found (player has been removed/timed out)
-	if (game == undefined) {
+	// if no game is found (player has been removed/timed out)
+	if (game === undefined) {
 		return {
+			status: 200,
 			removed: true,
 			text: 'You were removed for inactivity.'
 		}
@@ -317,6 +321,7 @@ exports.pollGame = function (playerId) {
 
 	const scores = Object.entries(game.players).map(el => [el[0], el[1].score]);
 	return {
+		status: 200,
 		gameHasStarted: game.timeStarted !== null,
 		scores: scores,
 		gameHasFinished: game.timeFinished !== null,
@@ -351,7 +356,9 @@ exports.getCards = function (playerId) {
 }
 
 exports.getScore = function (username) {
-	return users[username].score;
+	return {
+		status: 200,
+		score: users[username].score};
 }
 
 exports.getMessages = function (gameId) {

@@ -200,7 +200,8 @@ app.post('/api/users/login', authenticate, (req, res) => {
 app.get('/api/users/scores/:username', authenticate, (req, res) => {
 	// todo
 	const username = req.params.username;
-	getScore(username);
+	const score = getScore(username);
+	res.status(score.status).json(score);
 })
 
 const PORT = 3000;

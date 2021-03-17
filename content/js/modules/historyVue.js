@@ -9,6 +9,7 @@ const makeHistoryVue = function () {
 		data: {
 			cardHistoryInstance: [1, 2, 3, 4],
 			cardHistory: [],
+			scores: [],
 			index: 0,
 			round: 0
 		},

@@ -22,6 +22,29 @@ export const setGuestUser = function () {
 	game.userKey = btoa('guest' + ':' + '')
 };
 
+export const sharedGameInfo = Vue.observable({
+	gameHasStarted: false,
+	playerIsOwner: false,
+	openDeckCards: [],
+	hand: [],
+	closedDeckCards: [],
+	showBackOfCard: false,
+	knockingAllowed: false,
+	roundMode: false,
+	playerNames: [],
+	scores: [],
+	turnPlayerIndex: null,
+	warningMessage: "",
+	warningMessageVisible: false,
+	generalInfo: {
+		GameID: "",
+		Username: "",
+		Players: 0,
+		Round: 1,
+		Time: 60
+	}
+});
+
 /**
  * Set the state to a new value.
  * @param state {string} the new state.
@@ -33,15 +56,35 @@ export const setState = function (state) {
 		console.log(`Tried to set invalid state ${state}. Must be one of ${ALLOWED_STATES}.`)
 	}
 	// reset values appropriately
-	if (state === "login") {
+	if (state === "login" || state === "lobby") {
+		game.playerId = "";
+		game.gameId = "";
+		game.messages = [];
+
+		// reset sharedGameInfo
+		sharedGameInfo.gameHasStarted = false,
+		sharedGameInfo.playerIsOwner = false,
+		sharedGameInfo.openDeckCards = [],
+		sharedGameInfo.hand = [],
+		sharedGameInfo.closedDeckCards = [],
+		sharedGameInfo.showBackOfCard = false,
+		sharedGameInfo.knockingAllowed = false,
+		sharedGameInfo.roundMode = false,
+		sharedGameInfo.playerNames = [],
+		sharedGameInfo.scores = [],
+		sharedGameInfo.turnPlayerIndex = null,
+		sharedGameInfo.warningMessage = "",
+		sharedGameInfo.warningMessageVisible = false,
+		sharedGameInfo.generalInfo = {
+				GameID: "",
+				Username: "",
+				Players: 0,
+				Round: 1,
+				Time: 60
+		}
+
+	} if (state === "login") {
 		game.userKey = "";
-		game.playerId = "";
-		game.gameId = "";
-		game.messages = [];
-	} else if (state === "lobby") {
-		game.playerId = "";
-		game.gameId = "";
-		game.messages = [];
 	}
 }
 
