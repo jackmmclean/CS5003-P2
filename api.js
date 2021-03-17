@@ -17,7 +17,7 @@ const {
 	getGameByPlayerId,
 	getHighestScoringPlayers,
 	niceUsername,
-	getGameByPlayerIdInCardInstance
+	playerInGameCardInstance
 } = require('./utils')
 
 
@@ -246,17 +246,6 @@ exports.gameStats = function (playerId) {
 
 	const game = getGameByPlayerId(playerId);
 
-	//if no game is found (player has been removed/timed out)
-	if (game === null) {
-		//but player is in a card instance - ie was previously in the game
-		if (getGameByPlayerIdInCardInstance(playerId) != null) {
-			return {
-				removed: true,
-				text: 'You were removed for inactivity.'
-			}
-		}
-	}
-
 	const numPlayers = Object.keys(game.players).length;
 	const scores = {};
 	const gameDuration = (game.gameOver ? game.timeStarted - game.timeFinished : game.timeStarted - new Date);
@@ -317,6 +306,15 @@ exports.makePlayerOnLogin = function (username) {
  * */
 exports.pollGame = function (playerId) {
 	const game = getGameByPlayerId(playerId);
+
+	//if no game is found (player has been removed/timed out)
+	if (game == undefined) {
+		return {
+			removed: true,
+			text: 'You were removed for inactivity.'
+		}
+	}
+
 	const scores = Object.entries(game.players).map(el => [el[0], el[1].score]);
 	return {
 		gameHasStarted: game.timeStarted !== null,
@@ -328,7 +326,8 @@ exports.pollGame = function (playerId) {
 		roundMode: game.roundMode,
 		playerNames: game.turnOrder.map(el => niceUsername(el.id)),
 		turnPlayerIndex: game.turnPlayerIndex,
-		winner: game.winner
+		winner: game.winner,
+		removed: false
 		// todo add more data that needs to be polled
 	}
 }

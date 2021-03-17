@@ -443,7 +443,7 @@ exports.getHighestScoringRoundPlayers = function (playerArray) {
  * @param playerId {string} The guest player whose name needs to be nicer
  * @returns {string} a nicer username
  * */
-exports.niceUsername = function (playerId) {
+niceUsername = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 	const guests = {};
 	for (let playerKey in game.players) {
@@ -457,6 +457,10 @@ exports.niceUsername = function (playerId) {
 	} else {
 		return game.players[playerId].username;
 	}
+}
+
+exports.niceUsername = function (playerId) {
+	return niceUsername(playerId);
 }
 
 exports.transformCards = function (cardsArr) {
@@ -498,14 +502,4 @@ exports.calculatePlayerScores = function (game) {
 		player.score += player.roundScore;
 	}
 
-}
-
-exports.getGameByPlayerIdInCardInstance = function (playerId) {
-	for (let gameId in games) {
-		for (let instance of games[gameId].cardHistory) {
-			if (instance.hasOwnProperty(playerId)) {
-				return games[gameId]
-			}
-		}
-	}
 }

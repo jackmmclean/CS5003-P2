@@ -94,7 +94,7 @@ export const getStats = function () {
 	})
 }
 
-export const messageArraysEqual = function (array1, array2) {
+export const arraysEqual = function (array1, array2) {
 
 	if (array1.length !== array2.length) return false;
 

@@ -147,11 +147,7 @@ app.get('/api/game/game-stats/:playerId', authenticate, (req, res) => {
 	const playerId = req.params.playerId;
 	let stats = gameStats(playerId);
 	stats.username = req.username;
-	if (stats.removed === true) {
-		res.status(409).json(stats)
-	} else {
-		res.status(200).json(stats);
-	}
+	res.status(200).json(stats);
 })
 
 // get messages from server
@@ -174,7 +170,11 @@ app.post('/api/game/messages', (req, res) => {
 app.get('/api/game/poll/:playerId', authenticate, (req, res) => {
 	const playerId = req.params.playerId;
 	const pollData = pollGame(playerId);
-	res.status(200).json(pollData)
+	if (pollData.removed === true) {
+		res.status(408).json(pollData)
+	} else {
+		res.status(200).json(pollData)
+	}
 })
 
 app.get('/api/game/get-cards/:playerId', authenticate, (req, res) => {

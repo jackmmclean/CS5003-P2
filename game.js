@@ -46,7 +46,9 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		// turnPlayer is index of current turn's player in the turnOrder array
 		this.turnPlayerIndex = null;
 		// set initially to dummy variable
-		this.turnTimer = {turnTimer: 60};
+		this.turnTimer = {
+			turnTimer: 10
+		};
 		// action: which action can currently be performed: can be 'draw', 'deposit'
 		this.currentAction = 'draw';
 		this.cardHistory = [];
@@ -84,6 +86,9 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		// remove a player from the game (e.g. when they don't respond)
 		this.removePlayer = (playerId) => {
 			let player = this.players[playerId]
+
+			//put players cards back
+			this.cards.deck = shuffle([...this.cards.deck, ...player.hand()]);
 
 			// remove from turn order
 			this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
@@ -373,7 +378,7 @@ makeTurnTimer = function (playerId) {
 	const game = getGameByPlayerId(playerId);
 
 	let timer = {
-		timeLeft: 60,
+		timeLeft: 10,
 		timerFunction: setInterval(() => {
 			if (timer.timeLeft === 0) {
 				clearInterval(timer.timerFunction);
@@ -384,7 +389,7 @@ makeTurnTimer = function (playerId) {
 		}, 1000),
 		resetTimer: function (newPlayerId) {
 			clearInterval(timer.timerFunction);
-			timer.timeLeft = 60;
+			timer.timeLeft = 10;
 			timer.timerFunction = setInterval(() => {
 				if (timer.timeLeft === 0) {
 					clearInterval(timer.timerFunction);

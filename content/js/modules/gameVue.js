@@ -3,7 +3,7 @@ import {
 	getCards,
 	getStats,
 	setState,
-	messageArraysEqual,
+	arraysEqual,
 	transformCards,
 
 } from "./clientUtils.js";
@@ -355,7 +355,7 @@ const makeMessagesVue = function () {
 						fetch(`/api/game/messages/${game.gameId}`)
 							.then(res => res.json())
 							.then(res => {
-								if (!messageArraysEqual(this.pastMessages, res.messages)) {
+								if (!arraysEqual(this.pastMessages, res.messages)) {
 									this.pastMessages = res.messages;
 									for (let pastMessage of this.pastMessages) {
 										pastMessage['isMyMsg'] = (game.playerId === pastMessage.playerId);
@@ -404,7 +404,6 @@ const sharedGameInfo = Vue.observable({
 	generalInfo: {
 		GameID: "",
 		Username: "",
-		Time: "some time",
 		Players: 0,
 		Round: 1,
 		Time: 60
@@ -447,6 +446,7 @@ const showBackOfCard = () => {
 }
 
 let pollInterval = null;
+let niceUsernames = [];
 
 // Poll server every 100 ms: check if game has started
 //  if yes (get data) else wait another 100 ms
@@ -460,9 +460,10 @@ const startInterval = () => {
 		}).then((res) => {
 			if (!res.ok) {
 				//if player is removed
-				if (res.status === 409) {
-					//console.log(res.json().text);
-					setState('lobby');
+				if (res.status === 408) {
+					alert('You timed out.');
+					clearInterval(pollInterval);
+					setState('login');
 				}
 				throw Error(`HTTP ${res.status}`);
 			} else {
@@ -477,6 +478,7 @@ const startInterval = () => {
 			sharedGameInfo.turnPlayerIndex = json.turnPlayerIndex;
 			sharedGameInfo.scores = json.scores;
 
+
 			// get game stats (even if game hasn't started yet)
 			getStats().then((json) => {
 				sharedGameInfo.generalInfo.GameID = json.gameId;
@@ -484,6 +486,20 @@ const startInterval = () => {
 				sharedGameInfo.generalInfo.Players = json.numPlayers;
 				sharedGameInfo.generalInfo.Round = json.round;
 				sharedGameInfo.generalInfo.Time = json.turnTimeLeft;
+
+				let incomingNiceUsernames = Object.entries(json.niceUsernames).map(el => el[1]);
+
+				if (!arraysEqual(niceUsernames, incomingNiceUsernames)) {
+					if (niceUsernames.length < incomingNiceUsernames.length) {
+
+						let newcomer = incomingNiceUsernames.filter(el => !niceUsernames.includes(el))
+						showUserMessage(`${newcomer[0]} has joined the game.`)
+					} else {
+						let leaver = niceUsernames.filter(el => !incomingNiceUsernames.includes(el))
+						showUserMessage(`${leaver[0]} has left the game.`)
+					}
+				}
+				niceUsernames = incomingNiceUsernames;
 			}).catch(err => console.log('Could not get stats.', err))
 
 			// only once the game is started
