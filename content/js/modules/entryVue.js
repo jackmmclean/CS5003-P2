@@ -162,7 +162,17 @@ const makeColorPickerVue = function() {
 const makeRulesVue = function() {
 	const rulesVue = new Vue({
 		el: "#rules",
-		data: { isHidden: true },
+		data: {
+			isHidden: true,
+			ruleText: "<p>The goal of the game is to have a hand that only contains melds (sets or runs).</p>" +
+				"<p>Each player receives 10 cards (or 7, if there are more than two players).<p>" +
+				"<p>Taking turns, the players draw a card either from the open or from the closed deck.</p>" +
+				"<p>Then, they deposit one card from their hand to the open deck.</p>" +
+				"<p>Once a player has only melds on their hand, they can declare Gin.</p>" +
+				"<p>If the meld is valid, they win the game. If not, they lose.</p>" +
+				"<p>Alternatively, a player can knock to submit their current hand even if they don't have Gin.</p>" +
+				"<p>In this case, they win if they have less deadwood than their opponents.</p>"
+		},
 		computed: { state() {return game.state;} },
 		methods: {
 			show() { this.isHidden = false; },
