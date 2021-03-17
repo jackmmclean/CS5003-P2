@@ -262,6 +262,7 @@ exports.gameStats = function (playerId) {
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
 		messageCount: game.messages.length,
 		cardHistory: game.cardHistory,
+		round: game.round,
 		niceUsernames: niceUsernames
 		// todo what else should we return here?
 	};

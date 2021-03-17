@@ -24,6 +24,9 @@ const makeGameInfoVue = function () {
 			generalInfo() {
 				return sharedGameInfo.generalInfo;
 			},
+			roundMode() {
+				return sharedGameInfo.roundMode;
+			},
 			warningMessageVisible() {
 				return sharedGameInfo.warningMessageVisible;
 			},
@@ -390,6 +393,7 @@ const sharedGameInfo = Vue.observable({
 		Username: "",
 		Time: "some time",
 		Players: 0,
+		Round: 1
 	}
 });
 
@@ -459,6 +463,7 @@ const startInterval = () => {
 				sharedGameInfo.generalInfo.GameID = json.gameId;
 				sharedGameInfo.generalInfo.Username = json.niceUsername;
 				sharedGameInfo.generalInfo.Players = json.numPlayers;
+				sharedGameInfo.generalInfo.Round = json.round;
 			}).catch(err => console.log('Could not get stats.', err))
 
 			// only once the game is started

@@ -123,7 +123,7 @@
 				</div>
 				<div class="content">
 					<table>
-						<tr v-for="(v, k) in generalInfo">
+						<tr v-show="k!='Round' || roundMode" v-for="(v, k) in generalInfo">
 							<td>{{ k }}</td>
 							<td>{{ v }}</td>
 						</tr>
