@@ -301,7 +301,10 @@ const makeTurnIndicatorVue = function () {
 			},
 			roundMode() {
 				return sharedGameInfo.roundMode;
-			}
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
+			},
 		},
 		methods: {
 			isTurnPlayer(idx) {
@@ -401,7 +404,6 @@ const sharedGameInfo = Vue.observable({
 	generalInfo: {
 		GameID: "",
 		Username: "",
-		Time: "some time",
 		Players: 0,
 		Round: 1,
 		Time: 60
@@ -414,7 +416,7 @@ const showUserMessage = (msg) => {
 	clearTimeout(warningTimer);
 	sharedGameInfo.warningMessageVisible = true;
 	sharedGameInfo.warningMessage = msg;
-	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 1500)
+	warningTimer = setTimeout(() => sharedGameInfo.warningMessageVisible = false, 2000)
 }
 
 const setHand = (newHand) => {
