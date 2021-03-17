@@ -40,8 +40,23 @@ body, html {
 }
 
 /* Modal: attribution https://stackoverflow.com/a/53594839/12168211 */
+#rules {
+    position: absolute;
+    top: 5px;
+    right: 50px;
+    border: none;
+}
+
+#open-modal {
+    background-color: inherit;
+    border: none;
+    /* dynamic color s.t. it's (almost) always visible no matter the background-color */
+    color: white;
+    mix-blend-mode: difference;
+}
+
 .modal {
-    background-color: rgba(0,0,0,0.4); /* Transparent dimmed overlay */
+    background-color: rgba(0,0,0,0.6); /* Transparent dimmed overlay */
     position: fixed;
     top: 0;
     left: 0;
@@ -59,15 +74,17 @@ body, html {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    width: 200px;
+    width: 300px;
 }
 
 .modal .body {
-    box-shadow: 5px 10px #888888;
     display: inline-block;
     background-color: white;
     border: 1px solid black;
     padding: 10px;
+    text-align: left;
+    line-height: 2;
+
 }
 
 /* Game info */
@@ -98,6 +115,12 @@ body, html {
     grid-area: a;
     text-align: center;
     display: inline-flex;
+}
+
+#player-hand.waiting {
+    background: none;
+    font-size: 120%;
+    font-weight: bold;
 }
 
 /* Turn indicator */
@@ -176,7 +199,6 @@ body, html {
 }
 
 /* Messaging */
-
 #messagesData {
 	grid-area: d;
 	height: 300px;

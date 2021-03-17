@@ -159,10 +159,33 @@ const makeColorPickerVue = function() {
 	})
 }
 
+const makeRulesVue = function() {
+	const rulesVue = new Vue({
+		el: "#rules",
+		data: {
+			isHidden: true,
+			ruleText: "<p>The goal of the game is to have a hand that only contains melds (sets or runs).</p>" +
+				"<p>Each player receives 10 cards (or 7, if there are more than two players).<p>" +
+				"<p>Taking turns, the players draw a card either from the open or from the closed deck.</p>" +
+				"<p>Then, they deposit one card from their hand to the open deck.</p>" +
+				"<p>Once a player has only melds on their hand, they can declare Gin.</p>" +
+				"<p>If the meld is valid, they win the game. If not, they lose.</p>" +
+				"<p>Alternatively, a player can knock to submit their current hand even if they don't have Gin.</p>" +
+				"<p>In this case, they win if they have less deadwood than their opponents.</p>"
+		},
+		computed: { state() {return game.state;} },
+		methods: {
+			show() { this.isHidden = false; },
+			hide() { this.isHidden = true; }
+		}
+	})
+}
+
 /**
  * Set the background color of the body.
  * */
 const setBodyColor = (color) => {
+	document.querySelector("HTML").style.backgroundColor = color;
 	document.body.style.backgroundColor = color;
 }
 
@@ -172,23 +195,12 @@ const registrationCard = Vue.observable({
 
 export const makeEntry = function () {
 
-
-	 // modal attribution https://stackoverflow.com/a/53594839/12168211
-	let modal = document.getElementById("my-modal");
-
-	document.getElementById("modal-button").onclick = () => {
-		modal.classList.remove("hidden")
-	};
-
-	document.getElementById("my-modal").onclick = () => {
-		modal.classList.add("hidden");
-	};
-
 	makeLoginVue();
 	makeRegisterVue();
 	makeGuestVue();
 	makeUserNavVue();
 	makeColorPickerVue();
+	makeRulesVue();
 
 	// todo take this out: this is only for development to navigate between states
 	const navVue = new Vue({

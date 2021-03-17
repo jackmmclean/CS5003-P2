@@ -21,18 +21,15 @@
 <body>
 
 	<!-- Modal attribution https://stackoverflow.com/a/53594839/12168211 -->
+	<div id="rules" v-show="(state === 'lobby') || (state === 'play')">
+		<button class="button is-small" id="open-modal" v-on:click="show"><i class="fas fa-question"></i></button>
 
-	<button id="modal-button">Rules</button>
-
-	<div class="modal hidden" id="my-modal">
-		<div class="container">
-			<div class="body">
-				<p>The goal of the game is to have a hand that only contains melds (sets or runs).</p>
-				<p>Each player receives 10 (or 7) cards.<p>
-						<p>Taking turns, the players draw either from the open or from the closed deck.</p>
-						<p>Then, they deposit one card from their hand to the open deck.</p>
-						<p>Once a player has only melds on their hand, they can declare Gin.</p>
-						<p>...</p>
+		<div class="modal" id="my-modal" v-bind:class="{hidden : isHidden}">
+			<div class="container">
+				<div class="body">
+					<div v-html="ruleText"></div>
+					<button class="button is-small" id="close-modal" v-on:click="hide">Close</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -128,10 +125,10 @@
 			</div>
 		</div>
 
-		<div class="card" id="user-actions" v-show="state === 'play'">
+		<div class="card" id="user-actions" v-show="(state === 'play') && (numPlayers > 1)">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted">Start
+					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted && (numPlayers > 1)">Start
 						Game</button>
 					<button class="button is-small" v-on:click="declareGin" v-show="gameHasStarted">Declare Gin</button>
 					<button class="button is-small" v-on:click="knock"
@@ -262,20 +259,25 @@
 			</div>
 
 			<div class="board">
-				<div class="board-element hand" id="player-hand" v-show="state === 'play'">
+				<div class="board-element hand" id="player-hand" v-show="state === 'play'" v-bind:class="{waiting : !gameHasStarted}">
+
 					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"
 						v-on:click="depositCard(card.cardNo)" v-if="gameHasStarted"></div>
-					<div v-if="!gameHasStarted" style="color: black">
-						Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}
+
+					<div v-if="!gameHasStarted">
+						<progress class="progress is-large is-dark" max="100"></progress>
+						<p class="subtitle is-2" v-show="numPlayers > 1">Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}</p>
+						<p class="subtitle is-2" v-show="numPlayers <= 1">Waiting for more players to join.</p>
 					</div>
+
 				</div>
 
-				<div class="board-element deck" id="closed-deck" v-show="state === 'play'">
+				<div class="board-element deck" id="closed-deck" v-show="(state === 'play') && gameHasStarted">
 					<div class="playing-card" v-for="card in closedDeckCards" v-html="card.card"
 						v-bind:style="{color: card.color}" v-on:click="drawFromClosedDeck"></div>
 				</div>
 
-				<div class="board-element deck" id="open-deck" v-show="state === 'play'">
+				<div class="board-element deck" id="open-deck" v-show="(state === 'play') && gameHasStarted">
 					<div class="playing-card" v-for="card in openDeckCards" v-html="card.card"
 						v-bind:style="{color: card.color}" v-on:click="drawFromOpenDeck"></div>
 				</div>

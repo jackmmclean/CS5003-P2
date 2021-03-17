@@ -66,6 +66,9 @@ const makePlayerHandVue = function () {
 			},
 			isOwner() {
 				return sharedGameInfo.playerIsOwner;
+			},
+			numPlayers() {
+				return sharedGameInfo.generalInfo.Players;
 			}
 		},
 		methods: {
@@ -117,6 +120,9 @@ const makeClosedDeckVue = function () {
 			},
 			closedDeckCards() {
 				return sharedGameInfo.closedDeckCards;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
 			}
 		},
 		methods: {
@@ -150,6 +156,9 @@ const makeOpenDeckVue = function () {
 			},
 			openDeckCards() {
 				return sharedGameInfo.openDeckCards;
+			},
+			gameHasStarted() {
+				return sharedGameInfo.gameHasStarted;
 			}
 		},
 		methods: {
@@ -188,6 +197,9 @@ const makeUserActionsVue = function () {
 			},
 			gameHasStarted() {
 				return sharedGameInfo.gameHasStarted;
+			},
+			numPlayers() {
+				return sharedGameInfo.generalInfo.Players;
 			}
 		},
 		methods: {
@@ -371,8 +383,6 @@ const makeMessagesVue = function () {
 		}
 	})
 }
-
-
 
 const sharedGameInfo = Vue.observable({
 	gameHasStarted: false,
