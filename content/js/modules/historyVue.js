@@ -1,6 +1,6 @@
 import {
 	game,
-
+	sharedGameInfo
 } from "./clientUtils.js";
 
 const makeHistoryVue = function () {
@@ -11,7 +11,8 @@ const makeHistoryVue = function () {
 			cardHistory: [],
 			scores: {},
 			index: 0,
-			round: 0
+			round: 0,
+			roundMode: false
 		},
 		methods: {
 			getCardHistory: function () {
@@ -65,6 +66,7 @@ const makeHistoryVue = function () {
 				if (game.state === 'history') {
 					// get the game stats if we're playing
 					this.getCardHistory();
+					this.roundMode = sharedGameInfo.roundMode;
 				}
 				return game.state;
 			}

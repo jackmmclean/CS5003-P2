@@ -100,6 +100,13 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			if (this.timeStarted != null) {
 				//put players cards back
 				this.cards.deck = shuffle([...this.cards.deck, ...player.hand()]);
+
+				//if it was the player leaving's turn and they were depositing then ensure that the
+				//next player starts their turn with a draw
+				if (this.turnOrder[this.turnPlayerIndex] === player && this.currentAction === 'deposit') {
+					this.toggleAction();
+				}
+
 				// remove from turn order
 				this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
 
@@ -235,7 +242,6 @@ function makeCards(game, round) {
 			// Shuffle all but the upcard from the open deck and put them back into the deck
 			cards.deck.push(...shuffle(cards.openDeck.splice(0, cards.openDeck.length - 1)))
 		}
-
 		return cards[player.id][cards[player.id].length - 1];
 	}
 
@@ -434,6 +440,9 @@ makeTurnTimer = function (playerId) {
 				if (timer.timeLeft === 0) {
 					clearInterval(timer.timerFunction);
 					game.removePlayer(newPlayerId);
+					if (Object.keys(game.players).length < 2) {
+						game.endGame();
+					}
 				} else {
 					timer.timeLeft--;
 				}

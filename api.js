@@ -138,6 +138,7 @@ exports.drawClosedCard = function (playerId) {
 	let card = player.closedDraw();
 	// set action to 'deposit'
 	game.toggleAction();
+	console.log(game.currentAction)
 	return {
 		drawnCard: card,
 		hand: player.hand(),

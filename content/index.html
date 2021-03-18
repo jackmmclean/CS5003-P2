@@ -324,7 +324,7 @@
 
 			<div id="history" v-show="state === 'history'">
 
-				<h1 class="title is-1">Round: {{round}}</h1>
+				<h1 v-show="roundMode" class="title is-1">Round: {{round}}</h1>
 				<h3 class="subtitle is-3">Instance: {{index}}</h3>
 
 
