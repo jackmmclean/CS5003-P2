@@ -234,7 +234,6 @@ const makeUserActionsVue = function () {
 					}).then((res) => res.json())
 					.then((json) => {
 						if (json.status === 405) {
-							console.log('sth')
 							showUserMessage(json.text);
 						} else if (json.status === 200) {
 							if (json.winners == null) {
@@ -242,11 +241,7 @@ const makeUserActionsVue = function () {
 							} else {
 								showUserMessage(json.text);
 								setState('end');
-								console.log('Winner is', json.winners)
-								console.log(json.text)
-
 							}
-
 						} else {
 							throw Error(`Http error: ${json.status}`)
 						}
@@ -267,8 +262,6 @@ const makeUserActionsVue = function () {
 							} else {
 								showUserMessage(json.text);
 								setState('end');
-								console.log('Winner is', json.winners)
-								console.log(json.text)
 							}
 						} else {
 							throw Error(`Http error: ${json.status}`)

@@ -16,7 +16,6 @@ const {
 	getCards,
 	sendMessage,
 	getMessages,
-	newRound,
 	validateAction,
 	knock
 } = require("./api");
@@ -195,14 +194,6 @@ app.post('/api/users/login', authenticate, (req, res) => {
 	const user = Object.assign({}, req.user)
 	delete user['password'];
 	res.status(200).json(user);
-})
-
-// Get the all time scores for a user
-app.get('/api/users/scores/:username', authenticate, (req, res) => {
-	// todo
-	const username = req.params.username;
-	const score = getScore(username);
-	res.status(score.status).json(score);
 })
 
 const PORT = 3000;

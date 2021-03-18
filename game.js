@@ -101,15 +101,17 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
 
 			// update turnPlayerIndex if the removed element was the last one in turnPlayer.order
-			// todo check that this works properly
 			this.turnPlayerIndex = (this.turnPlayerIndex < this.turnOrder.length) ? this.turnPlayerIndex : 0
 
 			// remove from players
 			delete this.players[playerId]
 		};
-		this.newRound = () => {
+		this.newRound = (nextRoundStartingPlayer) => {
 			this.round++;
 			this.cards = makeCards(this, this.round);
+			if (nextRoundStartingPlayer != null) {
+				this.turnPlayerIndex = this.turnOrder.indexOf(nextRoundStartingPlayer);
+			}
 		};
 		this.startGame = () => {
 			this.turnTimer = makeTurnTimer(this.owner.id);
@@ -211,6 +213,7 @@ function makeCards(game, round) {
 
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
+		if (game.currentAction !== 'draw') throw "Disallowed action: draw. Currently allowed " + game.currentAction;
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.deck.splice(cards.deck.length - 1, 1)[0]);
 
@@ -225,6 +228,7 @@ function makeCards(game, round) {
 
 	// define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
+		if (game.currentAction !== 'draw') throw "Disallowed action: draw. Currently allowed " + game.currentAction;
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards[player.id].push(cards.openDeck.splice(cards.openDeck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
@@ -232,6 +236,7 @@ function makeCards(game, round) {
 
 	// define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, card) {
+		if (game.currentAction !== 'deposit') throw "Disallowed action: deposit. Currently allowed " + game.currentAction;
 		game.cardHistory.push(new CardsInstance(this.round));
 		cards['openDeck'].push(
 			cards[player.id].splice(cards[player.id].indexOf(card), 1)[0]
@@ -402,7 +407,6 @@ makeTurnTimer = function (playerId) {
 				clearInterval(timer.timerFunction);
 				game.removePlayer(playerId);
 				// if only one player left, end the game
-				// todo @leo check this again
 				if (Object.keys(game.players).length < 2) {
 					game.endGame();
 				}

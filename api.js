@@ -121,7 +121,6 @@ exports.getGames = function () {
 }
 
 exports.drawOpenCard = function (playerId) {
-	// todo check if draw is even possible
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.openDraw();
@@ -134,7 +133,6 @@ exports.drawOpenCard = function (playerId) {
 }
 
 exports.drawClosedCard = function (playerId) {
-	// todo check if draw is even possible
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
 	let card = player.closedDraw();
@@ -148,7 +146,6 @@ exports.drawClosedCard = function (playerId) {
 }
 
 exports.depositCard = function (playerId, cardNo) {
-	// todo check if player is allowed to deposit this card
 	const game = getGameByPlayerId(playerId);
 	const player = game.players[playerId];
 	const card = player.hand().filter(el => el.char === cardNo)
@@ -184,19 +181,19 @@ exports.declareGin = function (playerId) {
 	const validGin = processGinDeclared(player, game)
 
 	getRoundGinScores(game, player);
+	const highestScorers = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
 	//if not round mode or a player has a score of 100+
 	if (!game.roundMode || (Object.entries(game.players).filter(el => el[1].score >= 100)).length > 0) {
 		game.endGame();
 		text = validGin ? "Game is over." : "You incorrectly declared Gin.\nYou score zero!"
-		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+		winners = highestScorers.length
 	} else {
-		game.newRound();
+		game.newRound(highestScorers.length > 0 ? highestScorers[0] : null);
 		game.turnTimer.resetTimer(playerId);
 		winners = null;
 		text = validGin ? "Round is over." : "You incorrectly declared Gin.\nYou score zero for this round!"
 	}
 
-	// todo don't return full player objects -> only return relevant data
 	return {
 		status: 200,
 		text: text,
@@ -214,23 +211,23 @@ exports.knock = function (playerId) {
 	let status, text, winners;
 	let game = getGameByPlayerId(playerId);
 	let player = game.players[playerId];
-	// todo maybe tell player if they had best knock score
 	processKnock(game);
 	let resp = getRoundKnockScores(game, player);
+
+	const highestScorers = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]));
 
 	//if not round mode or a player has a score of 100+
 	if (!game.roundMode || ((((Object.entries(game.players)).filter(el => el[1].score >= 100)).length) > 0)) {
 		game.endGame();
 		text = "Game is over." + resp;
-		winners = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+		winners = highestScorers.length
 	} else {
-		game.newRound();
+		game.newRound(highestScorers.length > 0 ? highestScorers[0] : null);
 		game.turnTimer.resetTimer(playerId);
 		winners = null;
 		text = resp;
 	}
 
-	// todo don't return full player objects -> only return relevant data
 	return {
 		status: 200,
 		text: text,
@@ -247,6 +244,11 @@ exports.knock = function (playerId) {
 exports.gameStats = function (playerId) {
 
 	const game = getGameByPlayerId(playerId);
+
+	// if the player is not in a game, they have been timed out
+	if (game === undefined) {
+		return {status: 408}
+	}
 
 	const numPlayers = Object.keys(game.players).length;
 	const scores = {};
@@ -339,7 +341,6 @@ exports.pollGame = function (playerId) {
 		turnPlayerIndex: game.turnPlayerIndex,
 		winner: game.winner,
 		removed: false
-		// todo add more data that needs to be polled
 	}
 }
 
@@ -352,7 +353,6 @@ exports.getCards = function (playerId) {
 			hand: game.players[playerId].hand(),
 			openDeck: game.cards.openDeck,
 			deck: game.cards.deck,
-			// todo check what else needs to be send back
 		}
 	} else {
 		return {
@@ -441,20 +441,20 @@ exports.validateAction = function (playerId, requestedAction) {
 	}
 }
 
-exports.newRound = function (playerId) {
-
-	if (getGameByPlayerId(playerId) == undefined) {
-		return {
-			status: 409,
-			text: `Cannot find game containing player with player ID "${playerId}".`
-		}
-	} else {
-		const game = getGameByPlayerId(playerId);
-		game.newRound();
-		return {
-			status: 200,
-			text: `New cards for game ID "${getGameByPlayerId(playerId).id}"`
-		}
-	}
-
-}
+// exports.newRound = function (playerId) {
+//
+// 	if (getGameByPlayerId(playerId) == undefined) {
+// 		return {
+// 			status: 409,
+// 			text: `Cannot find game containing player with player ID "${playerId}".`
+// 		}
+// 	} else {
+// 		const game = getGameByPlayerId(playerId);
+// 		game.newRound();
+// 		return {
+// 			status: 200,
+// 			text: `New cards for game ID "${getGameByPlayerId(playerId).id}"`
+// 		}
+// 	}
+//
+// }
