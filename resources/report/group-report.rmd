@@ -1,0 +1,21 @@
+---
+title: "CS5003: Practical 2 - Gin Rummy (Group Report)"
+author: "JACKS_NO & 190026921"
+date: "March 19, 2021"
+output: pdf_document
+---
+
+# Overview
+...
+
+# Technologies & Resources
+...
+
+# Desgin
+...
+
+# Team Work
+...
+
+# Evaluation
+...
