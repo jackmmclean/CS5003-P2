@@ -12,7 +12,8 @@ const makeHistoryVue = function () {
 			scores: {},
 			index: 0,
 			round: 0,
-			roundMode: false
+			roundMode: false,
+			time: ''
 		},
 		methods: {
 			getCardHistory: function () {
@@ -35,6 +36,7 @@ const makeHistoryVue = function () {
 						this.cardHistoryInstance = this.cardHistory[this.index];
 						this.round = this.cardHistoryInstance.round;
 						this.scores = this.cardHistoryInstance.scores;
+						this.time = this.cardHistoryInstance.time.substr(11, 8);
 					})
 					.catch(err => console.log(err))
 			},
@@ -48,6 +50,7 @@ const makeHistoryVue = function () {
 				this.cardHistoryInstance = this.cardHistory[this.index];
 				this.round = this.cardHistoryInstance.round;
 				this.scores = this.cardHistoryInstance.scores;
+				this.time = this.cardHistoryInstance.time.substr(11, 8);
 			},
 			getInstanceBack: function () {
 				if (this.index === 0) {
@@ -58,6 +61,7 @@ const makeHistoryVue = function () {
 				this.cardHistoryInstance = this.cardHistory[this.index];
 				this.round = this.cardHistoryInstance.round;
 				this.scores = this.cardHistoryInstance.scores;
+				this.time = this.cardHistoryInstance.time.substr(11, 8);
 			}
 
 		},
