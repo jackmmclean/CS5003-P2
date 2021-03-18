@@ -440,6 +440,9 @@ makeTurnTimer = function (playerId) {
 				if (timer.timeLeft === 0) {
 					clearInterval(timer.timerFunction);
 					game.removePlayer(newPlayerId);
+					if (Object.keys(game.players).length < 2) {
+						game.endGame();
+					}
 				} else {
 					timer.timeLeft--;
 				}
