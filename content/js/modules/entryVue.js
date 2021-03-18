@@ -36,7 +36,8 @@ const makeLoginVue = function () {
 					setState("lobby");
 					this.hideRegistrationCard();
 					sharedGameInfo.generalInfo.Username = this.username;
-					sharedGameInfo.userInfo.playedGames = loginResponse.playedGames;
+					sharedGameInfo.userInfo.gamesWon = loginResponse.gamesWon;
+					sharedGameInfo.userInfo.gamesLost = loginResponse.gamesLost;
 					sharedGameInfo.userInfo.allTimeScore = loginResponse.allTimeScore;
 					sharedGameInfo.userInfo.role = loginResponse.role;
 				} else {

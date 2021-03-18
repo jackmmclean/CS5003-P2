@@ -77,10 +77,16 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			this.gameOver = true;
 			this.timeFinished = new Date;
 
+			const highestScorers = getHighestScoringPlayers(Object.entries(game.players).map(arr => arr[1]))
+
 			// save the scores of registered users to the overall score
 			for (let [, player] of Object.entries(this.players).filter(arr => arr[1].username !== 'guest')) {
 				users[player.username].allTimeScore += player.score;
-				users[player.username].playedGames++;
+				if (highestScorers.includes(player)) {
+					users[player.username].gamesWon++;
+				} else {
+					users[player.username].gamesLost++;
+				}
 			}
 
 		};

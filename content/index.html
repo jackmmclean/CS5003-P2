@@ -39,7 +39,7 @@
 	<nav id="sidebar">
 		<div class="title" id="brand">
 			<h1>Gin Rummy</h1>
-			<p class="subtitle">by Jack and Leo</p>
+			<p class="subtitle">What is life if not a gamble?</p>
 		</div>
 
 		<div class="card" id="user-info" v-show="isRegistered && state !== 'login'">
@@ -50,8 +50,12 @@
 				<div class="content">
 					<table>
 						<tr>
-							<td>Games played</td>
-							<td>{{ gamesPlayed }}</td>
+							<td>Games won</td>
+							<td>{{ gamesWon }}</td>
+						</tr>
+						<tr>
+							<td>Games lost</td>
+							<td>{{ gamesLost }}</td>
 						</tr>
 						<tr>
 							<td>All-time score</td>

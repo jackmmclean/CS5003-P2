@@ -37,7 +37,8 @@ export const sharedGameInfo = Vue.observable({
 	warningMessage: "",
 	warningMessageVisible: false,
 	userInfo: {
-		playedGames: 0,
+		gamesWon: 0,
+		gamesLost: 0,
 		allTimeScore: 0,
 		role: 'user',
 	},
@@ -86,7 +87,8 @@ export const setState = function (state) {
 	if (state === "login") {
 		game.userKey = "";
 		sharedGameInfo.userInfo = {
-			playedGames: 0,
+			gamesWon: 0,
+			gamesLost: 0,
 			allTimeScore: 0,
 			role: 'user',
 		};

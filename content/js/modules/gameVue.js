@@ -459,7 +459,8 @@ const startInterval = () => {
 				sharedGameInfo.generalInfo.Players = json.numPlayers;
 				sharedGameInfo.generalInfo.Round = json.round;
 				sharedGameInfo.generalInfo.Time = json.turnTimeLeft;
-				sharedGameInfo.userInfo.playedGames = json.playedGames;
+				sharedGameInfo.userInfo.gamesLost = json.gamesLost;
+				sharedGameInfo.userInfo.gamesWon = json.gamesWon;
 				sharedGameInfo.userInfo.allTimeScore = json.allTimeScore;
 
 				let incomingNiceUsernames = Object.entries(json.niceUsernames).map(el => el[1]);
