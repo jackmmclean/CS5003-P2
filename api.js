@@ -155,6 +155,7 @@ exports.depositCard = function (playerId, cardNo) {
 			text: 'Depositing this card is not allowed.'
 		}
 	} else {
+		const hand = player.depositCard(card[0]);
 		// set action to 'draw'
 		game.toggleAction();
 		// skip to next turn;
@@ -162,7 +163,7 @@ exports.depositCard = function (playerId, cardNo) {
 		return {
 			status: 200,
 			status: 200,
-			hand: player.depositCard(card[0]),
+			hand: hand,
 			text: 'Deposited card'
 		}
 	}
