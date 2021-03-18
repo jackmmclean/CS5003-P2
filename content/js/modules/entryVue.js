@@ -2,7 +2,10 @@ import {
 	game,
 	setGuestUser,
 	setState,
-	login, isGuest, sharedGameInfo
+	login,
+	isGuest,
+	sharedGameInfo,
+	leaveGame
 } from "./clientUtils.js";
 
 const makeLoginVue = function () {
@@ -127,7 +130,7 @@ const makeGuestVue = function () {
 	})
 }
 
-const makeUserNavVue = function() {
+const makeUserNavVue = function () {
 	const userNavVue = new Vue({
 		el: "#user-nav",
 		data: {
@@ -143,11 +146,19 @@ const makeUserNavVue = function() {
 
 		},
 		methods: {
-			logout: function() {
+			logout: function () {
+				let playerId = game.playerId;
 				setState("login");
+				leaveGame(playerId);
+				//stop polling the game we are leaving
+				clearInterval(sharedGameInfo.pollInterval);
 			},
-			backToLobby: function() {
+			backToLobby: function () {
+				let playerId = game.playerId;
 				setState("lobby");
+				leaveGame(playerId);
+				//stop polling the game we are leaving
+				clearInterval(sharedGameInfo.pollInterval);
 			}
 		}
 	})
@@ -156,15 +167,19 @@ const makeUserNavVue = function() {
 /**
  * Mini vue that controls the color picker.
  * */
-const makeColorPickerVue = function() {
+const makeColorPickerVue = function () {
 	const colorPickerVue = new Vue({
 		el: "#color-picker",
-		data: { color: '#477148' },
-		watch: { color: (c) => setBodyColor(c) }
+		data: {
+			color: '#477148'
+		},
+		watch: {
+			color: (c) => setBodyColor(c)
+		}
 	})
 }
 
-const makeRulesVue = function() {
+const makeRulesVue = function () {
 	const rulesVue = new Vue({
 		el: "#rules",
 		data: {
@@ -178,10 +193,18 @@ const makeRulesVue = function() {
 				"<p>Alternatively, a player can knock to submit their current hand even if they don't have Gin.</p>" +
 				"<p>In this case, they win if they have less deadwood than their opponents.</p>"
 		},
-		computed: { state() {return game.state;} },
+		computed: {
+			state() {
+				return game.state;
+			}
+		},
 		methods: {
-			show() { this.isHidden = false; },
-			hide() { this.isHidden = true; }
+			show() {
+				this.isHidden = false;
+			},
+			hide() {
+				this.isHidden = true;
+			}
 		}
 	})
 }

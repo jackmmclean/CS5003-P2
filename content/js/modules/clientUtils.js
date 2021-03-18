@@ -47,7 +47,8 @@ export const sharedGameInfo = Vue.observable({
 		Players: 0,
 		Round: 1,
 		Time: 60
-	}
+	},
+	pollInterval: null
 });
 
 /**
@@ -68,20 +69,21 @@ export const setState = function (state) {
 
 		// reset sharedGameInfo
 		sharedGameInfo.gameHasStarted = false,
-		sharedGameInfo.playerIsOwner = false,
-		sharedGameInfo.openDeckCards = [],
-		sharedGameInfo.hand = [],
-		sharedGameInfo.closedDeckCards = [],
-		sharedGameInfo.showBackOfCard = false,
-		sharedGameInfo.knockingAllowed = false,
-		sharedGameInfo.roundMode = false,
-		sharedGameInfo.playerNames = [],
-		sharedGameInfo.scores = [],
-		sharedGameInfo.turnPlayerIndex = null,
-		sharedGameInfo.warningMessage = "",
-		sharedGameInfo.warningMessageVisible = false
+			sharedGameInfo.playerIsOwner = false,
+			sharedGameInfo.openDeckCards = [],
+			sharedGameInfo.hand = [],
+			sharedGameInfo.closedDeckCards = [],
+			sharedGameInfo.showBackOfCard = false,
+			sharedGameInfo.knockingAllowed = false,
+			sharedGameInfo.roundMode = false,
+			sharedGameInfo.playerNames = [],
+			sharedGameInfo.scores = [],
+			sharedGameInfo.turnPlayerIndex = null,
+			sharedGameInfo.warningMessage = "",
+			sharedGameInfo.warningMessageVisible = false
 
-	} if (state === "login") {
+	}
+	if (state === "login") {
 		game.userKey = "";
 		sharedGameInfo.userInfo = {
 			playedGames: 0,
@@ -184,4 +186,20 @@ export const compareScore = function (a, b) {
 		return 1;
 	}
 	return 0;
+}
+
+export const leaveGame = function (playerId) {
+	console.log(`/api/game/leave-game/${playerId}`)
+	return fetch(`/api/game/leave-game/${playerId}`, {
+		method: "POST",
+		headers: {
+			"Authorization": "Basic " + game.userKey
+		}
+	}).then((res) => {
+		if (!res.ok) {
+			throw new Error(`HTTP Error ${res.status}`)
+		} else {
+			return res.json();
+		}
+	})
 }

@@ -17,12 +17,16 @@ const {
 	sendMessage,
 	getMessages,
 	validateAction,
-	knock
+	knock,
+	deletePlayer
 } = require("./api");
 
 const app = express();
-const {users} = require('./data/data')
+const {
+	users
+} = require('./data/data')
 const basicAuth = require('basic-auth');
+
 
 
 app.use(bodyParser.json());
@@ -194,6 +198,12 @@ app.post('/api/users/login', authenticate, (req, res) => {
 	const user = Object.assign({}, req.user)
 	delete user['password'];
 	res.status(200).json(user);
+})
+
+app.post('/api/game/leave-game/:playerId', authenticate, (req, res) => {
+	const playerId = req.params.playerId;
+	let deletion = deletePlayer(playerId);
+	res.status(deletion.status).json(deletion);
 })
 
 const PORT = 3000;

@@ -4,7 +4,8 @@ import {
 	getStats,
 	setState,
 	arraysEqual,
-	transformCards, sharedGameInfo,
+	transformCards,
+	sharedGameInfo,
 
 } from "./clientUtils.js";
 
@@ -416,13 +417,12 @@ const showBackOfCard = () => {
 	sharedGameInfo.showBackOfCard = true;
 }
 
-let pollInterval = null;
 let niceUsernames = [];
 
 // Poll server every 100 ms: check if game has started
 //  if yes (get data) else wait another 100 ms
 const startInterval = () => {
-	pollInterval = setInterval(() => {
+	sharedGameInfo.pollInterval = setInterval(() => {
 		fetch(`/api/game/poll/${game.playerId}`, {
 			method: "GET",
 			headers: {
@@ -433,7 +433,7 @@ const startInterval = () => {
 				//if player is removed
 				if (res.status === 408) {
 					alert('You timed out.');
-					clearInterval(pollInterval);
+					clearInterval(sharedGameInfo.pollInterval);
 					// need to reset usernames for next game
 					niceUsernames = []
 					setState('login');
@@ -492,7 +492,7 @@ const startInterval = () => {
 
 			if (json.gameHasFinished) {
 				setState('end');
-				clearInterval(pollInterval);
+				clearInterval(sharedGameInfo.pollInterval);
 			}
 
 		}).catch(err => console.log(err))

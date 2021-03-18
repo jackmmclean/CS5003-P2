@@ -1,4 +1,6 @@
-const {users} = require("./data/data");
+const {
+	users
+} = require("./data/data");
 const {
 	shuffle,
 	isRun,
@@ -48,7 +50,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		this.turnPlayerIndex = null;
 		// set initially to dummy variable
 		this.turnTimer = {
-			turnTimer: 10
+			timeLeft: 60
 		};
 		// action: which action can currently be performed: can be 'draw', 'deposit'
 		this.currentAction = 'draw';
@@ -78,7 +80,7 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 			// save the scores of registered users to the overall score
 			for (let [, player] of Object.entries(this.players).filter(arr => arr[1].username !== 'guest')) {
 				users[player.username].allTimeScore += player.score;
-				users[player.username].playedGames ++;
+				users[player.username].playedGames++;
 			}
 
 		};
@@ -94,17 +96,28 @@ exports.makeGame = function (username, knockingAllowed, lowHighAceAllowed, round
 		this.removePlayer = (playerId) => {
 			let player = this.players[playerId]
 
-			//put players cards back
-			this.cards.deck = shuffle([...this.cards.deck, ...player.hand()]);
+			//if the game has started, put players cards back and remove them from the turn order
+			if (this.timeStarted != null) {
+				//put players cards back
+				this.cards.deck = shuffle([...this.cards.deck, ...player.hand()]);
+				// remove from turn order
+				this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
 
-			// remove from turn order
-			this.turnOrder.splice(this.turnOrder.indexOf(player), 1)
+				// update turnPlayerIndex if the removed element was the last one in turnPlayer.order
+				this.turnPlayerIndex = (this.turnPlayerIndex < this.turnOrder.length) ? this.turnPlayerIndex : 0
+			}
 
-			// update turnPlayerIndex if the removed element was the last one in turnPlayer.order
-			this.turnPlayerIndex = (this.turnPlayerIndex < this.turnOrder.length) ? this.turnPlayerIndex : 0
+			//check if the player being removed is / was the owner
+			let isOwner = this.owner === player ? true : false
 
 			// remove from players
 			delete this.players[playerId]
+
+			//if they were the owner then assign a new owner as the next person in players obj
+			if (isOwner) {
+				this.owner = Object.entries(this.players)[0][1]
+			}
+
 		};
 		this.newRound = (nextRoundStartingPlayer) => {
 			this.round++;
@@ -191,7 +204,7 @@ function makeCards(game, round) {
 	}
 
 	//assign object attributes that hold each players cards
-	for (let [k,] of Object.entries(players)) {
+	for (let [k, ] of Object.entries(players)) {
 		cards[k] = cards.deck.splice(0, cardsPerPlayer);
 	}
 
@@ -220,7 +233,7 @@ function makeCards(game, round) {
 		// handle closed deck fully depleted
 		if (cards.deck.length === 0) {
 			// Shuffle all but the upcard from the open deck and put them back into the deck
-			cards.deck.push(...shuffle(cards.openDeck.splice(0, cards.openDeck.length-1)))
+			cards.deck.push(...shuffle(cards.openDeck.splice(0, cards.openDeck.length - 1)))
 		}
 
 		return cards[player.id][cards[player.id].length - 1];
@@ -396,12 +409,12 @@ exports.createMessage = function (playerId, text) {
 
 makeTurnTimer = function (playerId) {
 
-	const SECONDS_PER_ROUND = 10;
+	const SECONDS_PER_TURN = 60;
 
 	const game = getGameByPlayerId(playerId);
 
 	let timer = {
-		timeLeft: SECONDS_PER_ROUND,
+		timeLeft: SECONDS_PER_TURN,
 		timerFunction: setInterval(() => {
 			if (timer.timeLeft === 0) {
 				clearInterval(timer.timerFunction);
@@ -416,7 +429,7 @@ makeTurnTimer = function (playerId) {
 		}, 1000),
 		resetTimer: function (newPlayerId) {
 			clearInterval(timer.timerFunction);
-			timer.timeLeft = SECONDS_PER_ROUND;
+			timer.timeLeft = SECONDS_PER_TURN;
 			timer.timerFunction = setInterval(() => {
 				if (timer.timeLeft === 0) {
 					clearInterval(timer.timerFunction);

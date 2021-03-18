@@ -247,7 +247,9 @@ exports.gameStats = function (playerId) {
 
 	// if the player is not in a game, they have been timed out
 	if (game === undefined) {
-		return {status: 408}
+		return {
+			status: 408
+		}
 	}
 
 	const numPlayers = Object.keys(game.players).length;
@@ -364,7 +366,8 @@ exports.getCards = function (playerId) {
 exports.getScore = function (username) {
 	return {
 		status: 200,
-		score: users[username].score};
+		score: users[username].score
+	};
 }
 
 exports.getMessages = function (gameId) {
@@ -437,6 +440,23 @@ exports.validateAction = function (playerId, requestedAction) {
 	} else {
 		return {
 			status: 200
+		}
+	}
+}
+
+
+exports.deletePlayer = function (playerId) {
+	const game = getGameByPlayerId(playerId);
+	if (game === undefined) {
+		return {
+			status: 400,
+			text: "Cannot find game associated with this player."
+		}
+	} else {
+		game.removePlayer(playerId);
+		return {
+			status: 200,
+			text: `Player with ID ${playerId} removed from game with ID ${game.id}.`
 		}
 	}
 }
