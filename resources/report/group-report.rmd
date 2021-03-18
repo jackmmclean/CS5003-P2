@@ -3,19 +3,79 @@ title: "CS5003: Practical 2 - Gin Rummy (Group Report)"
 author: "JACKS_NO & 190026921"
 date: "March 19, 2021"
 output: pdf_document
+header-includes:
+- \usepackage{placeins}
+- \usepackage{amssymb}
 ---
 
 # Overview
-...
+A brief description of what has been achieved in the submission. This should include a list of which requirements have 
+been met and to what extent, including the ID of the person who was primarily responsible for each feature.
+
+\begin{tabular}{llll}
+\multicolumn{4}{l}{\textbf{Basic}}        \\
+& Start/Join Game               & \checkmark  &  19002621 \\
+& Current state of the game     & \checkmark  &  190026921\\
+& Draw card                     & \checkmark  &  JACK (server) + 190026921 (client)\\
+& Declare Gin + Submit melds    & \checkmark  &  JACK (server) + 190026921 (client)\\
+& Reveal hands                  & \checkmark  &  JACK (server)\\
+& Prevent cheating              & \checkmark  &  JACK + 190026921\\
+\multicolumn{4}{l}{\textbf{Intermediate}} \\
+& Player names                  & \checkmark  &  JACK + 190026921\\
+& User statistic (wins/losses)  & \checkmark  &  190026921 \\
+& High / Low Aces               & \checkmark  &  JACK\\
+& Knocking                      & \checkmark  &  JACK\\
+& Inactivity time out           & \checkmark  &  JACK\\
+\multicolumn{4}{l}{\textbf{Advanced}}     \\
+& Multi-round games             & \checkmark  &  JACK \\
+& More than two players         & \checkmark  &  JACK + 190026921\\
+& Game replay                   & \checkmark  &  JACK \\
+& Register/login/logout         & \checkmark  &  190026921
+\multicolumn{4}{l}{\textbf{Further enhancements}}     \\
+& In-game messaging             & \checkmark  &  JACK
+\end{tabular}
+
+
 
 # Technologies & Resources
-...
+A brief description of what external technologies and resources you used during the development of your solution and
+what you used them for. This should include references to any external CSS libraries, tutorials, forums, websites, 
+books, etc. that you used to produce your solution. It should also clearly state what browser(s) were used to run 
+and test your solution, and what version of NodeJS was used for the development.
 
-# Desgin
-...
+# Design
+A brief discussion of any interpretation of requirements and any design decisions taken. Focus on the reasons for your 
+decisions rather than just providing a description of what you did.
 
 # Team Work
-...
+A brief description of your approach to team work, including what tools and techniques you made use of (e.g. Trello, 
+pair programming, etc), how you allocated and tracked work within the team, and any up-skilling of team members.
+
+- Pair programming for API design to allow us to separate client and server side as we know how the two sides will be
+'talking' to each other.
+  
+- Regular MS Teams meetings (every other day) to catch up on current progress and integrate server and client side.
+
+- MS Teams messages as required to coordinate smaller changes as well as to avoid merge conflicts.
+
+- Tracking of To-Dos via a shared Excel spreadsheet on MS Teams.
 
 # Evaluation
-...
+A brief reflection on the success of your application. What went well and what could be improved? What might you do 
+differently next time or if you had more time?
+
+- Generally satisfied with the outcome. Game is very playable and offers a wide range of additional functionality.
+
+- Client and server are nicely separated. The game model is build in a way that a different client application could be
+  implemented fairly quickly without the need to change the server. The API could probably be improved in some cases
+
+- Visual appeal could still be improved.
+
+- Sometimes there are small delays beetween user actions so when a user clicks around very quickly, the experience 
+  doesn't feel very smooth (mostly due to polling, see next bullet point)
+
+- Use of web sockets as opposed to constantly sending GET requests to the server during polling (slows down the browser
+  when the game has been running for a few minutes and is generally not very efficient). 
+  Especially for messaging service, this would have been useful.
+  
+- 
