@@ -234,7 +234,7 @@ function makeCards(game, round) {
 	//define a method for a player to draw from closed deck
 	cards.closedDraw = function (player) {
 		if (game.currentAction !== 'draw') throw "Disallowed action: draw. Currently allowed " + game.currentAction;
-		game.cardHistory.push(new CardsInstance(this.round));
+		game.cardHistory.push(new CardsInstance(game.round));
 		cards[player.id].push(cards.deck.splice(cards.deck.length - 1, 1)[0]);
 
 		// handle closed deck fully depleted
@@ -248,7 +248,7 @@ function makeCards(game, round) {
 	// define a method for a player to draw from open deck
 	cards.openDraw = function (player) {
 		if (game.currentAction !== 'draw') throw "Disallowed action: draw. Currently allowed " + game.currentAction;
-		game.cardHistory.push(new CardsInstance(this.round));
+		game.cardHistory.push(new CardsInstance(game.round));
 		cards[player.id].push(cards.openDeck.splice(cards.openDeck.length - 1, 1)[0]);
 		return cards[player.id][cards[player.id].length - 1];
 	}
@@ -256,14 +256,14 @@ function makeCards(game, round) {
 	// define a method for a player to deposit one of their cards onto the open deck
 	cards.depositCard = function (player, card) {
 		if (game.currentAction !== 'deposit') throw "Disallowed action: deposit. Currently allowed " + game.currentAction;
-		game.cardHistory.push(new CardsInstance(this.round));
+		game.cardHistory.push(new CardsInstance(game.round));
 		cards['openDeck'].push(
 			cards[player.id].splice(cards[player.id].indexOf(card), 1)[0]
 		);
 		return player.hand();
 	}
 
-	game.cardHistory.push(new CardsInstance(this.round));
+	game.cardHistory.push(new CardsInstance(game.round));
 	return cards
 }
 
