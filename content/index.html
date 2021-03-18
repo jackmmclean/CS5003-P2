@@ -132,7 +132,8 @@
 		<div class="card" id="user-actions" v-show="(state === 'play') && (numPlayers > 1)">
 			<div class="card-content">
 				<div class="content">
-					<button class="button is-small" v-on:click="startGame" v-show="isOwner && !gameHasStarted && (numPlayers > 1)">Start
+					<button class="button is-small" v-on:click="startGame"
+						v-show="isOwner && !gameHasStarted && (numPlayers > 1)">Start
 						Game</button>
 					<button class="button is-small" v-on:click="declareGin" v-show="gameHasStarted">Declare Gin</button>
 					<button class="button is-small" v-on:click="knock"
@@ -263,14 +264,16 @@
 			</div>
 
 			<div class="board">
-				<div class="board-element hand" id="player-hand" v-show="state === 'play'" v-bind:class="{waiting : !gameHasStarted}">
+				<div class="board-element hand" id="player-hand" v-show="state === 'play'"
+					v-bind:class="{waiting : !gameHasStarted}">
 
 					<div class="playing-card" v-for="card in hand" v-html="card.card" v-bind:style="{color: card.color}"
 						v-on:click="depositCard(card.cardNo)" v-if="gameHasStarted"></div>
 
-					<div v-if="!gameHasStarted">
+					<div id="loadingMess" v-if="!gameHasStarted">
 						<progress class="progress is-large is-dark" max="100"></progress>
-						<p class="subtitle is-2" v-show="numPlayers > 1">Waiting for the game to be started by {{isOwner ? "you" : "the owner."}}</p>
+						<p class="subtitle is-2" v-show="numPlayers > 1">Waiting for the game to be started by
+							{{isOwner ? "you" : "the owner."}}</p>
 						<p class="subtitle is-2" v-show="numPlayers <= 1">Waiting for more players to join.</p>
 					</div>
 
@@ -338,9 +341,12 @@
 					</div>
 				</article>
 
-				<article v-for="(cards, key) in cardHistoryInstance" v-if="!(['openDeck', 'deck', 'time', 'round', 'scores'].includes(key))" class="message">
+				<article v-for="(cards, key) in cardHistoryInstance"
+					v-if="!(['openDeck', 'deck', 'time', 'round', 'scores'].includes(key))" class="message">
 					<div class="message-header">
-						<p>{{key}}<span style="font-weight: lighter">{{ scores[key] === undefined ? "" : " - Score: " + scores[key]}}</span></p>
+						<p>{{key}}<span
+								style="font-weight: lighter">{{ scores[key] === undefined ? "" : " - Score: " + scores[key]}}</span>
+						</p>
 					</div>
 					<div class="message-body">
 						<div class="board-element">
