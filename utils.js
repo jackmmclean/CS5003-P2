@@ -387,7 +387,7 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 							let possibleSetCardScore = possibleSets[rank].map(el => cardScore(el)).reduce((a, b) => a + b)
 							let possibleRunCardScore = run.map(el => cardScore(el)).reduce((a, b) => a + b)
 							if (possibleSetCardScore > possibleRunCardScore) {
-								delete distinctRuns[suit]
+								distinctRuns[suit][distRunChoice].splice(distinctRuns[suit][distRunChoice].indexOf(run))
 							} else {
 								delete possibleSets[rank]
 							}
