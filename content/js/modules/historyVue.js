@@ -48,7 +48,6 @@ const makeHistoryVue = function () {
 				}
 				this.index++
 				this.cardHistoryInstance = this.cardHistory[this.index];
-				console.log(this.cardHistoryInstance)
 				this.round = this.cardHistoryInstance.round;
 				this.scores = this.cardHistoryInstance.scores;
 				this.time = this.cardHistoryInstance.time.substr(11, 8);
