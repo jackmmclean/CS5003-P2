@@ -367,7 +367,6 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 				for (let overlappingCard of overlappingCardsArray) {
 					//for each of those cards, loop through each of the runs and determine whether we should remove the 
 					//duplicate/overlapping card from the suit or the run
-					console.log('xyz', distinctRuns[suit][distRunChoice])
 					for (let run of distinctRuns[suit][distRunChoice]) {
 						//if the run contains the overlapping card and will still be a run without it then remove 
 						//it from the run
@@ -384,7 +383,14 @@ exports.clearDuplicateCards = function (distinctRuns, possibleSets) {
 						//from the set stops it being a set then we leave the overlapping card in the set and
 						//delete the corresponding run
 						else {
-							delete distinctRuns[suit][distRunChoice]
+							//delete the one that gives the worse knock score
+							let possibleSetCardScore = possibleSets[rank].map(el => cardScore(el)).reduce((a, b) => a + b)
+							let possibleRunCardScore = run.map(el => cardScore(el)).reduce((a, b) => a + b)
+							if (possibleSetCardScore > possibleRunCardScore) {
+								delete distinctRuns[suit]
+							} else {
+								delete possibleSets[rank]
+							}
 						}
 					}
 				}
