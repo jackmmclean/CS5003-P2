@@ -196,8 +196,11 @@ const makeUserInfoVue = function() {
 			allTimeScore() {
 				return sharedGameInfo.userInfo.allTimeScore;
 			},
-			gamesPlayed() {
-				return sharedGameInfo.userInfo.playedGames;
+			gamesLost() {
+				return sharedGameInfo.userInfo.gamesLost;
+			},
+			gamesWon() {
+				return sharedGameInfo.userInfo.gamesWon;
 			}
 		},
 	})

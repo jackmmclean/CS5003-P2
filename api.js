@@ -266,12 +266,16 @@ exports.gameStats = function (playerId) {
 
 	const player = game.players[playerId];
 
+	const gamesWon = player.username === 'guest' ? 0 : users[player.username].gamesWon
+	const gamesLost = player.username === 'guest' ? 0 : users[player.username].gamesLost
+
 	return {
 		status: 200,
 		gameId: game.id,
 		niceUsername: niceUsername(playerId),
-		playedGames: player.username === 'guest' ? 0 : users[player.username].playedGames,
 		allTimeScore: player.username === 'guest' ? 0 : users[player.username].allTimeScore,
+		gamesWon: gamesWon,
+		gamesLost: gamesLost,
 		numPlayers: numPlayers,
 		scores: scores,
 		gameDuration: new Date(gameDuration).toISOString().substr(11, 8),
@@ -297,7 +301,8 @@ exports.registerUser = function (username, password) {
 			password: password,
 			score: 0,
 			role: 'user',
-			playedGames: 0,
+			gamesWon: 0,
+			gamesLost: 0,
 		};
 		return {
 			status: 200,
