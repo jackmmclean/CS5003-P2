@@ -322,6 +322,14 @@ exports.sortByCards = function (cardsArrayOfArraysOfArrays) {
 		if (cardCount(a) > cardCount(b)) {
 			return -1;
 		}
+		if (cardCount(a) === cardCount(b)) {
+			if (a.length < b.length) {
+				return 1;
+			}
+			if (a.length > b.length) {
+				return -1;
+			}
+		}
 		return 0;
 	}
 	return [].slice.call(cardsArrayOfArraysOfArrays).sort(compareValue);
